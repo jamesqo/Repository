@@ -16,6 +16,10 @@ namespace Repository
     [Activity(Label = "Choose a Provider")]
     public class ChooseProviderActivity : Activity
     {
+        private static string CallbackUrl { get; } = "http://google.com";
+
+        private static string GitHubSignInUrl { get; } = $"https://github.com/login/oauth/authorize?scope=repo&client_id={Credentials.ClientId}";
+
         private Button _githubButton;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -31,7 +35,8 @@ namespace Repository
         private void GitHubButton_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(SignInActivity));
-            intent.PutExtra(Strings.SignIn_Url, )
+            intent.PutExtra(Strings.SignIn_Url, GitHubSignInUrl);
+            intent.PutExtra(Strings.SignIn_CallbackUrl, CallbackUrl);
             StartActivity(intent);
         }
     }

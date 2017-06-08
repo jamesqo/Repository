@@ -67,7 +67,7 @@ namespace Repository
 			public const int GitHubButton = 2131034112;
 			
 			// aapt resource value: 0x7f050002
-			public const int webView1 = 2131034114;
+			public const int SignInWebView = 2131034114;
 			
 			static Id()
 			{

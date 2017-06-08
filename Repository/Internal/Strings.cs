@@ -15,5 +15,7 @@ namespace Repository.Internal
     internal static class Strings
     {
         public static string SignIn_Url { get; } = nameof(SignIn_Url);
+
+        public static string SignIn_CallbackUrl { get; } = nameof(SignIn_CallbackUrl);
     }
 }
