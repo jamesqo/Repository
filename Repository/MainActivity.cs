@@ -4,6 +4,7 @@ using Android.OS;
 using System;
 using Android.Content;
 using Repository.Internal;
+using System.Diagnostics;
 
 namespace Repository
 {
@@ -14,6 +15,8 @@ namespace Repository
 
         protected override void OnCreate(Bundle bundle)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource
@@ -21,6 +24,17 @@ namespace Repository
 
             _getStartedButton = FindViewById<Button>(Resource.Id.GetStartedButton);
             _getStartedButton.Click += GetStartedButton_Click;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var exception = ((Exception)e.ExceptionObject).GetBaseException();
+            System.Diagnostics.Debug.WriteLine(exception);
+
+            if (Debugger.IsAttached)
+            {
+                Debugger.Break();
+            }
         }
 
         private void GetStartedButton_Click(object sender, EventArgs e)

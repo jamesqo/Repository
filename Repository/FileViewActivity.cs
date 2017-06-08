@@ -34,7 +34,7 @@ namespace Repository
             }
         }
 
-        private RecyclerView _recyclerView;
+        private RecyclerView _fileView;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,10 +42,9 @@ namespace Repository
 
             SetContentView(Resource.Layout.FileView);
 
-            var accessToken = Intent.Extras.GetString(Strings.Global_AccessToken);
             // GitHub.Client.Repository.
 
-            _recyclerView = FindViewById<RecyclerView>(Resource.Id.RecyclerView);
+            _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
         }
     }
 }

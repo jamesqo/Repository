@@ -16,8 +16,6 @@ namespace Repository.Internal
     {
         public const string AppName = "Repository";
 
-        public const string Global_AccessToken = nameof(Global_AccessToken);
-
         public const string SignIn_Url = nameof(SignIn_Url);
 
         public const string SignIn_CallbackDomain = nameof(SignIn_CallbackDomain);

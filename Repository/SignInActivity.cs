@@ -13,6 +13,7 @@ using Android.Webkit;
 using Android.Widget;
 using Repository.Internal;
 using static Repository.Internal.Verify;
+using static System.Diagnostics.Debug;
 
 namespace Repository
 {
@@ -35,7 +36,7 @@ namespace Repository
                 if (url.Contains(_callbackDomain))
                 {
                     var queryParameters = UrlUtilities.ParseQueryParameters(url);
-                    System.Diagnostics.Debug.Assert(queryParameters.Count == 1);
+                    Assert(queryParameters.Count == 1);
                     string code = queryParameters["code"];
 
                     _activity.OnSessionCodeReceived(code);
@@ -62,24 +63,19 @@ namespace Repository
             _signInWebView.SetWebViewClient(new LoginSuccessListener(this, callbackDomain));
         }
 
-        private void OnAccessTokenReceived(string accessToken)
+        private async void OnSessionCodeReceived(string code)
         {
-            var intent = new Intent(this, typeof(FileViewActivity));
-            intent.PutExtra(Strings.Global_AccessToken, accessToken);
+            GitHub.Client.Credentials = await GetCredentials(code);
+
+            var intent = new Intent(this, typeof(ChooseRepositoryActivity));
             StartActivity(intent);
         }
 
-        private async void OnSessionCodeReceived(string code)
-        {
-            string accessToken = await RetrieveAccessToken(code);
-            OnAccessTokenReceived(accessToken);
-        }
-
-        private static async Task<string> RetrieveAccessToken(string code)
+        private static async Task<Octokit.Credentials> GetCredentials(string code)
         {
             var request = new Octokit.OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
             var oauthToken = await GitHub.Client.Oauth.CreateAccessToken(request);
-            return oauthToken.AccessToken;
+            return new Octokit.Credentials(oauthToken.AccessToken);
         }
     }
 }
