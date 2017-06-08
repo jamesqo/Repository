@@ -24,7 +24,6 @@ namespace Repository
         {
             private readonly long _repoId;
 
-            private IReadOnlyList<Octokit.RepositoryContent> _contents;
             private string _currentPath;
 
             private GitHubFileAdapter(long repoId)
@@ -40,12 +39,16 @@ namespace Repository
                 return adapter;
             }
 
-            public override int ItemCount => _contents.Count;
+            public IReadOnlyList<Octokit.RepositoryContent> Contents { get; private set; }
+
+            public event EventHandler<int> ItemClick;
+
+            public override int ItemCount => Contents.Count;
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var githubHolder = (GitHubFileViewHolder)holder;
-                var content = _contents[position];
+                var content = Contents[position];
                 githubHolder.RepoNameView.Text = content.Name;
             }
 
@@ -53,23 +56,27 @@ namespace Repository
             {
                 var inflater = LayoutInflater.From(parent.Context);
                 var view = inflater.Inflate(Resource.Layout.FileView_CardView, parent, attachToRoot: false);
-                return new GitHubFileViewHolder(view);
+                return new GitHubFileViewHolder(view, OnClick);
             }
 
             private async Task RefreshContents()
             {
-                _contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, _currentPath);
+                Contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, _currentPath);
             }
+
+            private void OnClick(int position) => ItemClick?.Invoke(this, position);
         }
 
         private sealed class GitHubFileViewHolder : RecyclerView.ViewHolder
         {
             public TextView RepoNameView { get; }
 
-            internal GitHubFileViewHolder(View view)
+            internal GitHubFileViewHolder(View view, Action<int> onClick)
                 : base(view)
             {
                 RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.FilenameView));
+
+                view.Click += (sender, e) => onClick(AdapterPosition);
             }
         }
 
@@ -81,12 +88,31 @@ namespace Repository
 
             SetContentView(Resource.Layout.FileView);
 
+            _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
+            _fileView.SetAdapter(await GetFileViewAdapter());
+            _fileView.SetLayoutManager(new LinearLayoutManager(this));
+        }
+
+        private void Adapter_ItemClick(object sender, int e)
+        {
+            var adapter = (GitHubFileAdapter)sender;
+            var content = adapter.Contents[e];
+            
+            switch (content.Type)
+            {
+                case Octokit.ContentType.Dir:
+                case Octokit.ContentType.File:
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private async Task<RecyclerView.Adapter> GetFileViewAdapter()
+        {
             long repoId = Intent.Extras.GetLong(Strings.FileView_RepoId);
             var adapter = await GitHubFileAdapter.Create(repoId);
-
-            _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
-            _fileView.SetAdapter(adapter);
-            _fileView.SetLayoutManager(new LinearLayoutManager(this));
+            adapter.ItemClick += Adapter_ItemClick;
+            return adapter;
         }
     }
 }
