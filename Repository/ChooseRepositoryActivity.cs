@@ -77,8 +77,8 @@ namespace Repository
         {
             var adapter = (GitHubRepositoryAdapter)sender;
             var repo = adapter.Repos[e];
-            var intent = new Intent(this, typeof(FileViewActivity));
-            intent.PutExtra(Strings.FileView_RepoId, repo.Id);
+            var intent = new Intent(this, typeof(BrowseFilesActivity));
+            intent.PutExtra(Strings.BrowseFiles_RepoId, repo.Id);
             StartActivity(intent);
         }
 

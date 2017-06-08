@@ -84,7 +84,7 @@
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="Internal\Verify.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="FileViewActivity.cs" />
+    <Compile Include="BrowseFilesActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignInActivity.cs" />
@@ -99,7 +99,7 @@
     <AndroidResource Include="Resources\layout\SignIn.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\FileView.axml">
+    <AndroidResource Include="Resources\layout\BrowseFiles.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\ChooseRepository.axml">
@@ -108,7 +108,7 @@
     <AndroidResource Include="Resources\layout\ChooseRepository_CardView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\FileView_CardView.axml">
+    <AndroidResource Include="Resources\layout\BrowseFiles_CardView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

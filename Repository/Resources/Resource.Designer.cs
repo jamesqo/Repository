@@ -161,23 +161,23 @@ namespace Repository
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050004
-			public const int FileView = 2131034116;
+			// aapt resource value: 0x7f050001
+			public const int FileView = 2131034113;
 			
-			// aapt resource value: 0x7f050005
-			public const int FilenameView = 2131034117;
+			// aapt resource value: 0x7f050002
+			public const int FilenameView = 2131034114;
 			
 			// aapt resource value: 0x7f050006
 			public const int GetStartedButton = 2131034118;
 			
-			// aapt resource value: 0x7f050001
-			public const int GitHubButton = 2131034113;
-			
 			// aapt resource value: 0x7f050003
-			public const int RepoNameView = 2131034115;
+			public const int GitHubButton = 2131034115;
 			
-			// aapt resource value: 0x7f050002
-			public const int RepoView = 2131034114;
+			// aapt resource value: 0x7f050005
+			public const int RepoNameView = 2131034117;
+			
+			// aapt resource value: 0x7f050004
+			public const int RepoView = 2131034116;
 			
 			// aapt resource value: 0x7f050007
 			public const int SignInWebView = 2131034119;
@@ -199,19 +199,19 @@ namespace Repository
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int ChooseProvider = 2130903040;
+			public const int BrowseFiles = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int ChooseRepository = 2130903041;
+			public const int BrowseFiles_CardView = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int ChooseRepository_CardView = 2130903042;
+			public const int ChooseProvider = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int FileView = 2130903043;
+			public const int ChooseRepository = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int FileView_CardView = 2130903044;
+			public const int ChooseRepository_CardView = 2130903044;
 			
 			// aapt resource value: 0x7f030005
 			public const int Main = 2130903045;

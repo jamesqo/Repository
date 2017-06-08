@@ -16,7 +16,7 @@ namespace Repository.Internal
     {
         public const string AppName = "Repository";
 
-        public const string FileView_RepoId = nameof(FileView_RepoId);
+        public const string BrowseFiles_RepoId = nameof(BrowseFiles_RepoId);
 
         public const string SignIn_Url = nameof(SignIn_Url);
 

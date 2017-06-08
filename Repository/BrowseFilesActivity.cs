@@ -18,7 +18,7 @@ namespace Repository
     // TODO: "Select a File" instead?
     // TODO: Put the current directory path in tiny text below the activity label?
     [Activity(Label = "File View")]
-    public class FileViewActivity : Activity
+    public class BrowseFilesActivity : Activity
     {
         private sealed class GitHubFileAdapter : RecyclerView.Adapter
         {
@@ -55,7 +55,7 @@ namespace Repository
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
                 var inflater = LayoutInflater.From(parent.Context);
-                var view = inflater.Inflate(Resource.Layout.FileView_CardView, parent, attachToRoot: false);
+                var view = inflater.Inflate(Resource.Layout.BrowseFiles_CardView, parent, attachToRoot: false);
                 return new GitHubFileViewHolder(view, OnClick);
             }
 
@@ -86,7 +86,7 @@ namespace Repository
         {
             base.OnCreate(savedInstanceState);
 
-            SetContentView(Resource.Layout.FileView);
+            SetContentView(Resource.Layout.BrowseFiles);
 
             _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
             _fileView.SetAdapter(await GetFileViewAdapter());
@@ -109,7 +109,7 @@ namespace Repository
 
         private async Task<RecyclerView.Adapter> GetFileViewAdapter()
         {
-            long repoId = Intent.Extras.GetLong(Strings.FileView_RepoId);
+            long repoId = Intent.Extras.GetLong(Strings.BrowseFiles_RepoId);
             var adapter = await GitHubFileAdapter.Create(repoId);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
