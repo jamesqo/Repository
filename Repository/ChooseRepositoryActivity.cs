@@ -54,7 +54,7 @@ namespace Repository
             internal GitHubRepositoryViewHolder(View view, Action<int> onClick)
                 : base(view)
             {
-                RepoNameView = view.FindViewById<TextView>(Resource.Id.RepoNameView);
+                RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.RepoNameView));
 
                 view.Click += (sender, e) => onClick(AdapterPosition);
             }
@@ -81,7 +81,7 @@ namespace Repository
             {
                 var repo = repos[e];
                 var intent = new Intent(this, typeof(FileViewActivity));
-                intent.PutExtra(Strings.FileView_Repo, repo.Name);
+                intent.PutExtra(Strings.FileView_RepoId, repo.Id);
                 StartActivity(intent);
             }
 

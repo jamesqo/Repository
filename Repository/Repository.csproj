@@ -105,7 +105,10 @@
     <AndroidResource Include="Resources\layout\ChooseRepository.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\ChooseRepository_Layout.axml">
+    <AndroidResource Include="Resources\layout\ChooseRepository_CardView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\FileView_CardView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
