@@ -18,7 +18,7 @@ namespace Repository
     {
         private static string CallbackDomain { get; } = "google.com";
 
-        private static string GitHubSignInUrl { get; } = $"https://github.com/login/oauth/authorize?scope=repo&client_id={Credentials.ClientId}";
+        private static string GitHubSignInUrl { get; } = $"https://github.com/login/oauth/authorize?scope=repo&client_id={Creds.ClientId}";
 
         private Button _githubButton;
 
