@@ -16,6 +16,8 @@ namespace Repository.Internal
     {
         public const string AppName = "Repository";
 
+        public const string FileView_Repo = nameof(FileView_Repo);
+
         public const string SignIn_Url = nameof(SignIn_Url);
 
         public const string SignIn_CallbackDomain = nameof(SignIn_CallbackDomain);

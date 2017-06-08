@@ -27,6 +27,8 @@ namespace Repository
                 _repos = NotNull(repos);
             }
 
+            public event EventHandler<int> ItemClick;
+
             public override int ItemCount => _repos.Count;
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -38,19 +40,23 @@ namespace Repository
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
                 var inflater = LayoutInflater.From(parent.Context);
-                var view = inflater.Inflate(Resource.Layout.ChooseRepository_Layout, parent, attachToRoot: false);
-                return new GitHubRepositoryViewHolder(view);
+                var view = inflater.Inflate(Resource.Layout.ChooseRepository_CardView, parent, attachToRoot: false);
+                return new GitHubRepositoryViewHolder(view, OnClick);
             }
+
+            private void OnClick(int position) => ItemClick?.Invoke(this, position);
         }
 
         private sealed class GitHubRepositoryViewHolder : RecyclerView.ViewHolder
         {
             public TextView RepoNameView { get; }
 
-            internal GitHubRepositoryViewHolder(View view)
+            internal GitHubRepositoryViewHolder(View view, Action<int> onClick)
                 : base(view)
             {
                 RepoNameView = view.FindViewById<TextView>(Resource.Id.RepoNameView);
+
+                view.Click += (sender, e) => onClick(AdapterPosition);
             }
         }
 
@@ -70,7 +76,18 @@ namespace Repository
         private async Task<RecyclerView.Adapter> GetRepoViewAdapter()
         {
             var repos = await GitHub.Client.Repository.GetAllForCurrent();
-            return new GitHubRepositoryAdapter(repos);
+
+            void Adapter_ItemClick(object sender, int e)
+            {
+                var repo = repos[e];
+                var intent = new Intent(this, typeof(FileViewActivity));
+                intent.PutExtra(Strings.FileView_Repo, repo.Name);
+                StartActivity(intent);
+            }
+
+            var adapter = new GitHubRepositoryAdapter(repos);
+            adapter.ItemClick += Adapter_ItemClick;
+            return adapter;
         }
     }
 }
