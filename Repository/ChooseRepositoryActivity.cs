@@ -20,21 +20,21 @@ namespace Repository
     {
         private sealed class GitHubRepositoryAdapter : RecyclerView.Adapter
         {
-            private readonly IReadOnlyList<Octokit.Repository> _repos;
-
             internal GitHubRepositoryAdapter(IReadOnlyList<Octokit.Repository> repos)
             {
-                _repos = NotNull(repos);
+                Repos = NotNull(repos);
             }
 
             public event EventHandler<int> ItemClick;
 
-            public override int ItemCount => _repos.Count;
+            public override int ItemCount => Repos.Count;
+
+            public IReadOnlyList<Octokit.Repository> Repos { get; }
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var githubHolder = (GitHubRepositoryViewHolder)holder;
-                githubHolder.RepoNameView.Text = _repos[position].Name;
+                githubHolder.RepoNameView.Text = Repos[position].Name;
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -73,18 +73,18 @@ namespace Repository
             _repoView.SetLayoutManager(new LinearLayoutManager(this));
         }
 
+        private void Adapter_ItemClick(object sender, int e)
+        {
+            var adapter = (GitHubRepositoryAdapter)sender;
+            var repo = adapter.Repos[e];
+            var intent = new Intent(this, typeof(FileViewActivity));
+            intent.PutExtra(Strings.FileView_RepoId, repo.Id);
+            StartActivity(intent);
+        }
+
         private async Task<RecyclerView.Adapter> GetRepoViewAdapter()
         {
             var repos = await GitHub.Client.Repository.GetAllForCurrent();
-
-            void Adapter_ItemClick(object sender, int e)
-            {
-                var repo = repos[e];
-                var intent = new Intent(this, typeof(FileViewActivity));
-                intent.PutExtra(Strings.FileView_RepoId, repo.Id);
-                StartActivity(intent);
-            }
-
             var adapter = new GitHubRepositoryAdapter(repos);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
