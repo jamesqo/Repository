@@ -12,6 +12,8 @@ using Android.Widget;
 
 namespace Repository
 {
+    // TODO: "Select a File" instead?
+    // TODO: Put the current directory path in tiny text below the activity label?
     [Activity(Label = "File View")]
     public class FileViewActivity : Activity
     {
