@@ -45,6 +45,8 @@ namespace Repository
             SetContentView(Resource.Layout.SignIn);
 
             _signInWebView = FindViewById<WebView>(Resource.Id.SignInWebView);
+            // GitHub needs JS enabled to un-grey the authorization button
+            _signInWebView.Settings.JavaScriptEnabled = true;
 
             var url = NotNull(Intent.Extras.GetString(Strings.SignIn_Url));
             _signInWebView.LoadUrl(url);
