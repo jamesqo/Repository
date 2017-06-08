@@ -16,7 +16,7 @@ namespace Repository
     [Activity(Label = "Choose a Provider")]
     public class ChooseProviderActivity : Activity
     {
-        private static string CallbackUrl { get; } = "http://google.com";
+        private static string CallbackDomain { get; } = "google.com";
 
         private static string GitHubSignInUrl { get; } = $"https://github.com/login/oauth/authorize?scope=repo&client_id={Credentials.ClientId}";
 
@@ -36,7 +36,7 @@ namespace Repository
         {
             var intent = new Intent(this, typeof(SignInActivity));
             intent.PutExtra(Strings.SignIn_Url, GitHubSignInUrl);
-            intent.PutExtra(Strings.SignIn_CallbackUrl, CallbackUrl);
+            intent.PutExtra(Strings.SignIn_CallbackDomain, CallbackDomain);
             StartActivity(intent);
         }
     }

@@ -16,6 +16,6 @@ namespace Repository.Internal
     {
         public static string SignIn_Url { get; } = nameof(SignIn_Url);
 
-        public static string SignIn_CallbackUrl { get; } = nameof(SignIn_CallbackUrl);
+        public static string SignIn_CallbackDomain { get; } = nameof(SignIn_CallbackDomain);
     }
 }

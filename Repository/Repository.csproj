@@ -47,8 +47,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
+    <Reference Include="Octokit, Version=0.24.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Octokit.0.24.1-alpha0001\lib\netstandard1.1\Octokit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,6 +61,7 @@
     <Compile Include="ChooseProviderActivity.cs" />
     <Compile Include="Internal\Credentials.cs" />
     <Compile Include="Internal\Strings.cs" />
+    <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="Internal\Verify.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -63,6 +69,7 @@
     <Compile Include="SignInActivity.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\ChooseProvider.axml">
