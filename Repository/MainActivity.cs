@@ -3,10 +3,11 @@ using Android.Widget;
 using Android.OS;
 using System;
 using Android.Content;
+using Repository.Internal;
 
 namespace Repository
 {
-    [Activity(Label = "Repository", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = Strings.AppName, MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
         private Button _getStartedButton;

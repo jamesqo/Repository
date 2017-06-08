@@ -11,7 +11,6 @@ using Android.Runtime;
 using Android.Views;
 using Android.Webkit;
 using Android.Widget;
-using Octokit;
 using Repository.Internal;
 using static Repository.Internal.Verify;
 
@@ -65,8 +64,8 @@ namespace Repository
 
         private void OnAccessTokenReceived(string accessToken)
         {
-            var intent = new Intent(this, typeof());
-            intent.PutExtra();
+            var intent = new Intent(this, typeof(FileViewActivity));
+            intent.PutExtra(Strings.FileView_AccessToken, accessToken);
             StartActivity(intent);
         }
 
@@ -78,6 +77,9 @@ namespace Repository
 
         private static async Task<string> RetrieveAccessToken(string code)
         {
+            var request = new Octokit.OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
+            var oauthToken = await GitHub.Client.Oauth.CreateAccessToken(request);
+            return oauthToken.AccessToken;
         }
     }
 }

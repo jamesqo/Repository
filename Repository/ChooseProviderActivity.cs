@@ -18,8 +18,6 @@ namespace Repository
     {
         private static string CallbackDomain { get; } = "google.com";
 
-        private static string GitHubSignInUrl { get; } = $"https://github.com/login/oauth/authorize?scope=repo&client_id={Creds.ClientId}";
-
         private Button _githubButton;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -35,9 +33,18 @@ namespace Repository
         private void GitHubButton_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(SignInActivity));
-            intent.PutExtra(Strings.SignIn_Url, GitHubSignInUrl);
+            intent.PutExtra(Strings.SignIn_Url, GetGitHubLoginUrl());
             intent.PutExtra(Strings.SignIn_CallbackDomain, CallbackDomain);
             StartActivity(intent);
+        }
+
+        private static string GetGitHubLoginUrl()
+        {
+            var request = new Octokit.OauthLoginRequest(Creds.ClientId)
+            {
+                Scopes = { "repo" }
+            };
+            return GitHub.Client.Oauth.GetGitHubLoginUrl(request).ToString();
         }
     }
 }

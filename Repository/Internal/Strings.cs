@@ -14,8 +14,12 @@ namespace Repository.Internal
 {
     internal static class Strings
     {
-        public static string SignIn_Url { get; } = nameof(SignIn_Url);
+        public const string AppName = "Repository";
 
-        public static string SignIn_CallbackDomain { get; } = nameof(SignIn_CallbackDomain);
+        public const string FileView_AccessToken = nameof(FileView_AccessToken);
+
+        public const string SignIn_Url = nameof(SignIn_Url);
+
+        public const string SignIn_CallbackDomain = nameof(SignIn_CallbackDomain);
     }
 }
