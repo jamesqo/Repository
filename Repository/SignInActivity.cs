@@ -65,7 +65,7 @@ namespace Repository
         private void OnAccessTokenReceived(string accessToken)
         {
             var intent = new Intent(this, typeof(FileViewActivity));
-            intent.PutExtra(Strings.FileView_AccessToken, accessToken);
+            intent.PutExtra(Strings.Global_AccessToken, accessToken);
             StartActivity(intent);
         }
 
