@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="ChooseProviderActivity.cs" />
     <Compile Include="ChooseRepositoryActivity.cs" />
+    <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Strings.cs" />
@@ -109,6 +110,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\BrowseFiles_CardView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\EditFile.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

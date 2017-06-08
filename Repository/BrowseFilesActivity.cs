@@ -24,22 +24,21 @@ namespace Repository
         {
             private readonly long _repoId;
 
-            private string _currentPath;
-
             private GitHubFileAdapter(long repoId)
             {
                 _repoId = repoId;
-                _currentPath = "/";
             }
 
             internal static async Task<GitHubFileAdapter> Create(long repoId)
             {
                 var adapter = new GitHubFileAdapter(repoId);
-                await adapter.RefreshContents();
+                await adapter.UpdateContents("/");
                 return adapter;
             }
 
             public IReadOnlyList<Octokit.RepositoryContent> Contents { get; private set; }
+
+            public string Path { get; private set; }
 
             public event EventHandler<int> ItemClick;
 
@@ -59,9 +58,11 @@ namespace Repository
                 return new GitHubFileViewHolder(view, OnClick);
             }
 
-            private async Task RefreshContents()
+            internal async Task UpdateContents(string path)
             {
-                Contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, _currentPath);
+                Path = path;
+                Contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, path);
+                NotifyDataSetChanged();
             }
 
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
@@ -93,7 +94,7 @@ namespace Repository
             _fileView.SetLayoutManager(new LinearLayoutManager(this));
         }
 
-        private void Adapter_ItemClick(object sender, int e)
+        private async void Adapter_ItemClick(object sender, int e)
         {
             var adapter = (GitHubFileAdapter)sender;
             var content = adapter.Contents[e];
@@ -101,7 +102,13 @@ namespace Repository
             switch (content.Type)
             {
                 case Octokit.ContentType.Dir:
+                    await adapter.UpdateContents(adapter.Path + content.Name + "/");
+                    break;
                 case Octokit.ContentType.File:
+                    var intent = new Intent(this, typeof(EditFileActivity));
+                    intent.PutExtra(Strings.EditFile_Content, content.Content);
+                    StartActivity(intent);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
