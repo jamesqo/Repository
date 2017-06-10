@@ -48,11 +48,16 @@ namespace Repository
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            void CacheViews()
+            {
+                _signInWebView = FindViewById<WebView>(Resource.Id.SignInWebView);
+            }
+
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.SignIn);
+            CacheViews();
 
-            _signInWebView = FindViewById<WebView>(Resource.Id.SignInWebView);
             // GitHub needs JS enabled to un-grey the authorization button
             _signInWebView.Settings.JavaScriptEnabled = true;
 

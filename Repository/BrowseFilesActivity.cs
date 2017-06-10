@@ -133,11 +133,16 @@ namespace Repository
 
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+            void CacheViews()
+            {
+                _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
+            }
+
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.BrowseFiles);
+            CacheViews();
 
-            _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
             _fileView.SetAdapter(await GetFileViewAdapter());
             _fileView.SetLayoutManager(new LinearLayoutManager(this));
         }

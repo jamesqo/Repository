@@ -15,14 +15,18 @@ namespace Repository
 
         protected override void OnCreate(Bundle bundle)
         {
+            void CacheViews()
+            {
+                _getStartedButton = FindViewById<Button>(Resource.Id.GetStartedButton);
+            }
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.OnCreate(bundle);
 
-            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
+            CacheViews();
 
-            _getStartedButton = FindViewById<Button>(Resource.Id.GetStartedButton);
             _getStartedButton.Click += GetStartedButton_Click;
         }
 

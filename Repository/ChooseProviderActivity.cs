@@ -22,11 +22,16 @@ namespace Repository
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            void CacheViews()
+            {
+                _githubButton = FindViewById<Button>(Resource.Id.GitHubButton);
+            }
+
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.ChooseProvider);
+            CacheViews();
 
-            _githubButton = FindViewById<Button>(Resource.Id.GitHubButton);
             _githubButton.Click += GitHubButton_Click;
         }
 

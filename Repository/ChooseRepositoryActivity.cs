@@ -64,11 +64,16 @@ namespace Repository
 
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+            void CacheViews()
+            {
+                _repoView = FindViewById<RecyclerView>(Resource.Id.RepoView);
+            }
+
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.ChooseRepository);
+            CacheViews();
 
-            _repoView = FindViewById<RecyclerView>(Resource.Id.RepoView);
             _repoView.SetAdapter(await GetRepoViewAdapter());
             _repoView.SetLayoutManager(new LinearLayoutManager(this));
         }
