@@ -80,9 +80,25 @@ namespace Repository
 
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
 
+            private IEnumerable<Octokit.RepositoryContent> SortContents(IEnumerable<Octokit.RepositoryContent> contents)
+            {
+                int GetPriority(Octokit.ContentType type)
+                {
+                    switch (type)
+                    {
+                        case Octokit.ContentType.Dir: return 0;
+                        case Octokit.ContentType.File: return 1;
+                        default: throw new NotImplementedException();
+                    }
+                }
+
+                return contents.OrderBy(c => GetPriority(c.Type)).ThenBy(c => c.Name);
+            }
+
             private async Task UpdateContents()
             {
-                _contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, CurrentDirectory);
+                var unsortedContents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, CurrentDirectory);
+                _contents = SortContents(unsortedContents).ToReadOnly();
                 NotifyDataSetChanged();
             }
         }
