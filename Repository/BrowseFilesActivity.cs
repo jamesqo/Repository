@@ -65,6 +65,12 @@ namespace Repository
                 return new GitHubFileViewHolder(view, OnClick);
             }
 
+            internal async Task<Octokit.RepositoryContent> GetFullContent(string filePath)
+            {
+                var fullContents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, filePath);
+                return fullContents.Single();
+            }
+
             internal Task PopDirectory()
             {
                 Assert(!IsAtRoot);
@@ -147,21 +153,34 @@ namespace Repository
             _fileView.SetLayoutManager(new LinearLayoutManager(this));
         }
 
-        private async void Adapter_ItemClick(object sender, int e)
+        private void Adapter_ItemClick(object sender, int e)
         {
             var adapter = (GitHubFileAdapter)sender;
             var content = adapter.Contents[e];
+
+            async void HandleDirectoryClick()
+            {
+                var subdir = adapter.CurrentDirectory + content.Name + "/";
+                await adapter.PushDirectory(subdir);
+            }
+
+            async void HandleFileClick()
+            {
+                var filePath = adapter.CurrentDirectory + content.Name;
+                var fullContent = await adapter.GetFullContent(filePath);
+
+                var intent = new Intent(this, typeof(EditFileActivity));
+                intent.PutExtra(Strings.EditFile_Content, fullContent.Content);
+                StartActivity(intent);
+            }
             
             switch (content.Type)
             {
                 case Octokit.ContentType.Dir:
-                    var subdir = adapter.CurrentDirectory + content.Name + "/";
-                    await adapter.PushDirectory(subdir);
+                    HandleDirectoryClick();
                     break;
                 case Octokit.ContentType.File:
-                    var intent = new Intent(this, typeof(EditFileActivity));
-                    intent.PutExtra(Strings.EditFile_Content, content.Content);
-                    StartActivity(intent);
+                    HandleFileClick();
                     break;
                 default:
                     throw new NotImplementedException();
