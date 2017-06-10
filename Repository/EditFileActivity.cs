@@ -5,8 +5,11 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
+using Android.Text;
+using Android.Text.Style;
 using Android.Views;
 using Android.Widget;
 using Repository.Internal;
@@ -39,7 +42,10 @@ namespace Repository
         private void DisplayContent()
         {
             var content = NotNull(Intent.Extras.GetString(Strings.EditFile_Content));
-            _editor.Text = content;
+            var coloredContent = new SpannableString(content);
+            var colorSpan = new ForegroundColorSpan(Color.Blue);
+            coloredContent.SetSpan(colorSpan, 0, content.Length, SpanTypes.ExclusiveExclusive);
+            _editor.SetText(coloredContent, TextView.BufferType.Editable);
         }
 
         private void HideActionBar()
