@@ -12,6 +12,7 @@ using Android.Views;
 using Android.Widget;
 using Repository.Internal;
 using static Repository.Internal.Verify;
+using static System.Diagnostics.Debug;
 
 namespace Repository
 {
@@ -23,24 +24,30 @@ namespace Repository
         private sealed class GitHubFileAdapter : RecyclerView.Adapter
         {
             private readonly long _repoId;
+            private readonly Stack<string> _directoryStack;
+
+            private IReadOnlyList<Octokit.RepositoryContent> _contents;
 
             private GitHubFileAdapter(long repoId)
             {
                 _repoId = repoId;
+                _directoryStack = new Stack<string>();
             }
 
             internal static async Task<GitHubFileAdapter> Create(long repoId)
             {
                 var adapter = new GitHubFileAdapter(repoId);
-                await adapter.UpdateContents("/");
+                await adapter.PushDirectory("/");
                 return adapter;
             }
 
-            public IReadOnlyList<Octokit.RepositoryContent> Contents { get; private set; }
+            public IReadOnlyList<Octokit.RepositoryContent> Contents => _contents;
 
-            public string Path { get; private set; }
+            public string CurrentDirectory => _directoryStack.Peek();
 
             public event EventHandler<int> ItemClick;
+
+            public bool IsAtRoot => _directoryStack.Count == 1;
 
             public override int ItemCount => Contents.Count;
 
@@ -58,14 +65,26 @@ namespace Repository
                 return new GitHubFileViewHolder(view, OnClick);
             }
 
-            internal async Task UpdateContents(string path)
+            internal Task PopDirectory()
             {
-                Path = path;
-                Contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, path);
-                NotifyDataSetChanged();
+                Assert(!IsAtRoot);
+                _directoryStack.Pop();
+                return UpdateContents();
+            }
+
+            internal Task PushDirectory(string directory)
+            {
+                _directoryStack.Push(directory);
+                return UpdateContents();
             }
 
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
+
+            private async Task UpdateContents()
+            {
+                _contents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, CurrentDirectory);
+                NotifyDataSetChanged();
+            }
         }
 
         private sealed class GitHubFileViewHolder : RecyclerView.ViewHolder
@@ -82,6 +101,19 @@ namespace Repository
         }
 
         private RecyclerView _fileView;
+
+        public override async void OnBackPressed()
+        {
+            var adapter = (GitHubFileAdapter)_fileView.GetAdapter();
+            if (adapter.IsAtRoot)
+            {
+                base.OnBackPressed();
+            }
+            else
+            {
+                await adapter.PopDirectory();
+            }
+        }
 
         protected override async void OnCreate(Bundle savedInstanceState)
         {
@@ -102,7 +134,8 @@ namespace Repository
             switch (content.Type)
             {
                 case Octokit.ContentType.Dir:
-                    await adapter.UpdateContents(adapter.Path + content.Name + "/");
+                    var subdir = adapter.CurrentDirectory + content.Name + "/";
+                    await adapter.PushDirectory(subdir);
                     break;
                 case Octokit.ContentType.File:
                     var intent = new Intent(this, typeof(EditFileActivity));
