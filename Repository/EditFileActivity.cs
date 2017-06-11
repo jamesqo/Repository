@@ -5,15 +5,11 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
-using Android.Text;
-using Android.Text.Style;
 using Android.Views;
 using Android.Widget;
+using Repository.EditorServices.SyntaxHighlighting;
 using Repository.Internal;
-using Repository.Internal.SyntaxHighlighting;
 using static Repository.Internal.Verify;
 
 namespace Repository

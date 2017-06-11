@@ -1,8 +1,8 @@
-﻿namespace Repository.Internal.SyntaxHighlighting
+﻿namespace Repository.EditorServices.SyntaxHighlighting
 {
     // TODO: Introduce SyntaxKind.Plaintext or Generic or None or Default
     // TODO: As for the above, probably nah. SyntaxKind.Class(Declaration), SyntaxKind.Member(Declaration/Invocation)?
-    internal enum SyntaxKind
+    public enum SyntaxKind
     {
         Annotation,
         BooleanLiteral,

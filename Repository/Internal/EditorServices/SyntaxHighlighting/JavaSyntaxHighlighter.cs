@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Text;
 using Antlr4.Runtime;
-using Repository.Internal.SyntaxHighlighting.Grammars;
-using static Repository.Internal.SyntaxHighlighting.Grammars.JavaLexer;
+using Repository.EditorServices.SyntaxHighlighting;
+using Repository.Internal.EditorServices.SyntaxHighlighting.Grammars;
+using static Repository.Internal.EditorServices.SyntaxHighlighting.Grammars.JavaLexer;
 
-namespace Repository.Internal.SyntaxHighlighting
+namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
     internal class JavaSyntaxHighlighter : ISyntaxHighlighter
     {

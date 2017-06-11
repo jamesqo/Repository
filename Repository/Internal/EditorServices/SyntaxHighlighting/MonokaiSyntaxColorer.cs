@@ -3,23 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Android.Graphics;
-using Android.Text.Style;
+using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.Internal.SyntaxHighlighting
+namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
-    internal abstract class SyntaxColorer : ISyntaxStyler
-    {
-        public static SyntaxColorer Default => Monokai;
-
-        public static SyntaxColorer Monokai { get; } = new MonokaiSyntaxColorer();
-
-        public abstract Color BackgroundColor { get; }
-
-        public abstract Color GetForegroundColor(SyntaxKind kind);
-
-        Java.Lang.Object ISyntaxStyler.GetSpan(SyntaxKind kind) => new ForegroundColorSpan(GetForegroundColor(kind));
-    }
-
     internal class MonokaiSyntaxColorer : SyntaxColorer
     {
         public override Color BackgroundColor => Color.Black;

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Android.Text;
 
-namespace Repository.Internal.SyntaxHighlighting
+namespace Repository.EditorServices.SyntaxHighlighting
 {
-    internal interface ISyntaxHighlighter
+    public interface ISyntaxHighlighter
     {
         SpannableString Highlight(string text, ISyntaxStyler styler);
     }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Repository.Internal;
+using Repository.Internal.EditorServices.SyntaxHighlighting;
 
-namespace Repository.Internal.SyntaxHighlighting
+namespace Repository.EditorServices.SyntaxHighlighting
 {
-    internal static class SyntaxHighlighter
+    public static class SyntaxHighlighter
     {
         public static ISyntaxHighlighter Plaintext { get; } = new PlaintextSyntaxHighlighter();
 

@@ -2,16 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Text;
-using Android.Views;
-using Android.Widget;
+using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.Internal.SyntaxHighlighting
+namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
     internal class PlaintextSyntaxHighlighter : ISyntaxHighlighter
     {
