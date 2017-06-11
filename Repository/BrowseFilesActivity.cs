@@ -171,6 +171,7 @@ namespace Repository
 
                 var intent = new Intent(this, typeof(EditFileActivity));
                 intent.PutExtra(Strings.EditFile_Content, fullContent.Content);
+                intent.PutExtra(Strings.EditFile_Path, fullContent.Path);
                 StartActivity(intent);
             }
             

@@ -13,6 +13,7 @@ using Android.Text.Style;
 using Android.Views;
 using Android.Widget;
 using Repository.Internal;
+using Repository.Internal.SyntaxHighlighting;
 using static Repository.Internal.Verify;
 
 namespace Repository
@@ -22,11 +23,20 @@ namespace Repository
     {
         private EditText _editor;
 
+        private string _content;
+        private string _path;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             void CacheViews()
             {
                 _editor = FindViewById<EditText>(Resource.Id.Editor);
+            }
+
+            void CacheExtras()
+            {
+                _content = NotNull(Intent.Extras.GetString(Strings.EditFile_Content));
+                _path = NotNull(Intent.Extras.GetString(Strings.EditFile_Path));
             }
 
             base.OnCreate(savedInstanceState);
@@ -35,17 +45,31 @@ namespace Repository
 
             SetContentView(Resource.Layout.EditFile);
             CacheViews();
+            CacheExtras();
 
             DisplayContent();
         }
 
         private void DisplayContent()
         {
-            var content = NotNull(Intent.Extras.GetString(Strings.EditFile_Content));
-            var coloredContent = new SpannableString(content);
-            var colorSpan = new ForegroundColorSpan(Color.Blue);
-            coloredContent.SetSpan(colorSpan, 0, content.Length, SpanTypes.ExclusiveExclusive);
+            var highlighter = GetSyntaxHighlighter();
+            var coloredContent = highlighter.Highlight(_content, SyntaxColorer.Default);
             _editor.SetText(coloredContent, TextView.BufferType.Editable);
+        }
+
+        private ISyntaxHighlighter GetSyntaxHighlighter()
+        {
+            var fileExtension = System.IO.Path.GetExtension(_path).TrimStart('.');
+            var highlighter = SyntaxHighlighter.FromFileExtension(fileExtension);
+
+            if (highlighter != null)
+            {
+                return highlighter;
+            }
+
+            int firstLineEnd = _content.IndexOf('\n');
+            var firstLine = _content.Substring(0, firstLineEnd);
+            return SyntaxHighlighter.FromFirstLine(firstLine) ?? SyntaxHighlighter.Plaintext;
         }
 
         private void HideActionBar()

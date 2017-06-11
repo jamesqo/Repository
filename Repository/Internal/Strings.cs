@@ -20,6 +20,8 @@ namespace Repository.Internal
 
         public const string EditFile_Content = nameof(EditFile_Content);
 
+        public const string EditFile_Path = nameof(EditFile_Path);
+
         public const string SignIn_Url = nameof(SignIn_Url);
 
         public const string SignIn_CallbackDomain = nameof(SignIn_CallbackDomain);
