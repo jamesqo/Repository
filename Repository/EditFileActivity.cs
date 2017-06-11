@@ -47,13 +47,15 @@ namespace Repository
             CacheViews();
             CacheExtras();
 
-            DisplayContent();
+            DisplayContent(SyntaxColorer.Default);
         }
 
-        private void DisplayContent()
+        private void DisplayContent(SyntaxColorer colorer)
         {
+            _editor.SetBackgroundColor(colorer.BackgroundColor);
+
             var highlighter = GetSyntaxHighlighter();
-            var coloredContent = highlighter.Highlight(_content, SyntaxColorer.Default);
+            var coloredContent = highlighter.Highlight(_content, colorer);
             _editor.SetText(coloredContent, TextView.BufferType.Editable);
         }
 

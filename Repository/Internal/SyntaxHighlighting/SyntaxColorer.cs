@@ -13,14 +13,18 @@ namespace Repository.Internal.SyntaxHighlighting
 
         public static SyntaxColorer Monokai { get; } = new MonokaiSyntaxColorer();
 
-        public abstract Color GetColor(SyntaxKind kind);
+        public abstract Color BackgroundColor { get; }
 
-        Java.Lang.Object ISyntaxStyler.GetSpan(SyntaxKind kind) => new ForegroundColorSpan(GetColor(kind));
+        public abstract Color GetForegroundColor(SyntaxKind kind);
+
+        Java.Lang.Object ISyntaxStyler.GetSpan(SyntaxKind kind) => new ForegroundColorSpan(GetForegroundColor(kind));
     }
 
     internal class MonokaiSyntaxColorer : SyntaxColorer
     {
-        public override Color GetColor(SyntaxKind kind)
+        public override Color BackgroundColor => Color.Black;
+
+        public override Color GetForegroundColor(SyntaxKind kind)
         {
             // TODO: Based off image from https://darekkay.com/2014/11/23/monokai-theme-intellij/
             switch (kind)
