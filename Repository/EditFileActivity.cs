@@ -32,7 +32,7 @@ namespace Repository
             void CacheExtras()
             {
                 _content = NotNull(Intent.Extras.GetString(Strings.EditFile_Content));
-                _path = NotNull(Intent.Extras.GetString(Strings.EditFile_Path));
+                _path = NotNullOrEmpty(Intent.Extras.GetString(Strings.EditFile_Path));
             }
 
             base.OnCreate(savedInstanceState);

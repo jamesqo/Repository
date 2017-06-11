@@ -27,8 +27,8 @@ namespace Repository
 
             internal LoginSuccessListener(SignInActivity activity, string callbackDomain)
             {
-                _activity = NotNull(activity);
-                _callbackDomain = NotNull(callbackDomain);
+                _activity = NotNull(activity, nameof(activity));
+                _callbackDomain = NotNullOrEmpty(callbackDomain, nameof(callbackDomain));
             }
 
             public override void OnPageFinished(WebView view, string url)
@@ -61,10 +61,10 @@ namespace Repository
             // GitHub needs JS enabled to un-grey the authorization button
             _signInWebView.Settings.JavaScriptEnabled = true;
 
-            var url = NotNull(Intent.Extras.GetString(Strings.SignIn_Url));
+            var url = NotNullOrEmpty(Intent.Extras.GetString(Strings.SignIn_Url));
             _signInWebView.LoadUrl(url);
 
-            var callbackDomain = NotNull(Intent.Extras.GetString(Strings.SignIn_CallbackDomain));
+            var callbackDomain = NotNullOrEmpty(Intent.Extras.GetString(Strings.SignIn_CallbackDomain));
             _signInWebView.SetWebViewClient(new LoginSuccessListener(this, callbackDomain));
         }
 

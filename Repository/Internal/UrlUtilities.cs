@@ -11,7 +11,7 @@ namespace Repository.Internal
     {
         public static Dictionary<string, string> ParseQueryParameters(string url)
         {
-            Verify.NotNull(url, nameof(url));
+            Verify.NotNullOrEmpty(url, nameof(url));
 
             int index = url.IndexOf('?');
             if (index != -1)
