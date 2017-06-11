@@ -131,12 +131,12 @@ namespace Repository.Internal.SyntaxHighlighting
                     case FloatingPointLiteral:
                         return SyntaxKind.NumericLiteral;
                     case BooleanLiteral:
-                        return SyntaxKind.Keyword;
+                        return SyntaxKind.BooleanLiteral;
                     case CharacterLiteral:
                     case StringLiteral:
                         return SyntaxKind.StringLiteral;
                     case NullLiteral:
-                        return SyntaxKind.Keyword;
+                        return SyntaxKind.NullLiteral;
                     case LPAREN:
                     case RPAREN:
                     case LBRACE:

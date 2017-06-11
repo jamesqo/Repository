@@ -4,10 +4,12 @@
     internal enum SyntaxKind
     {
         Annotation,
+        BooleanLiteral,
         Comment,
         Eof,
         Identifier,
         Keyword,
+        NullLiteral,
         NumericLiteral,
         StringLiteral
     }

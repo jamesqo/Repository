@@ -26,10 +26,12 @@ namespace Repository.Internal.SyntaxHighlighting
             switch (kind)
             {
                 case SyntaxKind.Annotation: return Color.Yellow;
+                case SyntaxKind.BooleanLiteral: return Color.HotPink;
                 case SyntaxKind.Comment: return Color.LightGray;
                 case SyntaxKind.Eof: return default(Color);
                 case SyntaxKind.Identifier: return Color.White;
                 case SyntaxKind.Keyword: return Color.HotPink;
+                case SyntaxKind.NullLiteral: return Color.HotPink;
                 case SyntaxKind.NumericLiteral: return Color.Purple;
                 case SyntaxKind.StringLiteral: return Color.Yellow;
                 default: throw new NotSupportedException();
