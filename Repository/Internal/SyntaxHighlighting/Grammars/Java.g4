@@ -1004,7 +1004,7 @@ ELLIPSIS : '...';
 // Whitespace and comments
 //
 
-WS  :  [ \t\r\n\u000C]+
+WS  :  [ \t\r\n\u000C]+ -> channel(HIDDEN)
     ;
 
 COMMENT
