@@ -45,6 +45,9 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
 
+            public override object VisitConstructorDeclaration([NotNull] ConstructorDeclarationContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.ConstructorDeclaration));
+
             public override object VisitCreatedName([NotNull] CreatedNameContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
 
@@ -54,11 +57,17 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
+            public override object VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.MethodDeclaration));
+
             public override object VisitTerminal(ITerminalNode node)
             {
                 Advance(node, _kindOverride);
                 return null;
             }
+
+            public override object VisitTypeParameter([NotNull] TypeParameterContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
 
             internal SpannableString HighlightText()
             {

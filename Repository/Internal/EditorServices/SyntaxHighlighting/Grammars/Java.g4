@@ -502,7 +502,7 @@ expression
     |   expression '.' 'super' superSuffix
     |   expression '.' explicitGenericInvocation
     |   expression '[' expression ']'
-    |   expression '(' expressionList? ')'
+    |   expression arguments
     |   'new' creator
     |   '(' typeType ')' expression
     |   expression ('++' | '--')
