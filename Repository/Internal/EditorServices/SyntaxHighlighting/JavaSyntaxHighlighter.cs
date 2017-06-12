@@ -33,37 +33,26 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             }
 
             public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
-            {
-                int childCount = context.ChildCount;
-                for (int i = 0; i < childCount; i++)
-                {
-                    var child = context.GetChild(i);
-                    switch (child)
-                    {
-                        case QualifiedNameContext _:
-                            VisitWithKindOverride(SyntaxKind.Annotation, child);
-                            break;
-                        default:
-                            Visit(child);
-                            break;
-                    }
-                }
-
-                return null;
-            }
+                => VisitChildren(context, TargetedKindOverride.Create<QualifiedNameContext>(SyntaxKind.Annotation));
 
             // TODO: Do annotation type declarations, which use '@interface', need special treatment?
-            public override object VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context) => VisitTypeDeclaration(context);
+            public override object VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
-            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context) => VisitTypeDeclaration(context);
+            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
-            public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context) => VisitTypeIdentifier(context);
+            public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
 
-            public override object VisitCreatedName([NotNull] CreatedNameContext context) => VisitTypeIdentifier(context);
+            public override object VisitCreatedName([NotNull] CreatedNameContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
 
-            public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context) => VisitTypeDeclaration(context);
+            public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
-            public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context) => VisitTypeDeclaration(context);
+            public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
             public override object VisitTerminal(ITerminalNode node)
             {
@@ -267,47 +256,26 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 Surpass(token, kind);
             }
 
-            private object VisitTypeDeclaration(ParserRuleContext context)
+            private object VisitChildren(ParserRuleContext context, TargetedKindOverride kindOverride)
             {
                 int childCount = context.ChildCount;
                 for (int i = 0; i < childCount; i++)
                 {
                     var child = context.GetChild(i);
-                    switch (child)
+                    if (child.GetType() == kindOverride.TargetType)
                     {
-                        case ITerminalNode _:
-                            VisitWithKindOverride(SyntaxKind.TypeDeclaration, child);
-                            break;
-                        default:
-                            Visit(child);
-                            break;
+                        VisitWithKindOverride(child, kindOverride.Kind);
+                    }
+                    else
+                    {
+                        Visit(child);
                     }
                 }
 
                 return null;
             }
 
-            private object VisitTypeIdentifier(ParserRuleContext context)
-            {
-                int childCount = context.ChildCount;
-                for (int i = 0; i < childCount; i++)
-                {
-                    var child = context.GetChild(i);
-                    switch (child)
-                    {
-                        case ITerminalNode _:
-                            VisitWithKindOverride(SyntaxKind.TypeIdentifier, child);
-                            break;
-                        default:
-                            Visit(child);
-                            break;
-                    }
-                }
-
-                return null;
-            }
-
-            private void VisitWithKindOverride(SyntaxKind kindOverride, IParseTree tree)
+            private void VisitWithKindOverride(IParseTree tree, SyntaxKind kindOverride)
             {
                 var original = _kindOverride;
                 _kindOverride = kindOverride;
