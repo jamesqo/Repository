@@ -265,35 +265,21 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 Surpass(token, kind);
             }
 
-            private object VisitKeepKindOverride(ParserRuleContext context, bool mayHaveTerminalChildren = true)
+            private object VisitKeepKindOverride(ParserRuleContext context)
             {
                 var kindOverride = _kindOverride;
-
-                bool TryHandleTerminal(IParseTree child)
-                {
-                    if (mayHaveTerminalChildren)
-                    {
-                        if (child is ITerminalNode node)
-                        {
-                            Advance(node, kindOverride);
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        Debug.Assert(!(child is ITerminalNode));
-                    }
-
-                    return false;
-                }
-
                 int childCount = context.ChildCount;
                 for (int i = 0; i < childCount; i++)
                 {
                     var child = context.GetChild(i);
-                    if (!TryHandleTerminal(child))
+                    switch (child)
                     {
-                        Visit(child);
+                        case ITerminalNode node:
+                            Advance(node, kindOverride);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
                     }
                 }
 
