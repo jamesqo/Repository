@@ -24,6 +24,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 case SyntaxKind.Keyword: return Color.HotPink;
                 case SyntaxKind.NullLiteral: return Color.HotPink;
                 case SyntaxKind.NumericLiteral: return Color.Purple;
+                case SyntaxKind.Parenthesis: return Color.White;
                 case SyntaxKind.StringLiteral: return Color.Yellow;
                 default: throw new NotSupportedException();
             }

@@ -3,191 +3,207 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Text;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree;
 using Repository.EditorServices.SyntaxHighlighting;
 using Repository.Internal.EditorServices.SyntaxHighlighting.Grammars;
-using static Repository.Internal.EditorServices.SyntaxHighlighting.Grammars.JavaLexer;
+using static Repository.Internal.EditorServices.SyntaxHighlighting.Grammars.JavaParser;
 
 namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
     internal class JavaSyntaxHighlighter : ISyntaxHighlighter
     {
-        private class CoreHighlighter
+        private class Visitor : JavaBaseVisitor<object>
         {
             private readonly string _rawText;
             private readonly SpannableString _text;
             private readonly ISyntaxStyler _styler;
+            private readonly CommonTokenStream _stream;
 
             private int _index;
+            private int _lastTokenIndex;
+            private SyntaxKind _defaultKind;
 
-            internal CoreHighlighter(string text, ISyntaxStyler styler)
+            internal Visitor(string text, ISyntaxStyler styler)
             {
                 _rawText = text;
                 _text = new SpannableString(text);
                 _styler = styler;
+                _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
+                _lastTokenIndex = -1;
+                _defaultKind = SyntaxKind.None;
             }
 
-            public void HighlightAll(IList<IToken> tokens)
+            public override object VisitAnnotation([NotNull] AnnotationContext context)
             {
-                int tokenCount = tokens.Count;
-
-                for (int i = 0; i < tokenCount; i++)
+                var defaultKind = _defaultKind;
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
                 {
-                    var token = tokens[i];
-                    var kind = GetSyntaxKind(token);
-                    Highlight(token, kind);
-
-                    HandleAnnotationIdentifier(tokens, ref i);
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode node:
+                            Advance(node, defaultKind);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
                 }
+
+                return null;
             }
 
-            private void HandleAnnotationIdentifier(IList<IToken> tokens, ref int index)
+            public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
             {
-                if (tokens[index].Type == AT)
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
                 {
-                    var nextToken = tokens[++index];
-                    Debug.Assert(nextToken.Type == Identifier);
-                    Highlight(nextToken, SyntaxKind.Annotation);
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case QualifiedNameContext qualifiedName:
+                            _defaultKind = SyntaxKind.Annotation;
+                            VisitQualifiedName(qualifiedName);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
                 }
+
+                return null;
             }
 
-            public void Highlight(IToken token, SyntaxKind tokenKind)
+            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context)
             {
-                int count = token.Text.Length;
-                // TODO: Set up handlers for Debug.Assert so this will fire.
-                Debug.Assert(_rawText.Substring(_index, count) == token.Text);
-
-                if (token.Type != AntlrUtilities.Eof)
+                var defaultKind = _defaultKind;
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
                 {
-                    _text.SetSpan(_styler.GetSpan(tokenKind), _index, _index + count, SpanTypes.InclusiveExclusive);
-                    _index += count;
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode node:
+                            Advance(node, defaultKind);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
                 }
+
+                return null;
             }
 
-            public SpannableString HighlightText()
+            public override object VisitClassOrInterfaceModifier([NotNull] ClassOrInterfaceModifierContext context)
             {
-                var tokens = AntlrUtilities.Tokenize(_rawText, input => new JavaLexer(input));
-                HighlightAll(tokens);
+                var defaultKind = _defaultKind;
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode node:
+                            Advance(node, defaultKind);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
+                }
+
+                return null;
+            }
+
+            public override object VisitPackageDeclaration([NotNull] PackageDeclarationContext context)
+            {
+                var defaultKind = _defaultKind;
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode node:
+                            Advance(node, defaultKind);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
+                }
+
+                return null;
+            }
+
+            public override object VisitImportDeclaration([NotNull] ImportDeclarationContext context)
+            {
+                var defaultKind = _defaultKind;
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode node:
+                            Advance(node, defaultKind);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
+                }
+
+                return null;
+            }
+
+            public override object VisitTerminal(ITerminalNode node)
+            {
+                Advance(node, _defaultKind);
+                return null;
+            }
+
+            internal SpannableString HighlightText()
+            {
+                Visit(CreateTree());
                 return _text;
             }
 
-            // TODO: More operators should be highlighted.
-            private static SyntaxKind GetSyntaxKind(IToken token)
+            private void Advance(IToken token, SyntaxKind kind)
+            {
+                Approach(token);
+                Surpass(token, kind);
+            }
+
+            private void Advance(ITerminalNode node, SyntaxKind defaultKind)
+            {
+                var token = node.Symbol;
+                var kind = SuggestKind(token).TryOverride(defaultKind);
+                Advance(token, kind);
+            }
+
+            private void Approach(IToken token)
+            {
+                int startTokenIndex = _lastTokenIndex + 1;
+                int endTokenIndex = token.TokenIndex;
+
+                for (int i = startTokenIndex; i < endTokenIndex; i++)
+                {
+                    SurpassHidden(_stream.Get(i));
+                }
+            }
+
+            private CompilationUnitContext CreateTree() => new JavaParser(_stream).compilationUnit();
+
+            private SyntaxKind GetHiddenKind(IToken token)
             {
                 switch (token.Type)
                 {
-                    case AntlrUtilities.Eof:
-                        return SyntaxKind.Eof;
-                    case ABSTRACT:
-                    case ASSERT:
-                    case BOOLEAN:
-                    case BREAK:
-                    case BYTE:
-                    case CASE:
-                    case CATCH:
-                    case CHAR:
-                    case CLASS:
-                    case CONST:
-                    case CONTINUE:
-                    case DEFAULT:
-                    case DO:
-                    case DOUBLE:
-                    case ELSE:
-                    case ENUM:
-                    case EXTENDS:
-                    case FINAL:
-                    case FINALLY:
-                    case FLOAT:
-                    case FOR:
-                    case IF:
-                    case GOTO:
-                    case IMPLEMENTS:
-                    case IMPORT:
-                    case INSTANCEOF:
-                    case INT:
-                    case INTERFACE:
-                    case LONG:
-                    case NATIVE:
-                    case NEW:
-                    case PACKAGE:
-                    case PRIVATE:
-                    case PROTECTED:
-                    case PUBLIC:
-                    case RETURN:
-                    case SHORT:
-                    case STATIC:
-                    case STRICTFP:
-                    case SUPER:
-                    case SWITCH:
-                    case SYNCHRONIZED:
-                    case THIS:
-                    case THROW:
-                    case THROWS:
-                    case TRANSIENT:
-                    case TRY:
-                    case VOID:
-                    case VOLATILE:
-                    case WHILE:
-                        return SyntaxKind.Keyword;
-                    case IntegerLiteral:
-                    case FloatingPointLiteral:
-                        return SyntaxKind.NumericLiteral;
-                    case BooleanLiteral:
-                        return SyntaxKind.BooleanLiteral;
-                    case CharacterLiteral:
-                    case StringLiteral:
-                        return SyntaxKind.StringLiteral;
-                    case NullLiteral:
-                        return SyntaxKind.NullLiteral;
-                    case LPAREN:
-                    case RPAREN:
-                    case LBRACE:
-                    case RBRACE:
-                    case LBRACK:
-                    case RBRACK:
-                    case SEMI:
-                    case COMMA:
-                    case DOT:
-                    case ASSIGN:
-                    case GT:
-                    case LT:
-                    case BANG:
-                    case TILDE:
-                    case QUESTION:
-                    case COLON:
-                    case EQUAL:
-                    case LE:
-                    case GE:
-                    case NOTEQUAL:
-                    case AND:
-                    case OR:
-                    case INC:
-                    case DEC:
-                    case ADD:
-                    case SUB:
-                    case MUL:
-                    case DIV:
-                    case BITAND:
-                    case BITOR:
-                    case CARET:
-                    case MOD:
-                    case ADD_ASSIGN:
-                    case SUB_ASSIGN:
-                    case MUL_ASSIGN:
-                    case DIV_ASSIGN:
-                    case AND_ASSIGN:
-                    case OR_ASSIGN:
-                    case XOR_ASSIGN:
-                    case MOD_ASSIGN:
-                    case LSHIFT_ASSIGN:
-                    case RSHIFT_ASSIGN:
-                    case URSHIFT_ASSIGN:
-                        return SyntaxKind.Identifier;
-                    case Identifier:
-                        return SyntaxKind.Identifier;
-                    case AT:
-                        return SyntaxKind.Annotation;
-                    case ELLIPSIS:
                     case WS:
+                        // TODO
                         return SyntaxKind.Identifier;
                     case COMMENT:
                     case LINE_COMMENT:
@@ -196,8 +212,36 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                         throw new NotSupportedException();
                 }
             }
+
+            private SyntaxKindSuggestion SuggestKind(IToken token)
+            {
+                // TODO: No need to handle hidden token types below. They'll never get run.
+
+                switch (token.Type)
+                {
+                    case ABSTRACT: return SyntaxKind.Keyword;
+                    // TODO and all.
+                }
+            }
+
+            private void Surpass(IToken token, SyntaxKind kind)
+            {
+                _lastTokenIndex++;
+                Debug.Assert(_lastTokenIndex == token.TokenIndex);
+
+                int count = token.Text.Length;
+                var span = _styler.GetSpan(kind);
+                _text.SetSpan(span, _index, _index + count, SpanTypes.InclusiveExclusive);
+                _index += count;
+            }
+
+            private void SurpassHidden(IToken token)
+            {
+                var kind = GetHiddenKind(token);
+                Surpass(token, kind);
+            }
         }
 
-        public SpannableString Highlight(string text, ISyntaxStyler styler) => new CoreHighlighter(text, styler).HighlightText();
+        public SpannableString Highlight(string text, ISyntaxStyler styler) => new Visitor(text, styler).HighlightText();
     }
 }

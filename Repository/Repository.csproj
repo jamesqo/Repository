@@ -84,11 +84,12 @@
     <Compile Include="ChooseRepositoryActivity.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Creds.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\AbstractParseTreeVisitorExtensions.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\AntlrUtilities.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\MonokaiSyntaxColorer.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Strings.cs" />
-    <Compile Include="Internal\EditorServices\SyntaxHighlighting\AntlrUtilities.cs" />
     <Compile Include="EditorServices\SyntaxHighlighting\ISyntaxStyler.cs" />
     <Compile Include="EditorServices\SyntaxHighlighting\ISyntaxHighlighter.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\JavaSyntaxHighlighter.cs" />
