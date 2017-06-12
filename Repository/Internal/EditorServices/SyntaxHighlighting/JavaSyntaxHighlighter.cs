@@ -32,8 +32,6 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 _kindOverride = SyntaxKind.None;
             }
 
-            public override object VisitAnnotation([NotNull] AnnotationContext context) => VisitSameKindOverride(context);
-
             public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
             {
                 int childCount = context.ChildCount;
@@ -42,9 +40,8 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                     var child = context.GetChild(i);
                     switch (child)
                     {
-                        case QualifiedNameContext qualifiedName:
-                            _kindOverride = SyntaxKind.Annotation;
-                            VisitQualifiedName(qualifiedName);
+                        case QualifiedNameContext _:
+                            VisitWithKindOverride(SyntaxKind.Annotation, child);
                             break;
                         default:
                             Visit(child);
@@ -54,14 +51,6 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
 
                 return null;
             }
-
-            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context) => VisitSameKindOverride(context);
-
-            public override object VisitClassOrInterfaceModifier([NotNull] ClassOrInterfaceModifierContext context) => VisitSameKindOverride(context);
-
-            public override object VisitPackageDeclaration([NotNull] PackageDeclarationContext context) => VisitSameKindOverride(context);
-
-            public override object VisitImportDeclaration([NotNull] ImportDeclarationContext context) => VisitSameKindOverride(context);
 
             public override object VisitTerminal(ITerminalNode node)
             {
@@ -118,6 +107,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
 
             private SyntaxKindSuggestion SuggestKind(IToken token)
             {
+                // TODO: Better SyntaxKinds for certain types.
                 switch (token.Type)
                 {
                     case AntlrConstants.Eof:
@@ -262,25 +252,12 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 Surpass(token, kind);
             }
 
-            private object VisitSameKindOverride(ParserRuleContext context)
+            private void VisitWithKindOverride(SyntaxKind kindOverride, IParseTree tree)
             {
-                var kindOverride = _kindOverride;
-                int childCount = context.ChildCount;
-                for (int i = 0; i < childCount; i++)
-                {
-                    var child = context.GetChild(i);
-                    switch (child)
-                    {
-                        case ITerminalNode node:
-                            Advance(node, kindOverride);
-                            break;
-                        default:
-                            Visit(child);
-                            break;
-                    }
-                }
-
-                return null;
+                var original = _kindOverride;
+                _kindOverride = kindOverride;
+                Visit(tree);
+                _kindOverride = original;
             }
         }
 

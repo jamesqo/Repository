@@ -23,7 +23,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
         public static SyntaxKindSuggestion Overridable(SyntaxKind kind)
         {
             Debug.Assert(kind.IsValid() && !kind.IsNone());
-            return new SyntaxKindSuggestion((int)kind);
+            return new SyntaxKindSuggestion((int)kind | int.MinValue);
         }
 
         public bool IsOverridable => _value < 0;
