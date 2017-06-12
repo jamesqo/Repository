@@ -15,7 +15,6 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
     {
         private class Visitor : JavaBaseVisitor<object>
         {
-            private readonly string _rawText;
             private readonly SpannableString _text;
             private readonly ISyntaxStyler _styler;
             private readonly CommonTokenStream _stream;
@@ -26,7 +25,6 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
 
             internal Visitor(string text, ISyntaxStyler styler)
             {
-                _rawText = text;
                 _text = new SpannableString(text);
                 _styler = styler;
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
@@ -34,7 +32,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 _kindOverride = SyntaxKind.None;
             }
 
-            public override object VisitAnnotation([NotNull] AnnotationContext context) => VisitKeepKindOverride(context);
+            public override object VisitAnnotation([NotNull] AnnotationContext context) => VisitSameKindOverride(context);
 
             public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
             {
@@ -57,13 +55,13 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 return null;
             }
 
-            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context) => VisitKeepKindOverride(context);
+            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context) => VisitSameKindOverride(context);
 
-            public override object VisitClassOrInterfaceModifier([NotNull] ClassOrInterfaceModifierContext context) => VisitKeepKindOverride(context);
+            public override object VisitClassOrInterfaceModifier([NotNull] ClassOrInterfaceModifierContext context) => VisitSameKindOverride(context);
 
-            public override object VisitPackageDeclaration([NotNull] PackageDeclarationContext context) => VisitKeepKindOverride(context);
+            public override object VisitPackageDeclaration([NotNull] PackageDeclarationContext context) => VisitSameKindOverride(context);
 
-            public override object VisitImportDeclaration([NotNull] ImportDeclarationContext context) => VisitKeepKindOverride(context);
+            public override object VisitImportDeclaration([NotNull] ImportDeclarationContext context) => VisitSameKindOverride(context);
 
             public override object VisitTerminal(ITerminalNode node)
             {
@@ -120,8 +118,6 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
 
             private SyntaxKindSuggestion SuggestKind(IToken token)
             {
-                // TODO: No need to handle hidden token types below. They'll never get run.
-
                 switch (token.Type)
                 {
                     case AntlrConstants.Eof:
@@ -237,6 +233,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                         return SyntaxKind.Annotation;
                     case ELLIPSIS:
                         return SyntaxKind.Identifier;
+                    // Hidden token types are intentionally not handled here. GetHiddenKind() takes care of those.
                     default:
                         throw new NotSupportedException();
                 }
@@ -265,7 +262,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 Surpass(token, kind);
             }
 
-            private object VisitKeepKindOverride(ParserRuleContext context)
+            private object VisitSameKindOverride(ParserRuleContext context)
             {
                 var kindOverride = _kindOverride;
                 int childCount = context.ChildCount;
