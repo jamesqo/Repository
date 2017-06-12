@@ -52,6 +52,19 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 return null;
             }
 
+            // TODO: Do annotation type declarations, which use '@interface', need special treatment?
+            public override object VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context) => VisitTypeDeclaration(context);
+
+            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context) => VisitTypeDeclaration(context);
+
+            public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context) => VisitTypeIdentifier(context);
+
+            public override object VisitCreatedName([NotNull] CreatedNameContext context) => VisitTypeIdentifier(context);
+
+            public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context) => VisitTypeDeclaration(context);
+
+            public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context) => VisitTypeDeclaration(context);
+
             public override object VisitTerminal(ITerminalNode node)
             {
                 Advance(node, _kindOverride);
@@ -105,6 +118,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 }
             }
 
+            // TODO: Consider moving into partial class.
             private SyntaxKindSuggestion SuggestKind(IToken token)
             {
                 // TODO: Better SyntaxKinds for certain types.
@@ -175,6 +189,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                         return SyntaxKind.NullLiteral;
                     case LPAREN:
                     case RPAREN:
+                        return SyntaxKind.Parenthesis;
                     case LBRACE:
                     case RBRACE:
                     case LBRACK:
@@ -250,6 +265,46 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             {
                 var kind = GetHiddenKind(token);
                 Surpass(token, kind);
+            }
+
+            private object VisitTypeDeclaration(ParserRuleContext context)
+            {
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode _:
+                            VisitWithKindOverride(SyntaxKind.TypeDeclaration, child);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
+                }
+
+                return null;
+            }
+
+            private object VisitTypeIdentifier(ParserRuleContext context)
+            {
+                int childCount = context.ChildCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    var child = context.GetChild(i);
+                    switch (child)
+                    {
+                        case ITerminalNode _:
+                            VisitWithKindOverride(SyntaxKind.TypeIdentifier, child);
+                            break;
+                        default:
+                            Visit(child);
+                            break;
+                    }
+                }
+
+                return null;
             }
 
             private void VisitWithKindOverride(SyntaxKind kindOverride, IParseTree tree)

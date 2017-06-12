@@ -19,8 +19,10 @@
         NumericLiteral,
         Parenthesis,
         StringLiteral,
+        TypeDeclaration,
+        TypeIdentifier,
 
-        End = StringLiteral
+        End = TypeIdentifier
     }
 
     internal static class SyntaxKindExtensions
