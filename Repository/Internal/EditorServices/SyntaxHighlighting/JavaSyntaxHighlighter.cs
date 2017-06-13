@@ -37,22 +37,22 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
 
             // TODO: Do annotation type declarations, which use '@interface', need special treatment?
             public override object VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
 
             public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
 
             public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeIdentifier));
 
             public override object VisitConstructorDeclaration([NotNull] ConstructorDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.ConstructorDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.ConstructorDeclaration));
 
             public override object VisitCreatedName([NotNull] CreatedNameContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeIdentifier));
 
             public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
 
             public override object VisitExpression([NotNull] ExpressionContext context)
                 => context.HasStub(typeof(NamedMethodInvocationStubContext))
@@ -60,13 +60,13 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 : base.VisitExpression(context);
 
             public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
 
             public override object VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.MethodDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.MethodDeclaration));
 
             private object VisitNamedMethodInvocation(ExpressionContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.MethodIdentifier));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.MethodIdentifier));
 
             public override object VisitTerminal(ITerminalNode node)
             {
@@ -75,11 +75,11 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             }
 
             public override object VisitTypeParameter([NotNull] TypeParameterContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeIdentifier));
 
             // TODO: Affects declarators in try-with-resources and enhanced for loop, not only parameters.
             public override object VisitVariableDeclaratorId([NotNull] VariableDeclaratorIdContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.ParameterDeclaration));
+                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.ParameterDeclaration));
 
             internal SpannableString HighlightText()
             {
@@ -283,7 +283,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 for (int i = 0; i < childCount; i++)
                 {
                     var child = context.GetChild(i);
-                    if (kindOverride.TargetType.IsAssignableFrom(child.GetType()))
+                    if (child.GetType() == kindOverride.TargetType)
                     {
                         VisitWithKindOverride(child, kindOverride.Kind);
                     }

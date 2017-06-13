@@ -13,6 +13,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
     {
         private TargetedKindOverride(Type targetType, SyntaxKind kind)
         {
+            Debug.Assert(targetType.IsClass);
             Debug.Assert(typeof(IParseTree).IsAssignableFrom(targetType));
             Debug.Assert(kind.IsValid());
 
@@ -21,7 +22,9 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
         }
 
         public static TargetedKindOverride Create<TTarget>(SyntaxKind kind)
-            where TTarget : IParseTree
+            // Note: The 'class' constraint does not enforce TTarget isn't an interface.
+            // Do not remove the IsClass assert from the constructor.
+            where TTarget : class, IParseTree
             => new TargetedKindOverride(typeof(TTarget), kind);
 
         public SyntaxKind Kind { get; }
