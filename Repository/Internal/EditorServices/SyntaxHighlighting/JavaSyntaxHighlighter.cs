@@ -54,11 +54,19 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
+            public override object VisitExpression([NotNull] ExpressionContext context)
+                => context.HasStub(typeof(NamedMethodInvocationStubContext))
+                ? VisitNamedMethodInvocation(context)
+                : base.VisitExpression(context);
+
             public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeDeclaration));
 
             public override object VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.MethodDeclaration));
+
+            private object VisitNamedMethodInvocation(ExpressionContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.MethodIdentifier));
 
             public override object VisitTerminal(ITerminalNode node)
             {
@@ -284,6 +292,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 return null;
             }
 
+            // TODO: 'WithKindOverride' necessary?
             private void VisitWithKindOverride(IParseTree tree, SyntaxKind kindOverride)
             {
                 var original = _kindOverride;

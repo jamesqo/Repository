@@ -87,6 +87,7 @@
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\AntlrConstants.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\AntlrUtilities.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\MonokaiSyntaxColorer.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\ParserRuleContextExtensions.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\SyntaxKindSuggestion.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\TargetedKindOverride.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />

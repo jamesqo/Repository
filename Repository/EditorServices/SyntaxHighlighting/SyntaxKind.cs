@@ -17,6 +17,7 @@
         Identifier,
         Keyword,
         MethodDeclaration,
+        MethodIdentifier,
         NullLiteral,
         NumericLiteral,
         Parenthesis, // TODO: Triage

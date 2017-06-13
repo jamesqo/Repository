@@ -502,6 +502,8 @@ expression
     |   expression '.' 'super' superSuffix
     |   expression '.' explicitGenericInvocation
     |   expression '[' expression ']'
+    |   Identifier arguments namedMethodInvocationStub
+    |   expression '.' Identifier arguments namedMethodInvocationStub
     |   expression arguments
     |   'new' creator
     |   '(' typeType ')' expression
@@ -603,6 +605,10 @@ explicitGenericInvocationSuffix
 
 arguments
     :   '(' expressionList? ')'
+    ;
+
+namedMethodInvocationStub
+    :
     ;
 
 // LEXER
