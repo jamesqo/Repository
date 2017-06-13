@@ -113,6 +113,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Repository.Internal.EditorServices.SyntaxHighlighting.Grammars</CustomToolNamespace>
     </Antlr4>
+    <AndroidAsset Include="Assets\fonts\Inconsolata.ttf" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />

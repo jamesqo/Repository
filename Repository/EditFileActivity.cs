@@ -5,6 +5,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -43,7 +44,15 @@ namespace Repository
             CacheViews();
             CacheExtras();
 
+            ConfigureFont();
             DisplayContent(SyntaxColorer.Default);
+        }
+
+        private void ConfigureFont()
+        {
+            // TODO: Cache?
+            var typeface = Typeface.CreateFromAsset(Assets, "fonts/Inconsolata.ttf");
+            _editor.Typeface = typeface;
         }
 
         private void DisplayContent(SyntaxColorer colorer)
