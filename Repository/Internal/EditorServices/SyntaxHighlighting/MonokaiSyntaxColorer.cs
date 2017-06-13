@@ -13,21 +13,25 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
 
         public override Color GetForegroundColor(SyntaxKind kind)
         {
-            // TODO: Based off image from https://darekkay.com/2014/11/23/monokai-theme-intellij/
+            // TODO: Based off VSCode's Monokai theme
             switch (kind)
             {
-                case SyntaxKind.Annotation: return Color.Yellow;
-                case SyntaxKind.BooleanLiteral: return Color.HotPink;
-                case SyntaxKind.Comment: return Color.LightGray;
+                case SyntaxKind.Annotation: return Color.SkyBlue;
+                case SyntaxKind.BooleanLiteral: return Color.Purple;
+                case SyntaxKind.Comment: return Color.Gray;
+                case SyntaxKind.ConstructorDeclaration: return Color.LimeGreen;
                 case SyntaxKind.Eof: return default(Color);
                 case SyntaxKind.Identifier: return Color.White;
                 case SyntaxKind.Keyword: return Color.HotPink;
-                case SyntaxKind.NullLiteral: return Color.HotPink;
+                case SyntaxKind.MethodDeclaration: return Color.LimeGreen;
+                case SyntaxKind.MethodIdentifier: return Color.LimeGreen;
+                case SyntaxKind.NullLiteral: return Color.Purple;
                 case SyntaxKind.NumericLiteral: return Color.Purple;
+                case SyntaxKind.ParameterDeclaration: return Color.Orange;
                 case SyntaxKind.Parenthesis: return Color.White;
-                case SyntaxKind.StringLiteral: return Color.Yellow;
-                case SyntaxKind.TypeDeclaration: return Color.LightGreen;
-                case SyntaxKind.TypeIdentifier: return Color.SkyBlue;
+                case SyntaxKind.StringLiteral: return Color.Beige;
+                case SyntaxKind.TypeDeclaration: return Color.LimeGreen;
+                case SyntaxKind.TypeIdentifier: return Color.LimeGreen;
                 default: throw new NotSupportedException();
             }
         }

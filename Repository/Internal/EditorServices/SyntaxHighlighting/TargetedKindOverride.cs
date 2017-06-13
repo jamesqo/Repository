@@ -8,6 +8,7 @@ using Repository.EditorServices.SyntaxHighlighting;
 
 namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct TargetedKindOverride
     {
         private TargetedKindOverride(Type targetType, SyntaxKind kind)
@@ -26,5 +27,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
         public SyntaxKind Kind { get; }
 
         public Type TargetType { get; }
+
+        private string DebuggerDisplay => $"{nameof(Kind)} = {Kind}, {nameof(TargetType)} = {TargetType}";
     }
 }

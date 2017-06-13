@@ -77,6 +77,10 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             public override object VisitTypeParameter([NotNull] TypeParameterContext context)
                 => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.TypeIdentifier));
 
+            // TODO: Affects declarators in try-with-resources and enhanced for loop, not only parameters.
+            public override object VisitVariableDeclaratorId([NotNull] VariableDeclaratorIdContext context)
+                => VisitChildren(context, TargetedKindOverride.Create<ITerminalNode>(SyntaxKind.ParameterDeclaration));
+
             internal SpannableString HighlightText()
             {
                 Visit(CreateTree());
@@ -279,7 +283,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 for (int i = 0; i < childCount; i++)
                 {
                     var child = context.GetChild(i);
-                    if (child.GetType() == kindOverride.TargetType)
+                    if (kindOverride.TargetType.IsAssignableFrom(child.GetType()))
                     {
                         VisitWithKindOverride(child, kindOverride.Kind);
                     }

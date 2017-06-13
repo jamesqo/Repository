@@ -20,6 +20,7 @@
         MethodIdentifier,
         NullLiteral,
         NumericLiteral,
+        ParameterDeclaration,
         Parenthesis, // TODO: Triage
         StringLiteral,
         TypeDeclaration,

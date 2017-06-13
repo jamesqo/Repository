@@ -7,7 +7,7 @@ using Repository.EditorServices.SyntaxHighlighting;
 
 namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
-    [DebuggerDisplay("Kind = {Kind}, IsOverridable = {IsOverridable}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct SyntaxKindSuggestion
     {
         private readonly int _value;
@@ -29,6 +29,8 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
         public bool IsOverridable => _value < 0;
 
         public SyntaxKind Kind => (SyntaxKind)(_value & int.MaxValue);
+
+        private string DebuggerDisplay => $"{nameof(Kind)} = {Kind}, {nameof(IsOverridable)} = {IsOverridable}";
 
         public SyntaxKind TryOverride(SyntaxKind @override)
         {
