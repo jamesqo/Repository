@@ -101,6 +101,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             private SyntaxReplacement FindTerminalReplacement(ITerminalNode node)
             {
                 var nodePath = NodePath.GetRelativePath(_lastAncestor, node);
+                // The last replacements are the ones that were added most recently, by closer ancestors. Give precedence to those.
                 for (int i = _replacements.Length - 1; i >= 0; i--)
                 {
                     var replacement = _replacements[i];
