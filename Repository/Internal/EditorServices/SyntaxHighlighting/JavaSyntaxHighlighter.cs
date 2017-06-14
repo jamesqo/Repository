@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using Android.Text;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Repository.EditorServices.SyntaxHighlighting;
 using Repository.Internal.EditorServices.SyntaxHighlighting.Grammars;
@@ -11,79 +10,34 @@ using static Repository.Internal.EditorServices.SyntaxHighlighting.Grammars.Java
 
 namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
-    internal class JavaSyntaxHighlighter : ISyntaxHighlighter
+    internal partial class JavaSyntaxHighlighter : ISyntaxHighlighter
     {
-        private class Visitor : JavaBaseVisitor<object>
+        private partial class Visitor : JavaBaseVisitor<object>
         {
             private readonly SpannableString _text;
             private readonly ISyntaxStyler _styler;
             private readonly CommonTokenStream _stream;
+            private readonly CompilationUnitContext _tree;
 
             private int _index;
             private int _lastTokenIndex;
-            private SyntaxKind _kindOverride;
+            private ParserRuleContext _lastAncestor;
+            private ImmutableArray<SyntaxReplacement> _replacements;
 
             internal Visitor(string text, ISyntaxStyler styler)
             {
                 _text = new SpannableString(text);
                 _styler = styler;
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
+                _tree = new JavaParser(_stream).compilationUnit();
                 _lastTokenIndex = -1;
-                _kindOverride = SyntaxKind.None;
+                _lastAncestor = _tree;
+                _replacements = ImmutableArray<SyntaxReplacement>.Empty;
             }
-
-            public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<QualifiedNameContext>(SyntaxKind.Annotation));
-
-            // TODO: Do annotation type declarations, which use '@interface', need special treatment?
-            public override object VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
-
-            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
-
-            public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeIdentifier));
-
-            public override object VisitConstructorDeclaration([NotNull] ConstructorDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.ConstructorDeclaration));
-
-            public override object VisitCreatedName([NotNull] CreatedNameContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeIdentifier));
-
-            public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
-
-            public override object VisitExpression([NotNull] ExpressionContext context)
-                => context.HasStub(typeof(NamedMethodInvocationStubContext))
-                ? VisitNamedMethodInvocation(context)
-                : base.VisitExpression(context);
-
-            public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeDeclaration));
-
-            public override object VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.MethodDeclaration));
-
-            private object VisitNamedMethodInvocation(ExpressionContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.MethodIdentifier));
-
-            public override object VisitTerminal(ITerminalNode node)
-            {
-                Advance(node, _kindOverride);
-                return null;
-            }
-
-            public override object VisitTypeParameter([NotNull] TypeParameterContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.TypeIdentifier));
-
-            // TODO: Affects declarators in try-with-resources and enhanced for loop, not only parameters.
-            public override object VisitVariableDeclaratorId([NotNull] VariableDeclaratorIdContext context)
-                => VisitChildren(context, TargetedKindOverride.Create<TerminalNodeImpl>(SyntaxKind.ParameterDeclaration));
 
             internal SpannableString HighlightText()
             {
-                Visit(CreateTree());
+                Visit(_tree);
                 return _text;
             }
 
@@ -93,10 +47,10 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 Surpass(token, kind);
             }
 
-            private void Advance(ITerminalNode node, SyntaxKind kindOverride)
+            private void Advance(ITerminalNode node, SyntaxKind replacementKind)
             {
                 var token = node.Symbol;
-                var kind = SuggestKind(token).TryOverride(kindOverride);
+                var kind = SuggestKind(token).TryReplace(replacementKind);
                 Advance(token, kind);
             }
 
@@ -111,15 +65,12 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 }
             }
 
-            private CompilationUnitContext CreateTree() => new JavaParser(_stream).compilationUnit();
-
             private SyntaxKind GetHiddenKind(IToken token)
             {
                 switch (token.Type)
                 {
                     case WS:
-                        // TODO
-                        return SyntaxKind.Identifier;
+                        return SyntaxKind.Identifier; // TODO
                     case COMMENT:
                     case LINE_COMMENT:
                         return SyntaxKind.Comment;
@@ -128,8 +79,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 }
             }
 
-            // TODO: Consider moving into partial class.
-            private SyntaxKindSuggestion SuggestKind(IToken token)
+            private SyntaxSuggestion SuggestKind(IToken token)
             {
                 // TODO: Better SyntaxKinds for certain types.
                 switch (token.Type)
@@ -243,7 +193,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                     case URSHIFT_ASSIGN:
                         return SyntaxKind.Identifier;
                     case Identifier:
-                        return SyntaxKindSuggestion.Overridable(SyntaxKind.Identifier);
+                        return SyntaxSuggestion.Replaceable(SyntaxKind.Identifier);
                     case AT:
                         return SyntaxKind.Annotation;
                     case ELLIPSIS:
@@ -275,34 +225,6 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
             {
                 var kind = GetHiddenKind(token);
                 Surpass(token, kind);
-            }
-
-            private object VisitChildren(ParserRuleContext context, TargetedKindOverride kindOverride)
-            {
-                int childCount = context.ChildCount;
-                for (int i = 0; i < childCount; i++)
-                {
-                    var child = context.GetChild(i);
-                    if (child.GetType() == kindOverride.TargetType)
-                    {
-                        VisitWithKindOverride(child, kindOverride.Kind);
-                    }
-                    else
-                    {
-                        Visit(child);
-                    }
-                }
-
-                return null;
-            }
-
-            // TODO: 'WithKindOverride' necessary?
-            private void VisitWithKindOverride(IParseTree tree, SyntaxKind kindOverride)
-            {
-                var original = _kindOverride;
-                _kindOverride = kindOverride;
-                Visit(tree);
-                _kindOverride = original;
             }
         }
 

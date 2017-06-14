@@ -8,7 +8,15 @@ namespace Repository.Internal
 {
     internal static class Verify
     {
-        public static T NotNull<T>(T argument, string argumentName = "argument") where T : class
+        public static void Argument(bool condition, string argumentName = null)
+        {
+            if (!condition)
+            {
+                throw new ArgumentException(null, argumentName);
+            }
+        }
+
+        public static T NotNull<T>(T argument, string argumentName = null) where T : class
         {
             if (argument == null)
             {
@@ -18,7 +26,7 @@ namespace Repository.Internal
             return argument;
         }
 
-        public static TEnumerable NotNullOrEmpty<TEnumerable>(TEnumerable argument, string argumentName = "argument")
+        public static TEnumerable NotNullOrEmpty<TEnumerable>(TEnumerable argument, string argumentName = null)
             where TEnumerable : IEnumerable
         {
             if (argument == null)

@@ -58,6 +58,10 @@
       <HintPath>..\packages\Octokit.0.24.1-alpha0001\lib\netstandard1.1\Octokit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
@@ -86,12 +90,16 @@
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\AntlrConstants.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\AntlrUtilities.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\JavaSyntaxHighlighter.VisitMethods.cs" />
     <Compile Include="Internal\EditorServices\SyntaxHighlighting\MonokaiSyntaxColorer.cs" />
-    <Compile Include="Internal\EditorServices\SyntaxHighlighting\ParserRuleContextExtensions.cs" />
-    <Compile Include="Internal\EditorServices\SyntaxHighlighting\SyntaxKindSuggestion.cs" />
-    <Compile Include="Internal\EditorServices\SyntaxHighlighting\TargetedKindOverride.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\NodePath.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\SyntaxSuggestion.cs" />
+    <Compile Include="Internal\EditorServices\SyntaxHighlighting\SyntaxReplacement.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
+    <Compile Include="Internal\ImmutableArrayExtensions.cs" />
+    <Compile Include="Internal\ImmutableSpan.cs" />
+    <Compile Include="Internal\ImmutableSpanExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="EditorServices\SyntaxHighlighting\ISyntaxStyler.cs" />
     <Compile Include="EditorServices\SyntaxHighlighting\ISyntaxHighlighter.cs" />

@@ -495,33 +495,31 @@ constantExpression
     ;
 
 expression
-    :   primary
-    |   expression '.' Identifier
-    |   expression '.' 'this'
-    |   expression '.' 'new' nonWildcardTypeArguments? innerCreator
-    |   expression '.' 'super' superSuffix
-    |   expression '.' explicitGenericInvocation
-    |   expression '[' expression ']'
-    |   Identifier arguments namedMethodInvocationStub
-    |   expression '.' Identifier arguments namedMethodInvocationStub
-    |   expression arguments
-    |   'new' creator
-    |   '(' typeType ')' expression
-    |   expression ('++' | '--')
-    |   ('+'|'-'|'++'|'--') expression
-    |   ('~'|'!') expression
-    |   expression ('*'|'/'|'%') expression
-    |   expression ('+'|'-') expression
-    |   expression ('<' '<' | '>' '>' '>' | '>' '>') expression
-    |   expression ('<=' | '>=' | '>' | '<') expression
-    |   expression 'instanceof' typeType
-    |   expression ('==' | '!=') expression
-    |   expression '&' expression
-    |   expression '^' expression
-    |   expression '|' expression
-    |   expression '&&' expression
-    |   expression '||' expression
-    |   expression '?' expression ':' expression
+    :   primary # primaryExpression
+    |   expression '.' Identifier # memberAccess
+    |   expression '.' 'this' # expressionDefault
+    |   expression '.' 'new' nonWildcardTypeArguments? innerCreator # expressionDefault
+    |   expression '.' 'super' superSuffix # expressionDefault
+    |   expression '.' explicitGenericInvocation # expressionDefault
+    |   expression '[' expression ']' # expressionDefault
+    |   expression arguments # methodInvocation
+    |   'new' creator # expressionDefault
+    |   '(' typeType ')' expression # expressionDefault
+    |   expression ('++' | '--') # expressionDefault
+    |   ('+'|'-'|'++'|'--') expression # expressionDefault
+    |   ('~'|'!') expression # expressionDefault
+    |   expression ('*'|'/'|'%') expression # expressionDefault
+    |   expression ('+'|'-') expression # expressionDefault
+    |   expression ('<' '<' | '>' '>' '>' | '>' '>') expression # expressionDefault
+    |   expression ('<=' | '>=' | '>' | '<') expression # expressionDefault
+    |   expression 'instanceof' typeType # expressionDefault
+    |   expression ('==' | '!=') expression # expressionDefault
+    |   expression '&' expression # expressionDefault
+    |   expression '^' expression # expressionDefault
+    |   expression '|' expression # expressionDefault
+    |   expression '&&' expression # expressionDefault
+    |   expression '||' expression # expressionDefault
+    |   expression '?' expression ':' expression # expressionDefault
     |   <assoc=right> expression
         (   '='
         |   '+='
@@ -536,7 +534,7 @@ expression
         |   '<<='
         |   '%='
         )
-        expression
+        expression # expressionDefault
     ;
 
 primary
@@ -605,10 +603,6 @@ explicitGenericInvocationSuffix
 
 arguments
     :   '(' expressionList? ')'
-    ;
-
-namedMethodInvocationStub
-    :
     ;
 
 // LEXER
