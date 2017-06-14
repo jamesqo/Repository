@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {
     internal static class AntlrConstants
     {

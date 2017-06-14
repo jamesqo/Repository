@@ -93,8 +93,8 @@
     <Compile Include="EditorServices\Internal\Languages\Java\SyntaxHighlighting\JavaSyntaxHighlighter.VisitMethods.cs" />
     <Compile Include="EditorServices\Internal\SyntaxHighlighting\MonokaiSyntaxColorer.cs" />
     <Compile Include="EditorServices\Internal\SyntaxHighlighting\NodePath.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\SyntaxSuggestion.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\SyntaxReplacement.cs" />
+    <Compile Include="EditorServices\Internal\SyntaxHighlighting\SyntaxSuggestion.cs" />
+    <Compile Include="EditorServices\Internal\SyntaxHighlighting\SyntaxReplacement.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\ImmutableArrayExtensions.cs" />
@@ -119,7 +119,7 @@
   <ItemGroup>
     <Antlr4 Include="EditorServices\Internal\Languages\Java\SyntaxHighlighting\Java.g4">
       <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>Repository.Internal.EditorServices.SyntaxHighlighting.Grammars</CustomToolNamespace>
+      <CustomToolNamespace>Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting</CustomToolNamespace>
     </Antlr4>
     <AndroidAsset Include="Assets\fonts\Inconsolata.ttf" />
     <None Include="packages.config" />

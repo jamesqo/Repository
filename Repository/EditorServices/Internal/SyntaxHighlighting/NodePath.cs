@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Antlr4.Runtime.Tree;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal class NodePath : IEquatable<NodePath>

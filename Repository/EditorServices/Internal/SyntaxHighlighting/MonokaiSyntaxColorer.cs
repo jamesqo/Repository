@@ -5,7 +5,7 @@ using System.Text;
 using Android.Graphics;
 using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {
     internal class MonokaiSyntaxColorer : SyntaxColorer
     {

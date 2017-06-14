@@ -6,7 +6,7 @@ using System.Text;
 using Antlr4.Runtime.Tree;
 using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct SyntaxReplacement

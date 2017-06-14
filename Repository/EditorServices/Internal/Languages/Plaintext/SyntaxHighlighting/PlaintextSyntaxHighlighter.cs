@@ -5,7 +5,7 @@ using System.Text;
 using Android.Text;
 using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Languages.Plaintext.SyntaxHighlighting
 {
     internal class PlaintextSyntaxHighlighter : ISyntaxHighlighter
     {

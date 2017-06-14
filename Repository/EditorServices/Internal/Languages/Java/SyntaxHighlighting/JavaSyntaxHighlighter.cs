@@ -5,10 +5,9 @@ using Android.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Repository.EditorServices.SyntaxHighlighting;
-using Repository.Internal.EditorServices.SyntaxHighlighting.Grammars;
-using static Repository.Internal.EditorServices.SyntaxHighlighting.Grammars.JavaParser;
+using static Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting.JavaParser;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
 {
     internal partial class JavaSyntaxHighlighter : ISyntaxHighlighter
     {

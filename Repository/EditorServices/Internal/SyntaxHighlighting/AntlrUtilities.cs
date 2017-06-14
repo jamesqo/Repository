@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Antlr4.Runtime;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {
     internal static class AntlrUtilities
     {
