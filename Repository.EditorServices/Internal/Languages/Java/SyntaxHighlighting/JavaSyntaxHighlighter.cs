@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Android.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using Repository.EditorServices.Internal.SyntaxHighlighting;
 using Repository.EditorServices.SyntaxHighlighting;
 using static Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting.JavaParser;
 

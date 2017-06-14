@@ -88,26 +88,12 @@
     <Compile Include="ChooseRepositoryActivity.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Creds.cs" />
-    <Compile Include="EditorServices\Internal\SyntaxHighlighting\AntlrConstants.cs" />
-    <Compile Include="EditorServices\Internal\SyntaxHighlighting\AntlrUtilities.cs" />
-    <Compile Include="EditorServices\Internal\Languages\Java\SyntaxHighlighting\JavaSyntaxHighlighter.VisitMethods.cs" />
-    <Compile Include="EditorServices\Internal\SyntaxHighlighting\MonokaiSyntaxColorer.cs" />
-    <Compile Include="EditorServices\Internal\SyntaxHighlighting\NodePath.cs" />
-    <Compile Include="EditorServices\Internal\SyntaxHighlighting\SyntaxSuggestion.cs" />
-    <Compile Include="EditorServices\Internal\SyntaxHighlighting\SyntaxReplacement.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\ImmutableArrayExtensions.cs" />
     <Compile Include="Internal\ImmutableSpan.cs" />
     <Compile Include="Internal\ImmutableSpanExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\ISyntaxStyler.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\ISyntaxHighlighter.cs" />
-    <Compile Include="EditorServices\Internal\Languages\Java\SyntaxHighlighting\JavaSyntaxHighlighter.cs" />
-    <Compile Include="EditorServices\Internal\Languages\Plaintext\SyntaxHighlighting\PlaintextSyntaxHighlighter.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\SyntaxHighlighter.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\SyntaxKind.cs" />
-    <Compile Include="EditorServices\SyntaxHighlighting\SyntaxColorer.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="Internal\Verify.cs" />
     <Compile Include="MainActivity.cs" />
@@ -117,10 +103,6 @@
     <Compile Include="SignInActivity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Antlr4 Include="EditorServices\Internal\Languages\Java\SyntaxHighlighting\Java.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting</CustomToolNamespace>
-    </Antlr4>
     <AndroidAsset Include="Assets\fonts\Inconsolata.ttf" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
