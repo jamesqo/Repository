@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
+    <NoWarn>3021</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting</CustomToolNamespace>
     </Antlr4>
-    <Compile Include="$(IntermediateOutputPath)\*.cs" />
+    <Compile Include="$(IntermediateOutputPath)*.cs" />
   </ItemGroup>
 
   <ItemGroup>

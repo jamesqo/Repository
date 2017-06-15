@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Repository.Common;
 using Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting;
 using Repository.EditorServices.Internal.Languages.Plaintext.SyntaxHighlighting;
-using Repository.Internal;
 
 namespace Repository.EditorServices.SyntaxHighlighting
 {

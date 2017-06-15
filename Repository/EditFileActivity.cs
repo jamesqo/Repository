@@ -11,7 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Repository.EditorServices.SyntaxHighlighting;
 using Repository.Internal;
-using static Repository.Internal.Verify;
+using static Repository.Common.Verify;
 
 namespace Repository
 {
@@ -45,7 +45,7 @@ namespace Repository
             CacheExtras();
 
             ConfigureFont();
-            DisplayContent(SyntaxColorer.Default);
+            DisplayContent(ColorTheme.Default);
         }
 
         private void ConfigureFont()
@@ -55,11 +55,12 @@ namespace Repository
             _editor.Typeface = typeface;
         }
 
-        private void DisplayContent(SyntaxColorer colorer)
+        private void DisplayContent(IColorTheme theme)
         {
-            _editor.SetBackgroundColor(colorer.BackgroundColor);
+            _editor.SetBackgroundColor(theme.BackgroundColor);
 
             var highlighter = GetSyntaxHighlighter();
+            var colorer = SyntaxColorer.Create(_content, theme);
             var coloredContent = highlighter.Highlight(_content, colorer);
             _editor.SetText(coloredContent, TextView.BufferType.Editable);
         }

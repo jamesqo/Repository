@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Repository.Internal
+namespace Repository.Common
 {
-    // TODO: Change namespace.
     public static class Verify
     {
         public static void Argument(bool condition, string argumentName = null)

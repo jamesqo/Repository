@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Antlr4.Runtime.Tree;
-using Repository.Internal;
+using Repository.Common;
 
 namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {

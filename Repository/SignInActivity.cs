@@ -12,7 +12,7 @@ using Android.Views;
 using Android.Webkit;
 using Android.Widget;
 using Repository.Internal;
-using static Repository.Internal.Verify;
+using static Repository.Common.Verify;
 using static System.Diagnostics.Debug;
 
 namespace Repository

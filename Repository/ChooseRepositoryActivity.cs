@@ -11,7 +11,7 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Repository.Internal;
-using static Repository.Internal.Verify;
+using static Repository.Common.Verify;
 
 namespace Repository
 {
