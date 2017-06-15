@@ -47,6 +47,8 @@ namespace Repository.EditorServices.Internal.SyntaxHighlighting
             return Create(builder.ToImmutable());
         }
 
+        public bool IsDefault => _nodeTypes.IsDefault;
+
         public int Length => _nodeTypes.Count;
 
         internal string DebuggerDisplay => string.Join(">", _nodeTypes.Select(GetDisplayName));

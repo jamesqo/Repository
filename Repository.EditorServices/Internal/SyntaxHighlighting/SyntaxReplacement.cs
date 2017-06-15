@@ -16,7 +16,7 @@ namespace Repository.EditorServices.Internal.SyntaxHighlighting
 
         private SyntaxReplacement(NodePath path, SyntaxKind kind)
         {
-            Verify.NotNull(path, nameof(path));
+            Verify.Argument(!path.IsDefault, nameof(path));
             Verify.Argument(kind.IsValid(), nameof(kind));
 
             Path = path;
