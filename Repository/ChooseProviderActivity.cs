@@ -16,8 +16,6 @@ namespace Repository
     [Activity(Label = "Choose a Provider")]
     public class ChooseProviderActivity : Activity
     {
-        private static string CallbackDomain { get; } = "google.com";
-
         private Button _githubButton;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -37,10 +35,15 @@ namespace Repository
 
         private void GitHubButton_Click(object sender, EventArgs e)
         {
-            var intent = new Intent(this, typeof(SignInActivity));
-            intent.PutExtra(Strings.SignIn_Url, GetGitHubLoginUrl());
-            intent.PutExtra(Strings.SignIn_CallbackDomain, CallbackDomain);
-            StartActivity(intent);
+            var token = ReadAccessToken(Strings.SPKey_Global_GitHubAccessToken);
+            if (token != null)
+            {
+                GitHub.Client.Credentials = new Octokit.Credentials(token);
+                SkipSignIn();
+                return;
+            }
+
+            StartSignIn(url: GetGitHubLoginUrl(), callbackDomain: "google.com");
         }
 
         private static string GetGitHubLoginUrl()
@@ -50,6 +53,26 @@ namespace Repository
                 Scopes = { "repo" }
             };
             return GitHub.Client.Oauth.GetGitHubLoginUrl(request).ToString();
+        }
+
+        private string ReadAccessToken(string key)
+        {
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_Global_AccessTokens, FileCreationMode.Private);
+            return prefs.GetString(key, defValue: null);
+        }
+
+        private void StartSignIn(string url, string callbackDomain)
+        {
+            var intent = new Intent(this, typeof(SignInActivity));
+            intent.PutExtra(Strings.Extra_SignIn_Url, url);
+            intent.PutExtra(Strings.Extra_SignIn_CallbackDomain, callbackDomain);
+            StartActivity(intent);
+        }
+
+        private void SkipSignIn()
+        {
+            var intent = new Intent(this, typeof(ChooseRepositoryActivity));
+            StartActivity(intent);
         }
     }
 }

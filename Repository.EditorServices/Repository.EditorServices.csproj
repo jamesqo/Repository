@@ -15,7 +15,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting</CustomToolNamespace>
     </Antlr4>
-    <Compile Include="$(IntermediateOutputPath)*.cs" />
+    <Compile Include="$(IntermediateOutputPath)Java*.cs" />
   </ItemGroup>
 
   <ItemGroup>

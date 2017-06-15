@@ -169,12 +169,9 @@ namespace Repository
                 var filePath = adapter.CurrentDirectory + content.Name;
                 var fullContent = await adapter.GetFullContent(filePath);
 
-                var intent = new Intent(this, typeof(EditFileActivity));
-                intent.PutExtra(Strings.EditFile_Content, fullContent.Content);
-                intent.PutExtra(Strings.EditFile_Path, fullContent.Path);
-                StartActivity(intent);
+                StartEditFile(content: fullContent.Content, path: filePath);
             }
-            
+
             switch (content.Type)
             {
                 case Octokit.ContentType.Dir:
@@ -190,10 +187,18 @@ namespace Repository
 
         private async Task<RecyclerView.Adapter> GetFileViewAdapter()
         {
-            long repoId = Intent.Extras.GetLong(Strings.BrowseFiles_RepoId);
+            long repoId = Intent.Extras.GetLong(Strings.Extra_BrowseFiles_RepoId);
             var adapter = await GitHubFileAdapter.Create(repoId);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
+        }
+
+        private void StartEditFile(string content, string path)
+        {
+            var intent = new Intent(this, typeof(EditFileActivity));
+            intent.PutExtra(Strings.Extra_EditFile_Content, content);
+            intent.PutExtra(Strings.Extra_EditFile_Path, path);
+            StartActivity(intent);
         }
     }
 }

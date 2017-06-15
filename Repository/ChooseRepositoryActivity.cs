@@ -83,9 +83,7 @@ namespace Repository
         {
             var adapter = (GitHubRepositoryAdapter)sender;
             var repo = adapter.Repos[e];
-            var intent = new Intent(this, typeof(BrowseFilesActivity));
-            intent.PutExtra(Strings.BrowseFiles_RepoId, repo.Id);
-            StartActivity(intent);
+            StartBrowseFiles(repoId: repo.Id);
         }
 
         private async Task<RecyclerView.Adapter> GetRepoViewAdapter()
@@ -94,6 +92,13 @@ namespace Repository
             var adapter = new GitHubRepositoryAdapter(repos);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
+        }
+
+        private void StartBrowseFiles(long repoId)
+        {
+            var intent = new Intent(this, typeof(BrowseFilesActivity));
+            intent.PutExtra(Strings.Extra_BrowseFiles_RepoId, repoId);
+            StartActivity(intent);
         }
     }
 }

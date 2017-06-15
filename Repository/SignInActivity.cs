@@ -39,7 +39,7 @@ namespace Repository
                     Assert(queryParameters.Count == 1);
                     string code = queryParameters["code"];
 
-                    _activity.OnSessionCodeReceived(code);
+                    _activity.HandleSessionCode(code);
                 }
             }
         }
@@ -48,6 +48,8 @@ namespace Repository
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Assert(GitHub.Client.Credentials == null, "Why bother coming here?");
+
             void CacheViews()
             {
                 _signInWebView = FindViewById<WebView>(Resource.Id.SignInWebView);
@@ -61,26 +63,41 @@ namespace Repository
             // GitHub needs JS enabled to un-grey the authorization button
             _signInWebView.Settings.JavaScriptEnabled = true;
 
-            var url = NotNullOrEmpty(Intent.Extras.GetString(Strings.SignIn_Url));
+            var url = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_Url));
             _signInWebView.LoadUrl(url);
 
-            var callbackDomain = NotNullOrEmpty(Intent.Extras.GetString(Strings.SignIn_CallbackDomain));
+            var callbackDomain = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_CallbackDomain));
             _signInWebView.SetWebViewClient(new LoginSuccessListener(this, callbackDomain));
         }
 
-        private async void OnSessionCodeReceived(string code)
+        private async void HandleSessionCode(string code)
         {
-            GitHub.Client.Credentials = await GetCredentials(code);
+            var token = await RequestAccessToken(code);
+            Argument(WriteAccessToken(key: Strings.SPKey_Global_GitHubAccessToken, token: token));
+            GitHub.Client.Credentials = new Octokit.Credentials(token);
 
+            StartChooseRepository();
+        }
+
+        private static async Task<string> RequestAccessToken(string code)
+        {
+            var request = new Octokit.OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
+            var oauthToken = await GitHub.Client.Oauth.CreateAccessToken(request);
+            return oauthToken.AccessToken;
+        }
+
+        private void StartChooseRepository()
+        {
             var intent = new Intent(this, typeof(ChooseRepositoryActivity));
             StartActivity(intent);
         }
 
-        private static async Task<Octokit.Credentials> GetCredentials(string code)
+        private bool WriteAccessToken(string key, string token)
         {
-            var request = new Octokit.OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
-            var oauthToken = await GitHub.Client.Oauth.CreateAccessToken(request);
-            return new Octokit.Credentials(oauthToken.AccessToken);
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_Global_AccessTokens, FileCreationMode.Private);
+            var editor = prefs.Edit();
+            editor.PutString(key, token);
+            return editor.Commit();
         }
     }
 }
