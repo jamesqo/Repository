@@ -20,6 +20,7 @@
         MethodIdentifier,
         NullLiteral,
         NumericLiteral,
+        Operator,
         ParameterDeclaration,
         Plaintext,
         StringLiteral,

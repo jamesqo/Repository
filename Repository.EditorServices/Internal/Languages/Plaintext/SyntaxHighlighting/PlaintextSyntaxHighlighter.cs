@@ -10,7 +10,7 @@ namespace Repository.EditorServices.Internal.Languages.Plaintext.SyntaxHighlight
     {
         public TResult Highlight<TResult>(string text, ISyntaxColorer<TResult> colorer)
         {
-            colorer.Color(SyntaxKind.Identifier, 0, text.Length);
+            colorer.Color(SyntaxKind.Plaintext, 0, text.Length);
             return colorer.Result;
         }
     }

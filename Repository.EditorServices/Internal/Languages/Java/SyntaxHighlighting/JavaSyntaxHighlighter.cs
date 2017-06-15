@@ -63,7 +63,7 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                 switch (token.Type)
                 {
                     case WS:
-                        return SyntaxKind.Identifier; // TODO
+                        return SyntaxKind.Plaintext;
                     case COMMENT:
                     case LINE_COMMENT:
                         return SyntaxKind.Comment;
@@ -149,12 +149,19 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                     case SEMI:
                     case COMMA:
                     case DOT:
+                        return SyntaxKind.Plaintext;
                     case ASSIGN:
+                        return SyntaxKind.Operator;
                     case GT:
                     case LT:
+                        // These tokens should not be considered operators in generic types or methods.
+                        return SyntaxSuggestion.Replaceable(SyntaxKind.Operator);
                     case BANG:
                     case TILDE:
+                        return SyntaxKind.Operator;
                     case QUESTION:
+                        // ? is not an operator in '? extends ...' in generics.
+                        return SyntaxSuggestion.Replaceable(SyntaxKind.Operator);
                     case COLON:
                     case EQUAL:
                     case LE:
@@ -183,7 +190,7 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                     case LSHIFT_ASSIGN:
                     case RSHIFT_ASSIGN:
                     case URSHIFT_ASSIGN:
-                        return SyntaxKind.Plaintext;
+                        return SyntaxKind.Operator;
                     case Identifier:
                         return SyntaxSuggestion.Replaceable(SyntaxKind.Identifier);
                     case AT:

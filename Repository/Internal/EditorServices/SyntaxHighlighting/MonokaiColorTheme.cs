@@ -27,6 +27,7 @@ namespace Repository.Internal.EditorServices.SyntaxHighlighting
                 case SyntaxKind.MethodIdentifier: return Color.LightGreen;
                 case SyntaxKind.NullLiteral: return Color.MediumPurple;
                 case SyntaxKind.NumericLiteral: return Color.MediumPurple;
+                case SyntaxKind.Operator: return Color.HotPink;
                 case SyntaxKind.ParameterDeclaration: return Color.Orange;
                 case SyntaxKind.Plaintext: return Color.White;
                 case SyntaxKind.StringLiteral: return Color.SandyBrown;

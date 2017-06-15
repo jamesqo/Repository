@@ -54,7 +54,25 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                     SyntaxReplacement.Create(NodePath.Create(typeof(PrimaryExpressionContext), typeof(PrimaryContext), typeof(TerminalNodeImpl)), SyntaxKind.MethodIdentifier),
                     SyntaxReplacement.Create(NodePath.Create(typeof(MemberAccessContext), typeof(TerminalNodeImpl)), SyntaxKind.MethodIdentifier));
 
+            private static SyntaxReplacement NonWildcardTypeArgumentsReplacement { get; } =
+                SyntaxReplacement.Terminal(SyntaxKind.Plaintext);
+
+            private static SyntaxReplacement NonWildcardTypeArgumentsOrDiamondReplacement { get; } =
+                SyntaxReplacement.Terminal(SyntaxKind.Plaintext);
+
+            private static SyntaxReplacement TypeArgumentsReplacement { get; } =
+                SyntaxReplacement.Terminal(SyntaxKind.Plaintext);
+
+            private static SyntaxReplacement TypeArgumentsOrDiamondReplacement { get; } =
+                SyntaxReplacement.Terminal(SyntaxKind.Plaintext);
+
             private static SyntaxReplacement TypeParameterReplacement { get; } =
+                SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
+
+            private static SyntaxReplacement TypeParametersReplacement { get; } =
+                SyntaxReplacement.Terminal(SyntaxKind.Plaintext);
+
+            private static SyntaxReplacement WildcardTypeArgumentReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
 
             public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
@@ -94,6 +112,12 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
             public override object VisitMethodInvocation([NotNull] MethodInvocationContext context)
                 => VisitChildren(context, MethodInvocationReplacements);
 
+            public override object VisitNonWildcardTypeArguments([NotNull] NonWildcardTypeArgumentsContext context)
+                => VisitChildren(context, NonWildcardTypeArgumentsReplacement);
+
+            public override object VisitNonWildcardTypeArgumentsOrDiamond([NotNull] NonWildcardTypeArgumentsOrDiamondContext context)
+                => VisitChildren(context, NonWildcardTypeArgumentsOrDiamondReplacement);
+
             public override object VisitTerminal(ITerminalNode node)
             {
                 var replacementKind = FindTerminalReplacement(node).Kind;
@@ -101,8 +125,20 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                 return null;
             }
 
+            public override object VisitTypeArguments([NotNull] TypeArgumentsContext context)
+                => VisitChildren(context, TypeArgumentsReplacement);
+
+            public override object VisitTypeArgumentsOrDiamond([NotNull] TypeArgumentsOrDiamondContext context)
+                => VisitChildren(context, TypeArgumentsOrDiamondReplacement);
+
             public override object VisitTypeParameter([NotNull] TypeParameterContext context)
                 => VisitChildren(context, TypeParameterReplacement);
+
+            public override object VisitTypeParameters([NotNull] TypeParametersContext context)
+                => VisitChildren(context, TypeParametersReplacement);
+
+            public override object VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
+                => VisitChildren(context, WildcardTypeArgumentReplacement);
 
             private SyntaxReplacement FindTerminalReplacement(ITerminalNode node)
             {

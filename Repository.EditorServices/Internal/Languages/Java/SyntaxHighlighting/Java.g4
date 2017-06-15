@@ -271,8 +271,8 @@ typeArguments
     ;
 
 typeArgument
-    :   typeType
-    |   '?' (('extends' | 'super') typeType)?
+    :   typeType # typeArgumentDefault
+    |   '?' (('extends' | 'super') typeType)? # wildcardTypeArgument
     ;
 
 qualifiedNameList
