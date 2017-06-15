@@ -5,13 +5,13 @@ using System.Text;
 using Android.Graphics;
 using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.EditorServices.Internal.SyntaxHighlighting
+namespace Repository.Internal.EditorServices.SyntaxHighlighting
 {
-    internal class MonokaiSyntaxColorer : SyntaxColorer
+    internal class MonokaiColorTheme : IColorTheme
     {
-        public override Color BackgroundColor => Color.Black;
+        public Color BackgroundColor => Color.Black;
 
-        public override Color GetForegroundColor(SyntaxKind kind)
+        public Color GetForegroundColor(SyntaxKind kind)
         {
             // TODO: Based off VSCode's Monokai theme
             switch (kind)

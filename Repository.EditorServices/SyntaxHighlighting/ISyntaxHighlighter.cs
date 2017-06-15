@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Android.Text;
 
 namespace Repository.EditorServices.SyntaxHighlighting
 {
     public interface ISyntaxHighlighter
     {
-        SpannableString Highlight(string text, ISyntaxStyler styler);
+        TResult Highlight<TResult>(string text, ISyntaxColorer<TResult> colorer);
     }
 }

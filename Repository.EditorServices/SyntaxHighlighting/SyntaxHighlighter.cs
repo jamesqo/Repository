@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting;
+using Repository.EditorServices.Internal.Languages.Plaintext.SyntaxHighlighting;
 using Repository.Internal;
-using Repository.Internal.EditorServices.SyntaxHighlighting;
 
 namespace Repository.EditorServices.SyntaxHighlighting
 {
     public static class SyntaxHighlighter
     {
+        public static ISyntaxHighlighter Java { get; } = new JavaSyntaxHighlighter();
+
         public static ISyntaxHighlighter Plaintext { get; } = new PlaintextSyntaxHighlighter();
+
+        // TODO: Consider whether appropriate for this assembly.
 
         public static ISyntaxHighlighter FromFileExtension(string fileExtension)
         {
@@ -18,7 +23,7 @@ namespace Repository.EditorServices.SyntaxHighlighting
             switch (fileExtension)
             {
                 case "java":
-                    return new JavaSyntaxHighlighter();
+                    return Java;
                 case "txt":
                     return Plaintext;
             }

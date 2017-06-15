@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Repository.Internal
+namespace Repository.EditorServices.Internal
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct ImmutableSpan<T> : IEnumerable<T>

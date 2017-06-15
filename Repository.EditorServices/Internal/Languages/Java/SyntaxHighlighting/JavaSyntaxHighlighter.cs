@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using Android.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Repository.EditorServices.Internal.SyntaxHighlighting;
@@ -14,8 +13,7 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
     {
         private partial class Visitor : JavaBaseVisitor<object>
         {
-            private readonly SpannableString _text;
-            private readonly ISyntaxStyler _styler;
+            private readonly ISyntaxColorer _colorer;
             private readonly CommonTokenStream _stream;
             private readonly CompilationUnitContext _tree;
 
@@ -24,10 +22,9 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
             private ParserRuleContext _lastAncestor;
             private ImmutableArray<SyntaxReplacement> _replacements;
 
-            internal Visitor(string text, ISyntaxStyler styler)
+            internal Visitor(string text, ISyntaxColorer colorer)
             {
-                _text = new SpannableString(text);
-                _styler = styler;
+                _colorer = colorer;
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
                 _tree = new JavaParser(_stream).compilationUnit();
                 _lastTokenIndex = -1;
@@ -35,11 +32,7 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                 _replacements = ImmutableArray<SyntaxReplacement>.Empty;
             }
 
-            internal SpannableString HighlightText()
-            {
-                Visit(_tree);
-                return _text;
-            }
+            internal void Run() => Visit(_tree);
 
             private void Advance(IToken token, SyntaxKind kind)
             {
@@ -216,8 +209,7 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                 _lastTokenIndex++;
 
                 int count = token.Text.Length;
-                var span = _styler.GetSpan(kind);
-                _text.SetSpan(span, _index, _index + count, SpanTypes.InclusiveExclusive);
+                _colorer.Color(kind, _index, count);
                 _index += count;
             }
 
@@ -228,6 +220,10 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
             }
         }
 
-        public SpannableString Highlight(string text, ISyntaxStyler styler) => new Visitor(text, styler).HighlightText();
+        public TResult Highlight<TResult>(string text, ISyntaxColorer<TResult> colorer)
+        {
+            new Visitor(text, colorer).Run();
+            return colorer.Result;
+        }
     }
 }

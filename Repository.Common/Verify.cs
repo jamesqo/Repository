@@ -6,7 +6,8 @@ using System.Text;
 
 namespace Repository.Internal
 {
-    internal static class Verify
+    // TODO: Change namespace.
+    public static class Verify
     {
         public static void Argument(bool condition, string argumentName = null)
         {
