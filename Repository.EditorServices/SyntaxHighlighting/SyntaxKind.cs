@@ -21,7 +21,7 @@
         NullLiteral,
         NumericLiteral,
         ParameterDeclaration,
-        Parenthesis, // TODO: Triage
+        Plaintext,
         StringLiteral,
         TypeDeclaration,
         TypeIdentifier,

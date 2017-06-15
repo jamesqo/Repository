@@ -142,7 +142,6 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                         return SyntaxKind.NullLiteral;
                     case LPAREN:
                     case RPAREN:
-                        return SyntaxKind.Parenthesis;
                     case LBRACE:
                     case RBRACE:
                     case LBRACK:
@@ -184,13 +183,13 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
                     case LSHIFT_ASSIGN:
                     case RSHIFT_ASSIGN:
                     case URSHIFT_ASSIGN:
-                        return SyntaxKind.Identifier;
+                        return SyntaxKind.Plaintext;
                     case Identifier:
                         return SyntaxSuggestion.Replaceable(SyntaxKind.Identifier);
                     case AT:
                         return SyntaxKind.Annotation;
                     case ELLIPSIS:
-                        return SyntaxKind.Identifier;
+                        return SyntaxKind.Plaintext;
                     // Hidden token types are intentionally not handled here. GetHiddenKind() takes care of those.
                     default:
                         throw new NotSupportedException();
