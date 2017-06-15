@@ -10,7 +10,7 @@ using Repository.Common;
 namespace Repository.EditorServices.Internal.SyntaxHighlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    internal class NodePath : IEquatable<NodePath>
+    internal struct NodePath : IEquatable<NodePath>
     {
         private static ImmutableArray<string> TrimFromDisplayNames { get; } =
             ImmutableArray.Create("Context", "NodeImpl");
@@ -23,7 +23,7 @@ namespace Repository.EditorServices.Internal.SyntaxHighlighting
             _nodeTypes = Verify.NotNullOrEmpty(nodeTypes);
         }
 
-        public static NodePath Create(params Type[] nodeTypes) => Create(nodeTypes.ToImmutableArray());
+        public static NodePath Create(params Type[] nodeTypes) => Create(ImmutableArray.Create(nodeTypes));
 
         public static NodePath Create(ImmutableArray<Type> nodeTypes) => new NodePath(nodeTypes);
 
@@ -66,11 +66,11 @@ namespace Repository.EditorServices.Internal.SyntaxHighlighting
                 return true;
             }
 
-            newPath = null;
+            newPath = default(NodePath);
             return false;
         }
 
-        private string GetDisplayName(Type nodeType)
+        private static string GetDisplayName(Type nodeType)
         {
             var name = nodeType.Name;
             foreach (var suffix in TrimFromDisplayNames)
