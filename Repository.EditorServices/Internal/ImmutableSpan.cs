@@ -13,7 +13,10 @@ namespace Repository.EditorServices.Internal
     {
         private ImmutableSpan(ImmutableArray<T> array, int index, int count)
         {
-            // TODO: Argument validation
+            Debug.Assert(!array.IsDefault);
+            Debug.Assert(index >= 0 && count >= 0);
+            Debug.Assert(array.Length - index >= count);
+
             Array = array;
             Index = index;
             Count = count;
@@ -34,6 +37,12 @@ namespace Repository.EditorServices.Internal
         public int Count { get; }
 
         public int Index { get; }
+
+        public bool IsDefault => Array.IsDefault;
+
+        public bool IsDefaultOrEmpty => IsDefault || IsEmpty;
+
+        public bool IsEmpty => Count == 0;
 
         public T this[int index] => Array[Index + index];
 

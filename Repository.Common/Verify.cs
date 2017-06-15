@@ -27,11 +27,11 @@ namespace Repository.Common
         }
 
         public static TEnumerable NotNullOrEmpty<TEnumerable>(TEnumerable argument, string argumentName = null)
-            where TEnumerable : IEnumerable
+            where TEnumerable : class, IEnumerable
         {
             if (argument == null)
             {
-                throw new ArgumentException(argumentName);
+                throw new ArgumentNullException(argumentName);
             }
 
             if (!argument.GetEnumerator().MoveNext())

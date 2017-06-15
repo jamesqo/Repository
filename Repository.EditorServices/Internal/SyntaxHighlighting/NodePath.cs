@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Antlr4.Runtime.Tree;
 using Repository.Common;
@@ -19,8 +20,10 @@ namespace Repository.EditorServices.Internal.SyntaxHighlighting
 
         private NodePath(ImmutableSpan<Type> nodeTypes)
         {
-            // TODO: Verify more about the types, like if they're classes/assignable to IParseTree.
-            _nodeTypes = Verify.NotNullOrEmpty(nodeTypes);
+            Debug.Assert(!nodeTypes.IsDefaultOrEmpty);
+            Debug.Assert(nodeTypes.All(IsPermittedType));
+
+            _nodeTypes = nodeTypes;
         }
 
         public static NodePath Create(params Type[] nodeTypes) => Create(ImmutableArray.Create(nodeTypes));
@@ -82,6 +85,12 @@ namespace Repository.EditorServices.Internal.SyntaxHighlighting
             }
 
             return name;
+        }
+
+        private static bool IsPermittedType(Type nodeType)
+        {
+            var typeInfo = nodeType.GetTypeInfo();
+            return typeInfo.IsClass && typeof(IParseTree).GetTypeInfo().IsAssignableFrom(typeInfo);
         }
     }
 }
