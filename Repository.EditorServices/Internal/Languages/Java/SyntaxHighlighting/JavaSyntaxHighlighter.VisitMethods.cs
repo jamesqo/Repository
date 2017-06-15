@@ -37,8 +37,14 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
             private static SyntaxReplacement EnumDeclarationReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeDeclaration);
 
+            private static SyntaxReplacement FormalParameterReplacement { get; } =
+                SyntaxReplacement.Create(NodePath.Create(typeof(VariableDeclaratorIdContext), typeof(TerminalNodeImpl)), SyntaxKind.ParameterDeclaration);
+
             private static SyntaxReplacement InterfaceDeclarationReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeDeclaration);
+
+            private static SyntaxReplacement LastFormalParameterReplacement { get; } =
+                SyntaxReplacement.Create(NodePath.Create(typeof(VariableDeclaratorIdContext), typeof(TerminalNodeImpl)), SyntaxKind.ParameterDeclaration);
 
             private static SyntaxReplacement MethodDeclarationReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.MethodDeclaration);
@@ -50,9 +56,6 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
 
             private static SyntaxReplacement TypeParameterReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
-
-            private static SyntaxReplacement VariableDeclaratorIdReplacement { get; } =
-                SyntaxReplacement.Terminal(SyntaxKind.ParameterDeclaration);
 
             public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
                 => VisitChildren(context, AnnotationNameReplacement);
@@ -76,8 +79,14 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
             public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
                 => VisitChildren(context, EnumDeclarationReplacement);
 
+            public override object VisitFormalParameter([NotNull] FormalParameterContext context)
+                => VisitChildren(context, FormalParameterReplacement);
+
             public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
                 => VisitChildren(context, InterfaceDeclarationReplacement);
+
+            public override object VisitLastFormalParameter([NotNull] LastFormalParameterContext context)
+                => VisitChildren(context, LastFormalParameterReplacement);
 
             public override object VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
                 => VisitChildren(context, MethodDeclarationReplacement);
@@ -94,10 +103,6 @@ namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
 
             public override object VisitTypeParameter([NotNull] TypeParameterContext context)
                 => VisitChildren(context, TypeParameterReplacement);
-
-            // TODO: Affects declarators in try-with-resources and enhanced for loop, not only parameters.
-            public override object VisitVariableDeclaratorId([NotNull] VariableDeclaratorIdContext context)
-                => VisitChildren(context, VariableDeclaratorIdReplacement);
 
             private SyntaxReplacement FindTerminalReplacement(ITerminalNode node)
             {
