@@ -8,7 +8,7 @@ using System.Text;
 using Antlr4.Runtime.Tree;
 using Repository.Common;
 
-namespace Repository.EditorServices.Internal.Common.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Common.Highlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct NodePath : IEquatable<NodePath>

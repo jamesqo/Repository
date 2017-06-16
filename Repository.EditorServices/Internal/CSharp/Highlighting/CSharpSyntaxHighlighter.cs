@@ -4,10 +4,10 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.Text;
-using Repository.EditorServices.SyntaxHighlighting;
+using Repository.EditorServices.Highlighting;
 using static Microsoft.CodeAnalysis.Classification.ClassificationTypeNames;
 
-namespace Repository.EditorServices.Internal.CSharp.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.CSharp.Highlighting
 {
     internal class CSharpSyntaxHighlighter : ISyntaxHighlighter
     {

@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Antlr4 Include="Internal\Java\SyntaxHighlighting\Java.g4">
+    <Antlr4 Include="Internal\Java\Highlighting\Java.g4">
       <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>Repository.EditorServices.Internal.Java.SyntaxHighlighting</CustomToolNamespace>
+      <CustomToolNamespace>Repository.EditorServices.Internal.Java.Highlighting</CustomToolNamespace>
     </Antlr4>
     <Compile Include="$(IntermediateOutputPath)Java*.cs" />
   </ItemGroup>

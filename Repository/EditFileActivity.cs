@@ -9,7 +9,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Repository.EditorServices.SyntaxHighlighting;
+using Repository.EditorServices.Highlighting;
 using Repository.Internal;
 using static Repository.Common.Verify;
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Android.Graphics;
-using Repository.EditorServices.SyntaxHighlighting;
+using Repository.EditorServices.Highlighting;
 
-namespace Repository.Internal.EditorServices.SyntaxHighlighting
+namespace Repository.Internal.EditorServices.Highlighting
 {
     internal class MonokaiColorTheme : IColorTheme
     {

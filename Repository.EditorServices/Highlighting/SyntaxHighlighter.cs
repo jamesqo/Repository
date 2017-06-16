@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Repository.Common;
-using Repository.EditorServices.Internal.CSharp.SyntaxHighlighting;
-using Repository.EditorServices.Internal.Java.SyntaxHighlighting;
-using Repository.EditorServices.Internal.Plaintext.SyntaxHighlighting;
+using Repository.EditorServices.Internal.CSharp.Highlighting;
+using Repository.EditorServices.Internal.Java.Highlighting;
+using Repository.EditorServices.Internal.Plaintext.Highlighting;
 
-namespace Repository.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Highlighting
 {
     public static class SyntaxHighlighter
     {

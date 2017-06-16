@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Repository.EditorServices.SyntaxHighlighting;
+using Repository.EditorServices.Highlighting;
 
-namespace Repository.EditorServices.Internal.Plaintext.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Plaintext.Highlighting
 {
     internal class PlaintextSyntaxHighlighter : ISyntaxHighlighter
     {

@@ -3,12 +3,11 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using Repository.EditorServices.Internal.Common.SyntaxHighlighting;
-using Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting;
-using Repository.EditorServices.SyntaxHighlighting;
-using static Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting.JavaParser;
+using Repository.EditorServices.Highlighting;
+using Repository.EditorServices.Internal.Common.Highlighting;
+using static Repository.EditorServices.Internal.Java.Highlighting.JavaParser;
 
-namespace Repository.EditorServices.Internal.Java.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Java.Highlighting
 {
     internal partial class JavaSyntaxHighlighter : ISyntaxHighlighter
     {

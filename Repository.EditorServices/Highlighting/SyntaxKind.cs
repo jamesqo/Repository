@@ -1,4 +1,4 @@
-﻿namespace Repository.EditorServices.SyntaxHighlighting
+﻿namespace Repository.EditorServices.Highlighting
 {
     // TODO: Introduce SyntaxKind.Plaintext or Generic or None or Default
     // TODO: As for the above, probably nah. SyntaxKind.Class(Declaration), SyntaxKind.Member(Declaration/Invocation)?

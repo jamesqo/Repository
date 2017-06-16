@@ -1,4 +1,4 @@
-namespace Repository.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Highlighting
 {
     public interface ISyntaxColorer
     {

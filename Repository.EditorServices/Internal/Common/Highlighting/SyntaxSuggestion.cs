@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Repository.EditorServices.SyntaxHighlighting;
+using Repository.EditorServices.Highlighting;
 
-namespace Repository.EditorServices.Internal.Common.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Common.Highlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct SyntaxSuggestion

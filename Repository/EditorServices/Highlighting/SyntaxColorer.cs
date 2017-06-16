@@ -6,7 +6,7 @@ using Android.Text;
 using Android.Text.Style;
 using Repository.Common;
 
-namespace Repository.EditorServices.SyntaxHighlighting
+namespace Repository.EditorServices.Highlighting
 {
     public class SyntaxColorer : ISyntaxColorer<SpannableString>
     {

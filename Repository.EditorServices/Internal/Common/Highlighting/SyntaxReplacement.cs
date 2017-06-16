@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Antlr4.Runtime.Tree;
-using Repository.EditorServices.SyntaxHighlighting;
+using Repository.EditorServices.Highlighting;
 using Repository.Common;
 
-namespace Repository.EditorServices.Internal.Common.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Common.Highlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct SyntaxReplacement
