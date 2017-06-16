@@ -15,12 +15,12 @@ namespace Repository
 
         protected override void OnCreate(Bundle bundle)
         {
+            SetupApp();
+
             void CacheViews()
             {
                 _getStartedButton = FindViewById<Button>(Resource.Id.GetStartedButton);
             }
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.OnCreate(bundle);
 
@@ -30,7 +30,7 @@ namespace Repository
             _getStartedButton.Click += GetStartedButton_Click;
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = ((Exception)e.ExceptionObject).GetBaseException();
             System.Diagnostics.Debug.WriteLine(exception);
@@ -41,7 +41,25 @@ namespace Repository
             }
         }
 
-        private void GetStartedButton_Click(object sender, EventArgs e)
+        private void GetStartedButton_Click(object sender, EventArgs e) => StartChooseProvider();
+
+        private static void SetupApp()
+        {
+            SetupAppDomain();
+            SetupDebug();
+        }
+
+        private static void SetupAppDomain()
+        {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private static void SetupDebug()
+        {
+            System.Diagnostics.Debug.Listeners.Add(new DebugListener());
+        }
+
+        private void StartChooseProvider()
         {
             var intent = new Intent(this, typeof(ChooseProviderActivity));
             StartActivity(intent);
