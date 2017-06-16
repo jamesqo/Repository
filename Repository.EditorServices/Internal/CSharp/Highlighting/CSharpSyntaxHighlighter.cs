@@ -34,16 +34,17 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
                     var current = _spanEnumerator.Current;
                     var textSpan = current.TextSpan;
 
-                    var spanStart = textSpan.Start;
-                    int lastSpanEnd = _index;
-
-                    if (lastSpanEnd < spanStart)
-                    {
-                        int skipped = spanStart - lastSpanEnd;
-                        Advance(skipped, SyntaxKind.Plaintext);
-                    }
-
+                    HandleSkippedText(_index, textSpan.Start);
                     Advance(textSpan.Length, GetSyntaxKind(current.ClassificationType));
+                }
+            }
+
+            private void HandleSkippedText(int lastSpanEnd, int spanStart)
+            {
+                if (lastSpanEnd < spanStart)
+                {
+                    int skipped = spanStart - lastSpanEnd;
+                    Advance(skipped, SyntaxKind.Plaintext);
                 }
             }
 
