@@ -42,7 +42,7 @@ namespace Repository.EditorServices.Internal
 
         public bool IsDefaultOrEmpty => IsDefault || IsEmpty;
 
-        public bool IsEmpty => Count == 0;
+        public bool IsEmpty => !IsDefault && Count == 0;
 
         public T this[int index] => Array[Index + index];
 

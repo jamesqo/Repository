@@ -14,6 +14,7 @@
         Comment,
         ConstructorDeclaration,
         Eof,
+        ExcludedCode,
         Identifier,
         Keyword,
         MethodDeclaration,
