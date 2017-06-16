@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 using Repository.EditorServices.SyntaxHighlighting;
 using static Microsoft.CodeAnalysis.Classification.ClassificationTypeNames;
 
-namespace Repository.EditorServices.Internal.Languages.CSharp.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.CSharp.SyntaxHighlighting
 {
     internal class CSharpSyntaxHighlighter : ISyntaxHighlighter
     {

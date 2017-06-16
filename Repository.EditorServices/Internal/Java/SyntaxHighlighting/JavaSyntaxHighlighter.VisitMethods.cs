@@ -6,11 +6,11 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using Repository.EditorServices.Internal.SyntaxHighlighting;
+using Repository.EditorServices.Internal.Common.SyntaxHighlighting;
 using Repository.EditorServices.SyntaxHighlighting;
 using static Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting.JavaParser;
 
-namespace Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Java.SyntaxHighlighting
 {
     internal partial class JavaSyntaxHighlighter
     {

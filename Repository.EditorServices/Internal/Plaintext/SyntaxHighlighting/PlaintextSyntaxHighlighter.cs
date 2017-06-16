@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.EditorServices.Internal.Languages.Plaintext.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Plaintext.SyntaxHighlighting
 {
     internal class PlaintextSyntaxHighlighter : ISyntaxHighlighter
     {

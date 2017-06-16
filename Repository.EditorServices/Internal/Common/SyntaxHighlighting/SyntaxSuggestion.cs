@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Repository.EditorServices.SyntaxHighlighting;
 
-namespace Repository.EditorServices.Internal.SyntaxHighlighting
+namespace Repository.EditorServices.Internal.Common.SyntaxHighlighting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct SyntaxSuggestion

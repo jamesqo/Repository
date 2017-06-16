@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Repository.Common;
-using Repository.EditorServices.Internal.Languages.CSharp.SyntaxHighlighting;
-using Repository.EditorServices.Internal.Languages.Java.SyntaxHighlighting;
-using Repository.EditorServices.Internal.Languages.Plaintext.SyntaxHighlighting;
+using Repository.EditorServices.Internal.CSharp.SyntaxHighlighting;
+using Repository.EditorServices.Internal.Java.SyntaxHighlighting;
+using Repository.EditorServices.Internal.Plaintext.SyntaxHighlighting;
 
 namespace Repository.EditorServices.SyntaxHighlighting
 {
