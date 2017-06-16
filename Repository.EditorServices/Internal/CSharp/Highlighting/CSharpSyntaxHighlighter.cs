@@ -15,27 +15,24 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
         {
             private readonly string _sourceText;
             private readonly ISyntaxColorer _colorer;
-            private readonly IEnumerator<ClassifiedSpan> _spanEnumerator;
+            private readonly IEnumerable<ClassifiedSpan> _spans;
 
             private int _index;
-            // TODO: Rename _lastTokenIndex to _lastTokenEnd in JavaSyntaxHighlighter? Shift up its value 1? (This follows the behavior of TextSpan.End?)
 
             internal Worker(string sourceText, ISyntaxColorer colorer)
             {
                 _sourceText = sourceText;
                 _colorer = colorer;
-                _spanEnumerator = GetClassifiedSpans(sourceText).GetEnumerator();
+                _spans = GetClassifiedSpans(sourceText);
             }
 
             internal void Run()
             {
-                while (_spanEnumerator.MoveNext())
+                foreach (var span in _spans)
                 {
-                    var current = _spanEnumerator.Current;
-                    var textSpan = current.TextSpan;
-
+                    var textSpan = span.TextSpan;
                     HandleSkippedText(_index, textSpan.Start);
-                    Advance(textSpan.Length, GetSyntaxKind(current.ClassificationType));
+                    Advance(textSpan.Length, GetSyntaxKind(span.ClassificationType));
                 }
             }
 
