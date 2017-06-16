@@ -18,7 +18,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
             private readonly CompilationUnitContext _tree;
 
             private int _index;
-            private int _lastTokenIndex;
+            private int _tokenIndex;
             private ParserRuleContext _lastAncestor;
             private ImmutableArray<SyntaxReplacement> _replacements;
 
@@ -27,7 +27,6 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
                 _colorer = colorer;
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
                 _tree = new JavaParser(_stream).compilationUnit();
-                _lastTokenIndex = -1;
                 _lastAncestor = _tree;
                 _replacements = ImmutableArray<SyntaxReplacement>.Empty;
             }
@@ -49,10 +48,10 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
 
             private void Approach(IToken token)
             {
-                int startTokenIndex = _lastTokenIndex + 1;
-                int endTokenIndex = token.TokenIndex;
+                int start = _tokenIndex;
+                int end = token.TokenIndex;
 
-                for (int i = startTokenIndex; i < endTokenIndex; i++)
+                for (int i = start; i < end; i++)
                 {
                     SurpassHidden(_stream.Get(i));
                 }
@@ -74,7 +73,6 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
 
             private SyntaxSuggestion SuggestKind(IToken token)
             {
-                // TODO: Better SyntaxKinds for certain types.
                 switch (token.Type)
                 {
                     case AntlrConstants.Eof:
@@ -196,6 +194,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
                     case AT:
                         return SyntaxKind.Annotation;
                     case ELLIPSIS:
+                        // TODO: We should highlight this.
                         return SyntaxKind.Plaintext;
                     // Hidden token types are intentionally not handled here. GetHiddenKind() takes care of those.
                     default:
@@ -205,14 +204,14 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
 
             private void Surpass(IToken token, SyntaxKind kind)
             {
-                Debug.Assert(_lastTokenIndex + 1 == token.TokenIndex);
+                Debug.Assert(_tokenIndex == token.TokenIndex);
 
                 if (kind == SyntaxKind.Eof)
                 {
                     return;
                 }
 
-                _lastTokenIndex++;
+                _tokenIndex++;
 
                 int count = token.Text.Length;
                 _colorer.Color(kind, _index, count);
