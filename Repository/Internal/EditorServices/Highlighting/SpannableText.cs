@@ -28,7 +28,8 @@ namespace Repository.Internal.EditorServices.Highlighting
         }
 
         private readonly string _rawText;
-        private readonly TwoWayDictionary<Java.Lang.Object, SpanInfo> _map;
+        private readonly Dictionary<Java.Lang.Object, SpanInfo> _map;
+        private readonly List<Java.Lang.Object> _spans;
         private readonly List<SpanInfo> _infos;
 
         private SpannableText(string rawText)
@@ -36,9 +37,9 @@ namespace Repository.Internal.EditorServices.Highlighting
             Verify.NotNull(rawText, nameof(rawText));
 
             _rawText = rawText;
-            _map = new TwoWayDictionary<Java.Lang.Object, SpanInfo>(
-                // Avoid calls to Java.Lang.Object.GetHashCode(), Java marshalling is slow.
-                forwardsComparer: ReferenceEqualityComparer.Instance);
+            // Avoid calls to Java.Lang.Object.GetHashCode(), Java marshalling is slow.
+            _map = new Dictionary<Java.Lang.Object, SpanInfo>(ReferenceEqualityComparer.Instance);
+            _spans = new List<Java.Lang.Object>();
             _infos = new List<SpanInfo>();
         }
 
@@ -47,17 +48,20 @@ namespace Repository.Internal.EditorServices.Highlighting
         public IEnumerator<char> GetEnumerator() => _rawText.GetEnumerator();
 
         public int GetSpanEnd(Java.Lang.Object tag)
-            => _map.TryGetForwards(tag, out var info) ? info.End : -1;
+            => _map.TryGetValue(tag, out var info) ? info.End : -1;
 
         [return: GeneratedEnum]
         public SpanTypes GetSpanFlags(Java.Lang.Object tag)
-            => _map.TryGetForwards(tag, out var info) ? info.Flags : default(SpanTypes);
+            => _map.TryGetValue(tag, out var info) ? info.Flags : default(SpanTypes);
 
         public Java.Lang.Object[] GetSpans(int start, int end, Class type)
         {
+            var spans = new List<Java.Lang.Object>();
+
             for (int i = 0; i < _infos.Count; i++)
             {
                 var info = _infos[i];
+                var span = _spans[i];
 
                 int spanStart = info.Start, spanEnd = info.End;
                 if (end < spanStart || spanEnd < start)
@@ -71,14 +75,19 @@ namespace Repository.Internal.EditorServices.Highlighting
                     continue;
                 }
 
-                var span = _map.GetBackwards(info);
                 // TODO: Missed out on optimization for `type` being Object.class.
                 // See https://github.com/android/platform_frameworks_base/blob/b5c4e80ecd47dda8c73b0e93eb2ee1a8da58c981/core/java/android/text/SpannableStringInternal.java#L313
+                if (type != null && !type.IsInstance(span))
+                {
+                    continue;
+                }
+
+                spans.Add(span);
             }
         }
 
         public int GetSpanStart(Java.Lang.Object tag)
-            => _map.TryGetForwards(tag, out var info) ? info.Start : -1;
+            => _map.TryGetValue(tag, out var info) ? info.Start : -1;
 
         public int Length() => _rawText.Length;
 
@@ -93,6 +102,7 @@ namespace Repository.Internal.EditorServices.Highlighting
         {
             var info = new SpanInfo(start, end, flags);
             _map.Add(what, info);
+            _spans.Add(what);
             _infos.Add(info);
         }
 
