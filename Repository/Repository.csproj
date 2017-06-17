@@ -126,6 +126,7 @@
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
+    <Compile Include="Internal\DictionaryExtensions.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
