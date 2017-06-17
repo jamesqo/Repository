@@ -16,7 +16,7 @@ namespace Repository.Internal.EditorServices.Highlighting
         private static IntPtr id_ctor_I;
 
         [Register(".ctor", "(I)V", "")]
-        public FastForegroundColorSpan(int color)
+        public unsafe FastForegroundColorSpan(int color)
             : base(IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
         {
             if (Handle != IntPtr.Zero)
@@ -29,9 +29,10 @@ namespace Repository.Internal.EditorServices.Highlighting
                 id_ctor_I = JNIEnv.GetMethodID(class_ref, "<init>", "(I)V");
             }
 
-            SetHandle(
-                JNIEnv.NewObject(class_ref, id_ctor_I, new JValue(color)),
-                JniHandleOwnership.TransferLocalRef);
+            var args = stackalloc JValue[1];
+            args[0] = new JValue(color);
+            var handle = JNIEnv.NewObject(class_ref, id_ctor_I, args);
+            SetHandle(handle, JniHandleOwnership.TransferLocalRef);
         }
     }
 }
