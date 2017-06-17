@@ -11,6 +11,12 @@ namespace Repository.Internal.EditorServices.Highlighting
     // TODO: Should this be in an Internal namespace?
     internal class NoCopySpannableFactory : SpannableFactory
     {
+        public new static NoCopySpannableFactory Instance { get; } = new NoCopySpannableFactory();
+
+        private NoCopySpannableFactory()
+        {
+        }
+
         public override ISpannable NewSpannable(ICharSequence source) => (ISpannable)source;
     }
 }
