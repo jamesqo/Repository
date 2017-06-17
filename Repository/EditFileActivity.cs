@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Repository.EditorServices.Highlighting;
 using Repository.Internal;
+using Repository.Internal.EditorServices.Highlighting;
 using static Repository.Common.Verify;
 
 namespace Repository
@@ -63,6 +64,7 @@ namespace Repository
             var highlighter = GetSyntaxHighlighter();
             var colorer = SyntaxColorer.Create(_content, theme);
             var coloredContent = highlighter.Highlight(_content, colorer);
+            _editor.SetSpannableFactory(new NoCopySpannableFactory());
             _editor.SetText(coloredContent, TextView.BufferType.Editable);
         }
 
