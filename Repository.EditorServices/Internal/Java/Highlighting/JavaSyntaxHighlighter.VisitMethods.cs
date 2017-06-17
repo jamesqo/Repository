@@ -120,6 +120,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
 
             public override object VisitTerminal(ITerminalNode node)
             {
+                // TODO: Just FindReplacement()?
                 var replacementKind = FindTerminalReplacement(node).Kind;
                 Advance(node, replacementKind);
                 return null;
