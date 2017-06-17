@@ -36,7 +36,6 @@ namespace Repository
                 if (url.Contains(_callbackDomain))
                 {
                     var queryParameters = UrlUtilities.ParseQueryParameters(url);
-                    Assert(queryParameters.Count == 1);
                     string code = queryParameters["code"];
 
                     _activity.HandleSessionCode(code);
@@ -48,7 +47,9 @@ namespace Repository
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            Assert(GitHub.Client.Credentials == null, "Why bother coming here?");
+            Assert(
+                GitHub.Client.Credentials.AuthenticationType != Octokit.AuthenticationType.Oauth,
+                "The point of being here is to get an OAuth access token.");
 
             void CacheViews()
             {
