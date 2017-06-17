@@ -26,8 +26,8 @@ namespace Repository.Internal
 
         public const string Extra_SignIn_CallbackDomain = nameof(Extra_SignIn_CallbackDomain);
 
-        public const string SPFile_Global_AccessTokens = nameof(SPFile_Global_AccessTokens);
+        public const string SPFile_AccessTokens = nameof(SPFile_AccessTokens);
 
-        public const string SPKey_Global_GitHubAccessToken = nameof(SPKey_Global_GitHubAccessToken);
+        public const string SPKey_AccessTokens_GitHubAccessToken = nameof(SPKey_AccessTokens_GitHubAccessToken);
     }
 }

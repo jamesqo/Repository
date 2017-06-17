@@ -73,7 +73,7 @@ namespace Repository
         private async void HandleSessionCode(string code)
         {
             var token = await RequestAccessToken(code);
-            Argument(WriteAccessToken(key: Strings.SPKey_Global_GitHubAccessToken, token: token));
+            Argument(WriteAccessToken(key: Strings.SPKey_AccessTokens_GitHubAccessToken, token: token));
             GitHub.Client.Credentials = new Octokit.Credentials(token);
 
             StartChooseRepository();
@@ -94,7 +94,7 @@ namespace Repository
 
         private bool WriteAccessToken(string key, string token)
         {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_Global_AccessTokens, FileCreationMode.Private);
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens, FileCreationMode.Private);
             var editor = prefs.Edit();
             editor.PutString(key, token);
             return editor.Commit();

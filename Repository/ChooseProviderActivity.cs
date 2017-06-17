@@ -35,7 +35,7 @@ namespace Repository
 
         private void GitHubButton_Click(object sender, EventArgs e)
         {
-            var token = ReadAccessToken(Strings.SPKey_Global_GitHubAccessToken);
+            var token = ReadAccessToken(Strings.SPKey_AccessTokens_GitHubAccessToken);
             if (token != null)
             {
                 GitHub.Client.Credentials = new Octokit.Credentials(token);
@@ -57,7 +57,7 @@ namespace Repository
 
         private string ReadAccessToken(string key)
         {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_Global_AccessTokens, FileCreationMode.Private);
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens, FileCreationMode.Private);
             return prefs.GetString(key, defValue: null);
         }
 
