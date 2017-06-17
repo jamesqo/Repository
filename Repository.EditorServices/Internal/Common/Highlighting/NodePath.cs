@@ -13,6 +13,7 @@ namespace Repository.EditorServices.Internal.Common.Highlighting
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal struct NodePath : IEquatable<NodePath>
     {
+        // TODO: This is ANTLR-specific. Maybe subclass NodePath with AntlrPath?
         private static ImmutableArray<string> TrimFromDisplayNames { get; } =
             ImmutableArray.Create("Context", "NodeImpl");
 
@@ -21,7 +22,6 @@ namespace Repository.EditorServices.Internal.Common.Highlighting
         private NodePath(ImmutableSpan<Type> nodeTypes)
         {
             Debug.Assert(!nodeTypes.IsDefaultOrEmpty);
-            Debug.Assert(nodeTypes.All(IsPermittedType));
 
             _nodeTypes = nodeTypes;
         }
@@ -87,12 +87,6 @@ namespace Repository.EditorServices.Internal.Common.Highlighting
             }
 
             return name;
-        }
-
-        private static bool IsPermittedType(Type nodeType)
-        {
-            var typeInfo = nodeType.GetTypeInfo();
-            return typeInfo.IsClass && typeof(IParseTree).GetTypeInfo().IsAssignableFrom(typeInfo);
         }
     }
 }
