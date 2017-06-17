@@ -5,12 +5,13 @@ using System.Text;
 using Android.Text;
 using Android.Text.Style;
 using Repository.Common;
+using Repository.Internal.EditorServices.Highlighting;
 
 namespace Repository.EditorServices.Highlighting
 {
-    public class SyntaxColorer : ISyntaxColorer<SpannableString>
+    public class SyntaxColorer : ISyntaxColorer<SpannableText>
     {
-        private readonly SpannableString _text;
+        private readonly SpannableText _text;
         private readonly IColorTheme _theme;
 
         private SyntaxColorer(string text, IColorTheme theme)
@@ -18,13 +19,13 @@ namespace Repository.EditorServices.Highlighting
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
-            _text = new SpannableString(text);
+            _text = SpannableText.Create(text);
             _theme = theme;
         }
 
         public static SyntaxColorer Create(string text, IColorTheme theme) => new SyntaxColorer(text, theme);
 
-        public SpannableString Result => _text;
+        public SpannableText Result => _text;
 
         public void Color(SyntaxKind kind, int index, int count)
         {
