@@ -29,8 +29,6 @@ namespace Repository.Internal.EditorServices.Highlighting
 
         private readonly string _rawText;
         private readonly Dictionary<JavaObject, SpanInfo> _map;
-        private readonly List<JavaObject> _spans;
-        private readonly List<SpanInfo> _infos;
 
         private SpannableText(string rawText)
         {
@@ -39,13 +37,9 @@ namespace Repository.Internal.EditorServices.Highlighting
             _rawText = rawText;
             // Avoid calls to Java.Lang.Object.GetHashCode(), Java marshalling is slow.
             _map = new Dictionary<JavaObject, SpanInfo>(ReferenceEqualityComparer.Instance);
-            _infos = new List<SpanInfo>();
-            _spans = new List<JavaObject>();
         }
 
         public static SpannableText Create(string rawText) => new SpannableText(rawText);
-
-        private int SpanCount => _spans.Count;
 
         public char CharAt(int index) => _rawText[index];
 
@@ -81,10 +75,12 @@ namespace Repository.Internal.EditorServices.Highlighting
             // It's okay to leave in the same order they were inserted.
             var spans = new List<JavaObject>();
 
-            for (int i = 0; i < SpanCount; i++)
+            // Hack: This is an implementation detail, but as long as you don't remove items from it,
+            // a Dictionary will hand out key-value pairs in the same order you inserted them.
+            foreach (var kvp in _map)
             {
-                var info = _infos[i];
-                var span = _spans[i];
+                var span = kvp.Key;
+                var info = kvp.Value;
 
                 if (!IsOverlapping(info) || !IsPermitted(span))
                 {
@@ -112,8 +108,6 @@ namespace Repository.Internal.EditorServices.Highlighting
 
             var info = new SpanInfo(start, end);
             _map.Add(what, info);
-            _spans.Add(what);
-            _infos.Add(info);
         }
 
         public ICharSequence SubSequenceFormatted(int start, int end) => throw new NotSupportedException();
