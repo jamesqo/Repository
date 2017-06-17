@@ -127,7 +127,6 @@
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\NoCopySpannableFactory.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Strings.cs" />
