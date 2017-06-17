@@ -144,7 +144,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
             {
                 var nodePath = NodePath.GetRelativePath(_lastAncestor, node);
                 // The last replacements are the ones that were added most recently, by closer ancestors. Give precedence to those.
-                for (int i = _replacements.Length - 1; i >= 0; i--)
+                for (int i = _replacements.Count - 1; i >= 0; i--)
                 {
                     var replacement = _replacements[i];
                     if (nodePath.Equals(replacement.Path))
@@ -156,38 +156,38 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
                 return SyntaxReplacement.None;
             }
 
-            private ImmutableArray<SyntaxReplacement>.Builder GetApplicableReplacements(IParseTree tree)
+            private List<SyntaxReplacement> GetApplicableReplacements(IParseTree tree)
             {
+                var list = new List<SyntaxReplacement>();
                 var treePath = NodePath.GetRelativePath(_lastAncestor, tree);
-                var builder = ImmutableArray.CreateBuilder<SyntaxReplacement>();
 
                 foreach (var replacement in _replacements)
                 {
                     var path = replacement.Path;
                     if (path.TryChangeRoot(treePath, out var newPath))
                     {
-                        builder.Add(replacement.WithPath(newPath));
+                        list.Add(replacement.WithPath(newPath));
                     }
                 }
 
-                return builder;
+                return list;
             }
 
             private object VisitChildren(ParserRuleContext context, SyntaxReplacement additionalReplacement)
             {
                 var newReplacements = GetApplicableReplacements(context);
                 newReplacements.Add(additionalReplacement);
-                return VisitChildrenWithReplacements(context, newReplacements.ToImmutable());
+                return VisitChildrenWithReplacements(context, newReplacements.AsReadOnlyList());
             }
 
             private object VisitChildren(ParserRuleContext context, ImmutableArray<SyntaxReplacement> additionalReplacements)
             {
                 var newReplacements = GetApplicableReplacements(context);
                 newReplacements.AddRange(additionalReplacements);
-                return VisitChildrenWithReplacements(context, newReplacements.ToImmutable());
+                return VisitChildrenWithReplacements(context, newReplacements.AsReadOnlyList());
             }
 
-            private object VisitChildrenWithReplacements(ParserRuleContext context, ImmutableArray<SyntaxReplacement> replacements)
+            private object VisitChildrenWithReplacements(ParserRuleContext context, ReadOnlyList<SyntaxReplacement> replacements)
             {
                 int childCount = context.ChildCount;
                 for (int i = 0; i < childCount; i++)
@@ -199,7 +199,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
                 return null;
             }
 
-            private void VisitWithReplacements(IParseTree child, ParserRuleContext parent, ImmutableArray<SyntaxReplacement> replacements)
+            private void VisitWithReplacements(IParseTree child, ParserRuleContext parent, ReadOnlyList<SyntaxReplacement> replacements)
             {
                 Debug.Assert(child.Parent == parent);
 

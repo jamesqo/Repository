@@ -20,7 +20,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
             private int _index;
             private int _tokenIndex;
             private ParserRuleContext _lastAncestor;
-            private ImmutableArray<SyntaxReplacement> _replacements;
+            private ReadOnlyList<SyntaxReplacement> _replacements;
 
             internal Visitor(string text, ISyntaxColorer colorer)
             {
@@ -28,7 +28,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
                 _tree = new JavaParser(_stream).compilationUnit();
                 _lastAncestor = _tree;
-                _replacements = ImmutableArray<SyntaxReplacement>.Empty;
+                _replacements = ReadOnlyList<SyntaxReplacement>.Empty;
             }
 
             internal void Run() => Visit(_tree);
