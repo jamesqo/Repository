@@ -28,6 +28,10 @@ namespace Repository.Internal
 
         public const string SPFile_AccessTokens = nameof(SPFile_AccessTokens);
 
+        public const string SPFile_EditorContent = nameof(SPFile_EditorContent);
+
         public const string SPKey_AccessTokens_GitHubAccessToken = nameof(SPKey_AccessTokens_GitHubAccessToken);
+
+        public const string SPKey_EditorContent_Value = nameof(SPKey_EditorContent_Value);
     }
 }

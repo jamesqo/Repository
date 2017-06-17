@@ -30,9 +30,10 @@ namespace Repository
                 _editor = FindViewById<EditText>(Resource.Id.Editor);
             }
 
-            void CacheExtras()
+            // TODO: Do this in other Activities, too?
+            void CacheParameters()
             {
-                _content = NotNull(Intent.Extras.GetString(Strings.Extra_EditFile_Content));
+                _content = NotNull(ReadEditorContent());
                 _path = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_EditFile_Path));
             }
 
@@ -42,7 +43,7 @@ namespace Repository
 
             SetContentView(Resource.Layout.EditFile);
             CacheViews();
-            CacheExtras();
+            CacheParameters();
 
             ConfigureFont();
             DisplayContent(ColorTheme.Default);
@@ -84,6 +85,12 @@ namespace Repository
         {
             RequestWindowFeature(WindowFeatures.NoTitle);
             Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
+        }
+
+        private string ReadEditorContent()
+        {
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_EditorContent);
+            return prefs.GetString(Strings.SPKey_EditorContent_Value, defValue: null);
         }
     }
 }

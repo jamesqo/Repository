@@ -95,7 +95,7 @@ namespace Repository
 
         private bool WriteAccessToken(string key, string token)
         {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens, FileCreationMode.Private);
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens);
             var editor = prefs.Edit();
             editor.PutString(key, token);
             return editor.Commit();

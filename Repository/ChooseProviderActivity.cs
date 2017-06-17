@@ -57,7 +57,7 @@ namespace Repository
 
         private string ReadAccessToken(string key)
         {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens, FileCreationMode.Private);
+            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens);
             return prefs.GetString(key, defValue: null);
         }
 
