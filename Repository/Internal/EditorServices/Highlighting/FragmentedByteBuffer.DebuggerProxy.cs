@@ -28,13 +28,18 @@ namespace Repository.Internal.EditorServices.Highlighting
 
             private static string GetDebugString(byte[] byteArray)
             {
+                if (byteArray.Length == 0)
+                {
+                    return "[]";
+                }
+
                 var sb = new StringBuilder();
                 sb.Append('[');
-                sb.Append(byteArray[0].ToString("X"));
+                sb.Append(byteArray[0].ToString("X2"));
                 for (int i = 1; i < byteArray.Length; i++)
                 {
                     sb.Append(' ');
-                    sb.Append(byteArray[i].ToString("X"));
+                    sb.Append(byteArray[i].ToString("X2"));
                 }
                 sb.Append(']');
                 return sb.ToString();
