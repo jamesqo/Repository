@@ -17,8 +17,8 @@ namespace Repository.Internal.EditorServices.Highlighting
     {
         private const int InitialCapacity = 256;
 
-        private readonly ArrayBuilder<ByteBuffer> _previous;
-
+        // Do not mark this field readonly, ArrayBuilder is a mutable struct.
+        private ArrayBuilder<ByteBuffer> _previous;
         private ByteBuffer _current;
         private int _currentCapacity;
         private int _index;
