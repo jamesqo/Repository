@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,7 +9,7 @@ using Repository.Common;
 namespace Repository.Internal
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
-    internal struct ArrayBuilder<T>
+    internal struct ArrayBuilder<T> : IEnumerable<T>
     {
         private T[] _array;
         private int _count;
@@ -64,5 +65,15 @@ namespace Repository.Internal
             Array.Copy(_array, 0, newArray, 0, _count);
             _array = newArray;
         }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                yield return this[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
     }
 }

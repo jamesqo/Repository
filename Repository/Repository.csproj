@@ -128,6 +128,7 @@
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.cs" />
+    <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\NoCopySpannableFactory.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />

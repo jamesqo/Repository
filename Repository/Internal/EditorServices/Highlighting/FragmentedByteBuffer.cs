@@ -28,9 +28,11 @@ namespace Repository.Internal.EditorServices.Highlighting
             Allocate(InitialCapacity);
         }
 
-        private int ByteCount => GetFragments().Sum(f => f.Capacity());
+        private int ByteCount => _previous.Sum(f => f.Capacity()) + _index;
 
-        private string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}";
+        private int Capacity => GetFragments().Sum(f => f.Capacity());
+
+        private string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}";
 
         public void Add(long value)
         {
