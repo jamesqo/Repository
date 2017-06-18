@@ -28,8 +28,6 @@ namespace Repository.Internal
 
         public int Count => _count;
 
-        public bool IsEmpty => Count == 0;
-
         public T this[int index]
         {
             get
@@ -50,6 +48,23 @@ namespace Repository.Internal
             }
 
             Array.Copy(_array, 0, array, arrayIndex, _count);
+        }
+
+        public T[] ToArray()
+        {
+            if (_count == 0)
+            {
+                return Array.Empty<T>();
+            }
+
+            if (_count == Capacity)
+            {
+                return _array;
+            }
+
+            var array = new T[_count];
+            CopyTo(array, 0);
+            return array;
         }
 
         private void Resize()

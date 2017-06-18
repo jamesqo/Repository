@@ -19,9 +19,9 @@ namespace Repository.Internal.EditorServices.Highlighting
         private const int InitialCapacity = 256;
 
         // Do not mark this field readonly, ArrayBuilder is a mutable struct.
-        private ArrayBuilder<ByteBuffer> _previous;
-        private ByteBuffer _current;
-        private int _currentCapacity; // Same as _current.Capacity(), but avoids unnecessary JNI calls in Add() which is a hot path.
+        private ArrayBuilder<ByteBuffer> _fragments;
+        private unsafe byte* _current;
+        private int _currentCapacity;
         private int _index;
 
         public FragmentedByteBuffer()
@@ -38,7 +38,7 @@ namespace Repository.Internal.EditorServices.Highlighting
                     return _index;
                 }
 
-                Debug.Assert(_previous.Sum(f => f.Capacity()) == _currentCapacity);
+                Debug.Assert(_fragments.Sum(f => f.Capacity()) == _currentCapacity);
                 return _currentCapacity + _index;
             }
         }
@@ -48,9 +48,9 @@ namespace Repository.Internal.EditorServices.Highlighting
 
         private string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}, {nameof(FragmentCount)} = {FragmentCount}";
 
-        private int FragmentCount => _previous.Count + 1;
+        private int FragmentCount => _fragments.Count;
 
-        public void Add(long value)
+        public unsafe void Add(long value)
         {
             Debug.Assert(IsAligned(sizeof(long)));
 
@@ -59,7 +59,7 @@ namespace Repository.Internal.EditorServices.Highlighting
                 Allocate();
             }
 
-            _current.PutLong(_index, value);
+            *((long*)(_current + _index)) = value;
             _index += sizeof(long);
         }
 
@@ -67,21 +67,13 @@ namespace Repository.Internal.EditorServices.Highlighting
         // Also prevent double frees and null out everything?
         public void Dispose()
         {
-            for (int i = 0; i < _previous.Count; i++)
+            for (int i = 0; i < _fragments.Count; i++)
             {
-                Free(_previous[i]);
+                Free(_fragments[i]);
             }
-
-            Free(_current);
         }
 
-        public ByteBuffer[] GetFragments()
-        {
-            var fragments = new ByteBuffer[_previous.Count + 1];
-            _previous.CopyTo(fragments, 0);
-            fragments[_previous.Count] = _current;
-            return fragments;
-        }
+        public ByteBuffer[] GetFragments() => _fragments.ToArray();
 
         public FragmentedReadStream ToReadStream() => new FragmentedReadStream(GetFragments(), ByteCount);
 
@@ -89,33 +81,29 @@ namespace Repository.Internal.EditorServices.Highlighting
         {
             Debug.Assert(_index == _currentCapacity);
 
-            int nextCapacity = _previous.IsEmpty
+            int nextCapacity = _fragments.Count == 1
                 ? InitialCapacity
                 : _currentCapacity * 2;
             Allocate(nextCapacity);
         }
 
-        private void Allocate(int capacity)
+        private unsafe void Allocate(int capacity)
         {
-            if (_current != null)
-            {
-                _previous.Add(_current);
-                _index = 0;
-            }
+            _index = 0;
             _currentCapacity = capacity;
 
-            // TODO: Refactor into static method?
-            IntPtr handle = Marshal.AllocHGlobal(capacity);
-            var objectHandle = JNIEnv.NewDirectByteBuffer(handle, capacity);
-            // TODO: Is this necessary? Store the raw IntPtrs directly?
-            _current = JavaObject.GetObject<ByteBuffer>(objectHandle, JniHandleOwnership.TransferLocalRef);
+            var address = Marshal.AllocHGlobal(capacity);
+            _current = (byte*)address.ToPointer();
+
+            var handle = JNIEnv.NewDirectByteBuffer(address, capacity);
+            _fragments.Add(JavaObject.GetObject<ByteBuffer>(handle, JniHandleOwnership.TransferLocalRef));
         }
 
         private static void Free(ByteBuffer fragment)
         {
             // TODO: Buffers should be freed ASAP. What if we open a 1GB file and we OOM before we get to free?
-            IntPtr handle = fragment.GetDirectBufferAddress();
-            Marshal.FreeHGlobal(handle);
+            var address = fragment.GetDirectBufferAddress();
+            Marshal.FreeHGlobal(address);
         }
 
         private bool IsAligned(int byteCount)
