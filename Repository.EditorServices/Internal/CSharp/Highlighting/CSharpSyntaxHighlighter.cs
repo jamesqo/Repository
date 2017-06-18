@@ -17,8 +17,6 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
             private readonly ITextColorer _colorer;
             private readonly IEnumerable<ClassifiedSpan> _spans;
 
-            // TODO: Remove, no longer needed. Not fixing the Color() calls bc this is in
-            // the midst of being rewritten anyway.
             private int _index;
 
             internal Worker(string sourceText, ITextColorer colorer)
@@ -49,7 +47,7 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
 
             private void Advance(int count, SyntaxKind kind)
             {
-                _colorer.Color(kind, _index, count);
+                _colorer.Color(kind, count);
                 _index += count;
             }
 
