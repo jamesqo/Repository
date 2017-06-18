@@ -14,6 +14,8 @@ namespace Repository.EditorServices.Highlighting
         private readonly SpannableText _text;
         private readonly IColorTheme _theme;
 
+        private int _index;
+
         private SyntaxColorer(string text, IColorTheme theme)
         {
             Verify.NotNull(text, nameof(text));
@@ -27,11 +29,12 @@ namespace Repository.EditorServices.Highlighting
 
         public SpannableText Result => _text;
 
-        public void Color(SyntaxKind kind, int index, int count)
+        public void Color(SyntaxKind kind, int count)
         {
             var color = _theme.GetForegroundColor(kind);
             var span = new ForegroundColorSpan(color);
-            _text.SetSpan(span, index, index + count, SpanTypes.InclusiveExclusive);
+            _text.SetSpan(span, _index, _index + count, SpanTypes.InclusiveExclusive);
+            _index += count;
         }
     }
 }

@@ -2,7 +2,7 @@ namespace Repository.EditorServices.Highlighting
 {
     public interface ISyntaxColorer
     {
-        void Color(SyntaxKind kind, int index, int count);
+        void Color(SyntaxKind kind, int count);
     }
 
     public interface ISyntaxColorer<out TResult> : ISyntaxColorer

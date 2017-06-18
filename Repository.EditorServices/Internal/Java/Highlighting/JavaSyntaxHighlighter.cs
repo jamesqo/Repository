@@ -17,7 +17,6 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
             private readonly CommonTokenStream _stream;
             private readonly CompilationUnitContext _tree;
 
-            private int _index;
             private int _tokenIndex;
             private ParserRuleContext _lastAncestor;
             private ReadOnlyList<SyntaxReplacement> _replacements;
@@ -214,8 +213,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
                 _tokenIndex++;
 
                 int count = token.Text.Length;
-                _colorer.Color(kind, _index, count);
-                _index += count;
+                _colorer.Color(kind, count);
             }
 
             private void SurpassHidden(IToken token)

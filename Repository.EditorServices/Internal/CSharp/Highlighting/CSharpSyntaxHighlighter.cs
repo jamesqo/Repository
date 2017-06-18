@@ -17,6 +17,8 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
             private readonly ISyntaxColorer _colorer;
             private readonly IEnumerable<ClassifiedSpan> _spans;
 
+            // TODO: Remove, no longer needed. Not fixing the Color() calls bc this is in
+            // the midst of being rewritten anyway.
             private int _index;
 
             internal Worker(string sourceText, ISyntaxColorer colorer)
