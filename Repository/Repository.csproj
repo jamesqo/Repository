@@ -121,17 +121,15 @@
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="EditorServices\Highlighting\ColorTheme.cs" />
     <Compile Include="EditorServices\Highlighting\IColorTheme.cs" />
-    <Compile Include="EditorServices\Highlighting\SyntaxColorer.cs" />
+    <Compile Include="EditorServices\Highlighting\TextColorer.cs" />
     <Compile Include="Internal\ContextExtensions.cs" />
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\NoCopySpannableFactory.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\SpannableText.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
-    <Compile Include="Internal\ReferenceEqualityComparer.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="MainActivity.cs" />
@@ -190,6 +188,10 @@
     <ProjectReference Include="..\Repository.EditorServices\Repository.EditorServices.csproj">
       <Project>{4490be7b-c620-40b1-8c62-5396eecc6f3e}</Project>
       <Name>Repository.EditorServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository.JavaInterop\Repository.JavaInterop.csproj">
+      <Project>{d84b83dc-37b4-443a-bb4b-4a9acc01d4ab}</Project>
+      <Name>Repository.JavaInterop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

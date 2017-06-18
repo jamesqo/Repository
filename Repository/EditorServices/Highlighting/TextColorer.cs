@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
+using Repository.JavaInterop;
 using Coloring = System.Int64;
 
 namespace Repository.EditorServices.Highlighting

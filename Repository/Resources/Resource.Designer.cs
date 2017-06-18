@@ -238,11 +238,14 @@ namespace Repository
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f080002
+			public const int ApplicationName = 2131230722;
+			
 			// aapt resource value: 0x7f080001
-			public const int ApplicationName = 2131230721;
+			public const int Hello = 2131230721;
 			
 			// aapt resource value: 0x7f080000
-			public const int Hello = 2131230720;
+			public const int app_name = 2131230720;
 			
 			static String()
 			{
