@@ -18,20 +18,12 @@ namespace Repository.Internal.EditorServices.Highlighting
 
             private static string GetDebugString(ByteBuffer fragment)
             {
-                var processed = new byte[fragment.Position()];
-                var remaining = new byte[fragment.Remaining()];
-                fragment.Get(remaining);
-                fragment.Rewind();
-                fragment.Get(processed);
-                return $"Processed: {GetDebugString(processed)}\nRemaining: {GetDebugString(remaining)}";
-            }
+                Debug.Assert(fragment.Position() == 0);
+                Debug.Assert(fragment.Capacity() > 0);
 
-            private static string GetDebugString(byte[] byteArray)
-            {
-                if (byteArray.Length == 0)
-                {
-                    return "[]";
-                }
+                var byteArray = new byte[fragment.Capacity()];
+                fragment.Get(byteArray);
+                fragment.Rewind();
 
                 var sb = new StringBuilder();
                 sb.Append('[');
