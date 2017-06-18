@@ -70,7 +70,10 @@ namespace Repository.Internal.EditorServices.Highlighting
         private void Allocate()
         {
             Debug.Assert(_index == _currentCapacity);
-            int nextCapacity = _currentCapacity * 2;
+
+            int nextCapacity = _currentCapacity == InitialCapacity
+                ? InitialCapacity
+                : _currentCapacity * 2;
             Allocate(nextCapacity);
         }
 
