@@ -7,6 +7,6 @@ namespace Repository.EditorServices.Highlighting
 {
     public interface ISyntaxHighlighter
     {
-        TResult Highlight<TResult>(string text, ISyntaxColorer<TResult> colorer);
+        TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer);
     }
 }

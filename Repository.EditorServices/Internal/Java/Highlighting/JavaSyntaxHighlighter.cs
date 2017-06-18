@@ -13,7 +13,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
     {
         private partial class Visitor : JavaBaseVisitor<object>
         {
-            private readonly ISyntaxColorer _colorer;
+            private readonly ITextColorer _colorer;
             private readonly CommonTokenStream _stream;
             private readonly CompilationUnitContext _tree;
 
@@ -21,7 +21,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
             private ParserRuleContext _lastAncestor;
             private ReadOnlyList<SyntaxReplacement> _replacements;
 
-            internal Visitor(string text, ISyntaxColorer colorer)
+            internal Visitor(string text, ITextColorer colorer)
             {
                 _colorer = colorer;
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
@@ -223,7 +223,7 @@ namespace Repository.EditorServices.Internal.Java.Highlighting
             }
         }
 
-        public TResult Highlight<TResult>(string text, ISyntaxColorer<TResult> colorer)
+        public TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer)
         {
             new Visitor(text, colorer).Run();
             return colorer.Result;

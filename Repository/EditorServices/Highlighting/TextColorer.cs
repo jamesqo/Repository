@@ -9,14 +9,14 @@ using Repository.Internal.EditorServices.Highlighting;
 
 namespace Repository.EditorServices.Highlighting
 {
-    public class SyntaxColorer : ISyntaxColorer<SpannableText>
+    public class TextColorer : ITextColorer<SpannableText>
     {
         private readonly SpannableText _text;
         private readonly IColorTheme _theme;
 
         private int _index;
 
-        private SyntaxColorer(string text, IColorTheme theme)
+        private TextColorer(string text, IColorTheme theme)
         {
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
@@ -25,7 +25,7 @@ namespace Repository.EditorServices.Highlighting
             _theme = theme;
         }
 
-        public static SyntaxColorer Create(string text, IColorTheme theme) => new SyntaxColorer(text, theme);
+        public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
         public SpannableText Result => _text;
 

@@ -14,14 +14,14 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
         private class Worker
         {
             private readonly string _sourceText;
-            private readonly ISyntaxColorer _colorer;
+            private readonly ITextColorer _colorer;
             private readonly IEnumerable<ClassifiedSpan> _spans;
 
             // TODO: Remove, no longer needed. Not fixing the Color() calls bc this is in
             // the midst of being rewritten anyway.
             private int _index;
 
-            internal Worker(string sourceText, ISyntaxColorer colorer)
+            internal Worker(string sourceText, ITextColorer colorer)
             {
                 _sourceText = sourceText;
                 _colorer = colorer;
@@ -134,7 +134,7 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
             }
         }
 
-        public TResult Highlight<TResult>(string text, ISyntaxColorer<TResult> colorer)
+        public TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer)
         {
             new Worker(text, colorer).Run();
             return colorer.Result;

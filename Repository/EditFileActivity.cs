@@ -62,7 +62,7 @@ namespace Repository
             _editor.SetBackgroundColor(theme.BackgroundColor);
 
             var highlighter = GetSyntaxHighlighter();
-            var colorer = SyntaxColorer.Create(_content, theme);
+            var colorer = TextColorer.Create(_content, theme);
             var coloredContent = highlighter.Highlight(_content, colorer);
             _editor.SetSpannableFactory(NoCopySpannableFactory.Instance);
             _editor.SetText(coloredContent, TextView.BufferType.Editable);
