@@ -91,10 +91,6 @@ namespace Repository
             Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
         }
 
-        private string ReadEditorContent()
-        {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_EditorContent);
-            return prefs.GetString(Strings.SPKey_EditorContent_Value, defValue: null);
-        }
+        private string ReadEditorContent() => EditorContent.Current;
     }
 }

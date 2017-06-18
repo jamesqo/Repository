@@ -127,6 +127,7 @@
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
+    <Compile Include="Internal\EditorContent.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
