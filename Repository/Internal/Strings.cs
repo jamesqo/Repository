@@ -18,8 +18,6 @@ namespace Repository.Internal
 
         public const string Extra_BrowseFiles_RepoId = nameof(Extra_BrowseFiles_RepoId);
 
-        public const string Extra_EditFile_Content = nameof(Extra_EditFile_Content);
-
         public const string Extra_EditFile_Path = nameof(Extra_EditFile_Path);
 
         public const string Extra_SignIn_Url = nameof(Extra_SignIn_Url);
