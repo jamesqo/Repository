@@ -89,7 +89,7 @@ namespace Repository.Internal.EditorServices.Highlighting
         {
             Debug.Assert(_index == _currentCapacity);
 
-            int nextCapacity = _currentCapacity == InitialCapacity
+            int nextCapacity = _previous.IsEmpty
                 ? InitialCapacity
                 : _currentCapacity * 2;
             Allocate(nextCapacity);

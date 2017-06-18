@@ -28,6 +28,8 @@ namespace Repository.Internal
 
         public int Count => _count;
 
+        public bool IsEmpty => Count == 0;
+
         public T this[int index]
         {
             get
