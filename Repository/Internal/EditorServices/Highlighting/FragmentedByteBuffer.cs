@@ -113,6 +113,7 @@ namespace Repository.Internal.EditorServices.Highlighting
 
         private static void Free(ByteBuffer fragment)
         {
+            // TODO: Buffers should be freed ASAP. What if we open a 1GB file and we OOM before we get to free?
             IntPtr handle = fragment.GetDirectBufferAddress();
             Marshal.FreeHGlobal(handle);
         }
