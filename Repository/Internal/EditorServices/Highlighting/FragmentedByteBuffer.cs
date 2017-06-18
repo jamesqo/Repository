@@ -6,11 +6,14 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Android.Runtime;
 using Java.Nio;
+using Repository.Common;
 using JavaObject = Java.Lang.Object;
 
 namespace Repository.Internal.EditorServices.Highlighting
 {
-    internal class FragmentedByteBuffer : IDisposable
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
+    [DebuggerTypeProxy(typeof(DebuggerProxy))]
+    internal partial class FragmentedByteBuffer : IDisposable
     {
         private const int InitialCapacity = 256;
 
@@ -24,6 +27,10 @@ namespace Repository.Internal.EditorServices.Highlighting
         {
             Allocate(InitialCapacity);
         }
+
+        private int ByteCount => GetFragments().Sum(f => f.Capacity());
+
+        private string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}";
 
         public void Add(long value)
         {
