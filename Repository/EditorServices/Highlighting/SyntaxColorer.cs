@@ -29,8 +29,8 @@ namespace Repository.EditorServices.Highlighting
 
         public void Color(SyntaxKind kind, int index, int count)
         {
-            int color = _theme.GetForegroundColor(kind).ToArgb();
-            var span = new FastForegroundColorSpan(color);
+            var color = _theme.GetForegroundColor(kind);
+            var span = new ForegroundColorSpan(color);
             _text.SetSpan(span, index, index + count, SpanTypes.InclusiveExclusive);
         }
     }
