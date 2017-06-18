@@ -24,7 +24,7 @@ public class ColoredText implements Spannable {
     }
 
     private static HashMap<Object, SpanInfo> buildMap(long[] colorings) {
-        HashMap<Object, SpanInfo> map = new HashMap<>();
+        HashMap<Object, SpanInfo> map = new HashMap<>(colorings.length);
         int spanStart = 0;
 
         for (int i = 0; i < colorings.length; i++) {
