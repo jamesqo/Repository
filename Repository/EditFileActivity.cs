@@ -60,12 +60,14 @@ namespace Repository
         private void DisplayContent(IColorTheme theme)
         {
             _editor.SetBackgroundColor(theme.BackgroundColor);
+            _editor.SetSpannableFactory(NoCopySpannableFactory.Instance);
 
             var highlighter = GetSyntaxHighlighter();
-            var colorer = TextColorer.Create(_content, theme);
-            var coloredContent = highlighter.Highlight(_content, colorer);
-            _editor.SetSpannableFactory(NoCopySpannableFactory.Instance);
-            _editor.SetText(coloredContent, TextView.BufferType.Editable);
+            using (var colorer = TextColorer.Create(_content, theme))
+            {
+                var coloredContent = highlighter.Highlight(_content, colorer);
+                _editor.SetText(coloredContent, TextView.BufferType.Editable);
+            }
         }
 
         private ISyntaxHighlighter GetSyntaxHighlighter()
