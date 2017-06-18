@@ -30,13 +30,14 @@ namespace Repository.EditorServices.Highlighting
 
         public void Color(SyntaxKind kind, int count)
         {
+            Debug.Assert(count > 0);
+
             var color = _theme.GetForegroundColor(kind);
             _colorings.Add(MakeColoring(color, count));
         }
 
         private static Coloring MakeColoring(Color color, int count)
         {
-            Debug.Assert(count >= 0);
             return ((long)color.ToArgb() << 32) | (uint)count;
         }
     }
