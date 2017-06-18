@@ -34,10 +34,12 @@ namespace Repository.Internal.EditorServices.Highlighting
                 Allocate();
             }
 
-            _current.PutLong(value);
+            _current.PutLong(_index, value);
+            _index += sizeof(long);
         }
 
         // TODO: Override Finalize(), have Dispose(bool)?
+        // Also prevent double frees and null out everything?
         public void Dispose()
         {
             for (int i = 0; i < _previous.Count; i++)
@@ -82,6 +84,10 @@ namespace Repository.Internal.EditorServices.Highlighting
             Marshal.FreeHGlobal(handle);
         }
 
-        private bool IsAligned(int byteCount) => _index % byteCount == 0;
+        private bool IsAligned(int byteCount)
+        {
+            Debug.Assert(_currentCapacity % byteCount == 0);
+            return _index % byteCount == 0;
+        }
     }
 }

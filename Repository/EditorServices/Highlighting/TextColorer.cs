@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
+using Repository.Internal.EditorServices.Highlighting;
 using Repository.JavaInterop;
-using Coloring = System.Int64;
 
 namespace Repository.EditorServices.Highlighting
 {
-    public class TextColorer : ITextColorer<ColoredText>
+    public class TextColorer : ITextColorer<ColoredText>, IDisposable
     {
         private readonly string _text;
         private readonly IColorTheme _theme;
-        private readonly List<Coloring> _colorings;
+        private readonly FragmentedByteBuffer _colorings;
 
         private TextColorer(string text, IColorTheme theme)
         {
@@ -21,12 +21,12 @@ namespace Repository.EditorServices.Highlighting
 
             _text = text;
             _theme = theme;
-            _colorings = new List<Coloring>();
+            _colorings = new FragmentedByteBuffer();
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
-        public ColoredText Result => new ColoredText(_text, _colorings.ToArray());
+        public ColoredText Result => new ColoredText(_text, _colorings.GetFragments());
 
         public void Color(SyntaxKind kind, int count)
         {
@@ -36,7 +36,10 @@ namespace Repository.EditorServices.Highlighting
             _colorings.Add(MakeColoring(color, count));
         }
 
-        private static Coloring MakeColoring(Color color, int count)
+        // TODO: Maybe set _colorings to null afterwards?
+        public void Dispose() => _colorings.Dispose();
+
+        private static long MakeColoring(Color color, int count)
         {
             return ((long)color.ToArgb() << 32) | (uint)count;
         }
