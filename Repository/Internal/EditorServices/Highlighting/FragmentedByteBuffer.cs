@@ -20,7 +20,7 @@ namespace Repository.Internal.EditorServices.Highlighting
         // Do not mark this field readonly, ArrayBuilder is a mutable struct.
         private ArrayBuilder<ByteBuffer> _previous;
         private ByteBuffer _current;
-        private int _currentCapacity;
+        private int _currentCapacity; // Same as _current.Capacity(), but avoids unnecessary JNI calls in Add() which is a hot path.
         private int _index;
 
         public FragmentedByteBuffer()
@@ -76,9 +76,12 @@ namespace Repository.Internal.EditorServices.Highlighting
 
         private void Allocate(int capacity)
         {
-            _previous.Add(_current);
+            if (_current != null)
+            {
+                _previous.Add(_current);
+                _index = 0;
+            }
             _currentCapacity = capacity;
-            _index = 0;
 
             // TODO: Refactor into static method?
             IntPtr handle = Marshal.AllocHGlobal(capacity);
