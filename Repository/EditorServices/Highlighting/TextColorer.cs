@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
-using Repository.Internal;
 using Coloring = System.Int64;
 
 namespace Repository.EditorServices.Highlighting
@@ -12,7 +11,7 @@ namespace Repository.EditorServices.Highlighting
     {
         private readonly string _text;
         private readonly IColorTheme _theme;
-        private readonly ArrayBuilder<Coloring> _colorings;
+        private readonly List<Coloring> _colorings;
 
         private TextColorer(string text, IColorTheme theme)
         {
@@ -21,12 +20,12 @@ namespace Repository.EditorServices.Highlighting
 
             _text = text;
             _theme = theme;
-            _colorings = new ArrayBuilder<Coloring>();
+            _colorings = new List<Coloring>();
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
-        public ColoredText Result => new ColoredText(_text, _colorings.Array, _colorings.Count);
+        public ColoredText Result => new ColoredText(_text, _colorings.ToArray());
 
         public void Color(SyntaxKind kind, int count)
         {
