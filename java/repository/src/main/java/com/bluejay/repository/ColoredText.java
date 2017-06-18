@@ -1,34 +1,34 @@
 package com.bluejay.repository;
 
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 
 import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class ColoredText implements Spannable {
     private final String rawText;
     private final HashMap<Object, SpanInfo> map;
 
-    public ColoredText(String rawText, long[] colorings) {
+    // TODO: Accept FragmentedByteStream directly in the constructor?
+    public ColoredText(String rawText, ByteBuffer[] colorings) {
         assert rawText != null;
         assert colorings != null;
 
         this.rawText = rawText;
-        this.map = buildMap(colorings);
+        this.map = buildMap(new FragmentedByteStream(colorings));
     }
 
-    private static HashMap<Object, SpanInfo> buildMap(long[] colorings) {
-        HashMap<Object, SpanInfo> map = new HashMap<>(colorings.length);
+    private static HashMap<Object, SpanInfo> buildMap(FragmentedByteStream colorings) {
+        int coloringCount = colorings.byteCount() / 8;
+        HashMap<Object, SpanInfo> map = new HashMap<>(coloringCount);
         int spanStart = 0;
 
-        for (int i = 0; i < colorings.length; i++) {
-            long coloring = colorings[i];
+        while (colorings.hasMore()) {
+            long coloring = colorings.readLong();
             int color = getColor(coloring);
             int count = getCount(coloring);
 

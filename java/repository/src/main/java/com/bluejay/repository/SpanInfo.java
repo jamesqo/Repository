@@ -10,10 +10,10 @@ public class SpanInfo {
     }
 
     public int getEnd() {
-        return end;
+        return this.end;
     }
 
     public int getStart() {
-        return start;
+        return this.start;
     }
 }
