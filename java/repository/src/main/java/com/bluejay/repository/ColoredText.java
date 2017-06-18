@@ -13,13 +13,12 @@ public class ColoredText implements Spannable {
     private final String rawText;
     private final HashMap<Object, SpanInfo> map;
 
-    // TODO: Accept FragmentedByteStream directly in the constructor?
-    public ColoredText(String rawText, ByteBuffer[] colorings) {
+    public ColoredText(String rawText, FragmentedReadStream colorings) {
         assert rawText != null;
         assert colorings != null;
 
         this.rawText = rawText;
-        this.map = buildMap(new FragmentedReadStream(colorings));
+        this.map = buildMap(colorings);
     }
 
     private static HashMap<Object, SpanInfo> buildMap(FragmentedReadStream colorings) {

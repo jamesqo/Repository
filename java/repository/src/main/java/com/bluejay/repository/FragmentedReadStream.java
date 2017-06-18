@@ -11,11 +11,12 @@ public class FragmentedReadStream {
     private int byteIndex;
     private int bytesRead;
 
-    public FragmentedReadStream(ByteBuffer[] fragments) {
+    public FragmentedReadStream(ByteBuffer[] fragments, int byteCount) {
         assert fragments != null;
+        assert byteCount >= 0;
 
         this.fragments = fragments.clone();
-        this.byteCount = getByteCount(fragments);
+        this.byteCount = byteCount;
     }
 
     public int byteCount() {
@@ -38,28 +39,19 @@ public class FragmentedReadStream {
         this.bytesRead += byteCount;
     }
 
-    private static int getByteCount(ByteBuffer[] fragments) {
-        int count = 0;
-        for (int i = 0; i < fragments.length; i++) {
-            count += fragments[i].capacity();
-        }
-        return count;
-    }
-
     private ByteBuffer getCurrentFragment() {
+        assert this.hasMore();
+
         ByteBuffer current = this.fragments[this.bufferIndex];
         if (this.byteIndex == current.capacity()) {
-            if (!moveToNextFragment()) {
-                throw new IllegalStateException("No more bytes available!");
-            }
+            moveToNextFragment();
             current = this.fragments[this.bufferIndex];
         }
         return current;
     }
 
-    private boolean moveToNextFragment() {
+    private void moveToNextFragment() {
         this.bufferIndex++;
         this.byteIndex = 0;
-        return this.bufferIndex != this.fragments.length;
     }
 }

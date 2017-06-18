@@ -7,6 +7,7 @@ using System.Text;
 using Android.Runtime;
 using Java.Nio;
 using Repository.Common;
+using Repository.JavaInterop;
 using JavaObject = Java.Lang.Object;
 
 namespace Repository.Internal.EditorServices.Highlighting
@@ -28,11 +29,26 @@ namespace Repository.Internal.EditorServices.Highlighting
             Allocate(InitialCapacity);
         }
 
-        private int ByteCount => _previous.Sum(f => f.Capacity()) + _index;
+        private int ByteCount
+        {
+            get
+            {
+                if (FragmentCount == 1)
+                {
+                    return _index;
+                }
 
+                Debug.Assert(_previous.Sum(f => f.Capacity()) == _currentCapacity);
+                return _currentCapacity + _index;
+            }
+        }
+
+        // Note: This is for debug use only.
         private int Capacity => GetFragments().Sum(f => f.Capacity());
 
-        private string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}";
+        private string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}, {nameof(FragmentCount)} = {FragmentCount}";
+
+        private int FragmentCount => _previous.Count + 1;
 
         public void Add(long value)
         {
@@ -66,6 +82,8 @@ namespace Repository.Internal.EditorServices.Highlighting
             fragments[_previous.Count] = _current;
             return fragments;
         }
+
+        public FragmentedReadStream ToReadStream() => new FragmentedReadStream(GetFragments(), ByteCount);
 
         private void Allocate()
         {
