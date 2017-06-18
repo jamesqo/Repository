@@ -13,15 +13,18 @@ import java.util.Objects;
 
 public class ColoredText implements Spannable {
     private final String rawText;
-    private final Map<Object, SpanInfo> map;
+    private final HashMap<Object, SpanInfo> map;
 
     public ColoredText(String rawText, long[] colorings) {
+        assert rawText != null;
+        assert colorings != null;
+
         this.rawText = rawText;
         this.map = buildMap(colorings);
     }
 
-    private static Map<Object, SpanInfo> buildMap(long[] colorings) {
-        Map<Object, SpanInfo> map = new HashMap<>();
+    private static HashMap<Object, SpanInfo> buildMap(long[] colorings) {
+        HashMap<Object, SpanInfo> map = new HashMap<>();
         int spanStart = 0;
 
         for (int i = 0; i < colorings.length; i++) {
@@ -68,7 +71,7 @@ public class ColoredText implements Spannable {
 
         // Hack: This is an implementation detail, but as long as you don't remove items from it, a HashMap
         // will hand out entries in the same order you inserted them.
-        for (Map.Entry<Object, SpanInfo> entry : this.map.entrySet()) {
+        for (HashMap.Entry<Object, SpanInfo> entry : this.map.entrySet()) {
             SpanInfo info = entry.getValue();
             int spanStart = info.getStart(), spanEnd = info.getEnd();
 
