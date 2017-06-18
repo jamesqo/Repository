@@ -19,10 +19,10 @@ public class ColoredText implements Spannable {
         assert colorings != null;
 
         this.rawText = rawText;
-        this.map = buildMap(new FragmentedByteStream(colorings));
+        this.map = buildMap(new FragmentedReadStream(colorings));
     }
 
-    private static HashMap<Object, SpanInfo> buildMap(FragmentedByteStream colorings) {
+    private static HashMap<Object, SpanInfo> buildMap(FragmentedReadStream colorings) {
         int coloringCount = colorings.byteCount() / 8;
         HashMap<Object, SpanInfo> map = new HashMap<>(coloringCount);
         int spanStart = 0;

@@ -3,7 +3,7 @@ package com.bluejay.repository;
 import java.io.EOFException;
 import java.nio.ByteBuffer;
 
-public class FragmentedByteStream {
+public class FragmentedReadStream {
     private final ByteBuffer[] fragments;
     private final int byteCount;
 
@@ -11,7 +11,7 @@ public class FragmentedByteStream {
     private int byteIndex;
     private int bytesRead;
 
-    public FragmentedByteStream(ByteBuffer[] fragments) {
+    public FragmentedReadStream(ByteBuffer[] fragments) {
         assert fragments != null;
 
         this.fragments = fragments.clone();
