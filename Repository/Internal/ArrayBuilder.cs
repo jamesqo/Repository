@@ -40,6 +40,12 @@ namespace Repository.Internal
 
         public void CopyTo(T[] array, int arrayIndex)
         {
+            if (_count == 0)
+            {
+                Debug.Assert(_array == null);
+                return;
+            }
+
             Array.Copy(_array, 0, array, arrayIndex, _count);
         }
 
