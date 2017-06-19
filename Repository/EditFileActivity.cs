@@ -60,7 +60,7 @@ namespace Repository
         private void DisplayContent(IColorTheme theme)
         {
             _editor.SetBackgroundColor(theme.BackgroundColor);
-            _editor.SetSpannableFactory(NoCopySpannableFactory.Instance);
+            _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
 
             var highlighter = GetSyntaxHighlighter();
             using (var colorer = TextColorer.Create(_content, theme))
