@@ -18,8 +18,6 @@ namespace Repository.Internal
 
         public const string Extra_BrowseFiles_RepoId = nameof(Extra_BrowseFiles_RepoId);
 
-        public const string Extra_EditFile_Content = nameof(Extra_EditFile_Content);
-
         public const string Extra_EditFile_Path = nameof(Extra_EditFile_Path);
 
         public const string Extra_SignIn_Url = nameof(Extra_SignIn_Url);
@@ -28,10 +26,6 @@ namespace Repository.Internal
 
         public const string SPFile_AccessTokens = nameof(SPFile_AccessTokens);
 
-        public const string SPFile_EditorContent = nameof(SPFile_EditorContent);
-
         public const string SPKey_AccessTokens_GitHubAccessToken = nameof(SPKey_AccessTokens_GitHubAccessToken);
-
-        public const string SPKey_EditorContent_Value = nameof(SPKey_EditorContent_Value);
     }
 }

@@ -198,18 +198,16 @@ namespace Repository
             // TODO: Other places where we don't pass in 'parameters' via the intent, but the other
             // activity still needs them, should accept those parameters in Start*?
             var intent = new Intent(this, typeof(EditFileActivity));
-            Argument(WriteEditorContent(content));
+            WriteEditorContent(content);
             intent.PutExtra(Strings.Extra_EditFile_Path, path);
             StartActivity(intent);
         }
 
-        private bool WriteEditorContent(string content)
+        private void WriteEditorContent(string content)
         {
-            // The file content can be arbitrarily large, so use SharedPreferences instead of Intent.PutExtra.
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_EditorContent);
-            var editor = prefs.Edit();
-            editor.PutString(Strings.SPKey_EditorContent_Value, content);
-            return editor.Commit();
+            // The file content can be arbitrarily large, which makes it no good for Intent.PutExtra
+            // and SharedPreferences. Just store it in a static field.
+            EditorContent.Current = content;
         }
     }
 }

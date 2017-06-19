@@ -60,12 +60,14 @@ namespace Repository
         private void DisplayContent(IColorTheme theme)
         {
             _editor.SetBackgroundColor(theme.BackgroundColor);
+            _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
 
             var highlighter = GetSyntaxHighlighter();
-            var colorer = TextColorer.Create(_content, theme);
-            var coloredContent = highlighter.Highlight(_content, colorer);
-            _editor.SetSpannableFactory(NoCopySpannableFactory.Instance);
-            _editor.SetText(coloredContent, TextView.BufferType.Editable);
+            using (var colorer = TextColorer.Create(_content, theme))
+            {
+                var coloredContent = highlighter.Highlight(_content, colorer);
+                _editor.SetText(coloredContent, TextView.BufferType.Editable);
+            }
         }
 
         private ISyntaxHighlighter GetSyntaxHighlighter()
@@ -89,10 +91,6 @@ namespace Repository
             Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
         }
 
-        private string ReadEditorContent()
-        {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_EditorContent);
-            return prefs.GetString(Strings.SPKey_EditorContent_Value, defValue: null);
-        }
+        private string ReadEditorContent() => EditorContent.Current;
     }
 }

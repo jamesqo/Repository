@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Octokit;
+﻿using Octokit;
 
 namespace Repository.Internal
 {
+    // TODO: Unify this + EditorContent into 1 static class where global app state can be accessed?
     internal static class GitHub
     {
         public static GitHubClient Client { get; } = new GitHubClient(new ProductHeaderValue(Strings.AppName));

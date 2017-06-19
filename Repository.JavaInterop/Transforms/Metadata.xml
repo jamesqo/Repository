@@ -2,4 +2,8 @@
   <attr
     path="/api/package[@name='com.bluejay.repository']"
     name="managedName">Repository.JavaInterop</attr>
+
+  <attr
+    path="/api/package[@name='com.bluejay.repository']/class[@name='ColoredText']/method[@name='append']"
+    name="managedReturn">Java.Lang.IAppendable</attr>
 </metadata>
