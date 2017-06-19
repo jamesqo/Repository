@@ -38,7 +38,7 @@ namespace Repository.Internal.EditorServices.Highlighting
                     return _index;
                 }
 
-                Debug.Assert(_fragments.Sum(f => f.Capacity()) == _currentCapacity);
+                Debug.Assert(_fragments.SkipLast(1).Sum(f => f.Capacity()) == _currentCapacity);
                 return _currentCapacity + _index;
             }
         }
@@ -59,7 +59,16 @@ namespace Repository.Internal.EditorServices.Highlighting
                 Allocate();
             }
 
-            *((long*)(_current + _index)) = value;
+            // It's tempting to use pointer arithmetic here, but we must write the data out in the correct endianness.
+            // TODO: What if other devices are little endian?
+            _current[_index] = (byte)(value >> 56);
+            _current[_index + 1] = (byte)(value >> 48);
+            _current[_index + 2] = (byte)(value >> 40);
+            _current[_index + 3] = (byte)(value >> 32);
+            _current[_index + 4] = (byte)(value >> 24);
+            _current[_index + 5] = (byte)(value >> 16);
+            _current[_index + 6] = (byte)(value >> 8);
+            _current[_index + 7] = (byte)value;
             _index += sizeof(long);
         }
 
