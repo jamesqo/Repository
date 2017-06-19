@@ -126,7 +126,7 @@ public class ColoredText implements Editable {
 
     @Override
     public void removeSpan(Object o) {
-        return this.builder.removeSpan(o);
+        this.builder.removeSpan(o);
     }
 
     @Override

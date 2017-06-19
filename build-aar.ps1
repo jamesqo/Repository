@@ -7,6 +7,11 @@ $aarDestination = [IO.Path]::Combine($javaInteropRoot, "Jars")
 pushd $javaProjectRoot
 
 .\gradlew assembleRelease
+if (! $?)
+{
+    exit $LastExitCode
+}
+
 cp $aarSource $aarDestination -Force
 echo "Successfully copied $aarName to $aarDestination."
 

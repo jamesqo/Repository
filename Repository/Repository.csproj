@@ -132,7 +132,7 @@
     <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\NoCopySpannableFactory.cs" />
+    <Compile Include="Internal\EditorServices\Highlighting\NoCopyEditableFactory.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Strings.cs" />
