@@ -31,7 +31,7 @@ public class ColoredText implements Editable {
             int count = getCount(coloring);
 
             Object span = new ForegroundColorSpan(color);
-            this.builder.setSpan(span, index, index + count, SPAN_INCLUSIVE_EXCLUSIVE);
+            this.setSpan(span, index, index + count, SPAN_INCLUSIVE_EXCLUSIVE);
             index += count;
         }
 
