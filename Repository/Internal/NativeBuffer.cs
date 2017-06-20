@@ -31,12 +31,13 @@ namespace Repository.Internal
 
         public bool IsFull => _count == _capacity;
 
-        public unsafe bool IsInvalid => _address == null;
+        public unsafe bool IsValid => _address != null;
 
         internal string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}";
 
         public unsafe void Add(long value)
         {
+            Verify.State(IsValid);
             Verify.State(HasRoom(sizeof(long)));
 
             // It's tempting to use pointer arithmetic here, but we must write the data out in the correct endianness.
@@ -56,7 +57,7 @@ namespace Repository.Internal
 
         public unsafe void Dispose()
         {
-            Verify.State(!IsInvalid);
+            Verify.State(IsValid);
 
             Marshal.FreeHGlobal(Address);
             _address = null;
