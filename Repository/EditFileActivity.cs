@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -12,6 +12,7 @@ using Android.Widget;
 using Repository.EditorServices.Highlighting;
 using Repository.Internal;
 using Repository.Internal.EditorServices.Highlighting;
+using Repository.JavaInterop;
 using static Repository.Common.Verify;
 
 namespace Repository
@@ -62,12 +63,9 @@ namespace Repository
             _editor.SetBackgroundColor(theme.BackgroundColor);
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
 
-            var highlighter = GetHighlighter();
-            using (var colorer = TextColorer.Create(_content, theme))
-            {
-                _editor.SetText(colorer.Text, TextView.BufferType.Editable);
-                highlighter.Highlight(_content, colorer);
-            }
+            var text = new ColoredText(_content);
+            _editor.SetText(text, TextView.BufferType.Editable);
+            Task.Factory.StartNew(HighlightContent, state: (text, theme));
         }
 
         private IHighlighter GetHighlighter()
@@ -89,6 +87,15 @@ namespace Repository
         {
             RequestWindowFeature(WindowFeatures.NoTitle);
             Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
+        }
+
+        private void HighlightContent(object state)
+        {
+            var (text, theme) = ((ColoredText, IColorTheme))state;
+            using (var colorer = TextColorer.Create(text, theme))
+            {
+                GetHighlighter().Highlight(_content, colorer);
+            }
         }
 
         private string ReadEditorContent() => EditorContent.Current;

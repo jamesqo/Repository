@@ -2,19 +2,25 @@ package com.bluejay.repository;
 
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpanWatcher;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 
 import java.nio.ByteBuffer;
+import java.util.IdentityHashMap;
 
 public class ColoredText implements Editable {
     private final SpannableStringBuilder builder;
+    private final IdentityHashMap<Object, UiThreadWatcher> uiThreadWatchers;
 
     private int index;
 
     public ColoredText(String rawText) {
         assert rawText != null;
+
         this.builder = new SpannableStringBuilder(rawText);
+        this.uiThreadWatchers = new IdentityHashMap<>();
     }
 
     public void receive(ByteBuffer colorings, int coloringCount) {
@@ -114,12 +120,12 @@ public class ColoredText implements Editable {
 
     @Override
     public void setSpan(Object o, int i, int i1, int i2) {
-        this.builder.setSpan(o, i, i1, i2);
+        this.builder.setSpan(this.wrap(o), i, i1, i2);
     }
 
     @Override
     public void removeSpan(Object o) {
-        this.builder.removeSpan(o);
+        this.builder.removeSpan(this.findWrapper(o));
     }
 
     @Override
@@ -129,17 +135,17 @@ public class ColoredText implements Editable {
 
     @Override
     public int getSpanStart(Object o) {
-        return this.builder.getSpanStart(o);
+        return this.builder.getSpanStart(this.findWrapper(o));
     }
 
     @Override
     public int getSpanEnd(Object o) {
-        return this.builder.getSpanEnd(o);
+        return this.builder.getSpanEnd(this.findWrapper(o));
     }
 
     @Override
     public int getSpanFlags(Object o) {
-        return this.builder.getSpanFlags(o);
+        return this.builder.getSpanFlags(this.findWrapper(o));
     }
 
     @Override
@@ -160,5 +166,29 @@ public class ColoredText implements Editable {
     @Override
     public CharSequence subSequence(int i, int i1) {
         return this.builder.subSequence(i, i1);
+    }
+
+    private UiThreadWatcher createWrapper(Object span) {
+        UiThreadWatcher wrapper = null;
+        if (span instanceof SpanWatcher) {
+            wrapper = new UiThreadSpanWatcher((SpanWatcher) span);
+        }
+        else {
+            wrapper = new UiThreadTextWatcher((TextWatcher) span);
+        }
+        this.uiThreadWatchers.put(span, wrapper);
+        return wrapper;
+    }
+
+    private Object findWrapper(Object span) {
+        if (span instanceof SpanWatcher || span instanceof TextWatcher) {
+            return this.uiThreadWatchers.get(span);
+        }
+        return span;
+    }
+
+    private Object wrap(Object span) {
+        Object wrapper = this.findWrapper(span);
+        return wrapper != null ? wrapper : this.createWrapper(span);
     }
 }
