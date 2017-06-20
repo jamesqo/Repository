@@ -13,7 +13,6 @@ namespace Repository.EditorServices.Highlighting
     {
         private const int BatchCount = 256;
 
-        private readonly string _rawText;
         private readonly IColorTheme _theme;
         private readonly WrappedByteBuffer _colorings;
         private readonly ColoredText _text;
@@ -23,7 +22,6 @@ namespace Repository.EditorServices.Highlighting
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
-            _rawText = text;
             _theme = theme;
             _colorings = new WrappedByteBuffer(BatchCount * 8);
             _text = new ColoredText(text);
