@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Java.Nio;
+using Repository.Common;
 
 namespace Repository.Internal
 {
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal class WrappedByteBuffer : IDisposable
     {
         private readonly NativeBuffer _buffer;
@@ -20,6 +23,8 @@ namespace Repository.Internal
         public int ByteCount => _buffer.ByteCount;
 
         public bool IsFull => _buffer.IsFull;
+
+        private string DebuggerDisplay => _buffer.DebuggerDisplay;
 
         public void Add(long value) => _buffer.Add(value);
 

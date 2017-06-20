@@ -134,6 +134,7 @@
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Jni.cs" />
     <Compile Include="Internal\NativeBuffer.cs" />
+    <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="Internal\WrappedByteBuffer.cs" />

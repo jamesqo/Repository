@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -7,7 +8,9 @@ using Repository.Common;
 
 namespace Repository.Internal
 {
-    internal class NativeBuffer : IDisposable
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
+    [DebuggerTypeProxy(typeof(DebuggerProxy))]
+    internal partial class NativeBuffer : IDisposable
     {
         private readonly int _capacity;
 
@@ -29,6 +32,8 @@ namespace Repository.Internal
         public bool IsFull => _count == _capacity;
 
         public unsafe bool IsInvalid => _address == null;
+
+        internal string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}";
 
         public unsafe void Add(long value)
         {
@@ -55,6 +60,13 @@ namespace Repository.Internal
 
             Marshal.FreeHGlobal(Address);
             _address = null;
+        }
+
+        public byte[] ToByteArray()
+        {
+            var array = new byte[_count];
+            Marshal.Copy(Address, array, 0, _count);
+            return array;
         }
 
         private bool HasRoom(int byteCount) => _count + byteCount <= _capacity;
