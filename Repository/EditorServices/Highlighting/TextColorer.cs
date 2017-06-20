@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
+using Repository.Internal;
 using Repository.Internal.EditorServices.Highlighting;
 using Repository.JavaInterop;
 
@@ -10,21 +11,27 @@ namespace Repository.EditorServices.Highlighting
 {
     public class TextColorer : ITextColorer, IDisposable
     {
-        private readonly string _text;
+        private const int BatchCount = 256;
+
+        private readonly string _rawText;
         private readonly IColorTheme _theme;
-        private readonly FragmentedByteBuffer _colorings;
+        private readonly WrappedByteBuffer _colorings;
+        private readonly ColoredText _text;
 
         private TextColorer(string text, IColorTheme theme)
         {
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
-            _text = text;
+            _rawText = text;
             _theme = theme;
-            _colorings = new FragmentedByteBuffer();
+            _colorings = new WrappedByteBuffer(BatchCount * 8);
+            _text = new ColoredText(text);
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
+
+        public ColoredText Text => _text;
 
         public void Color(SyntaxKind kind, int count)
         {
@@ -32,10 +39,21 @@ namespace Repository.EditorServices.Highlighting
 
             var color = _theme.GetForegroundColor(kind);
             _colorings.Add(MakeColoring(color, count));
+
+            if (_colorings.IsFull)
+            {
+                Flush();
+            }
         }
 
-        // TODO: Maybe set _colorings to null afterwards?
         public void Dispose() => _colorings.Dispose();
+
+        private void Flush()
+        {
+            // TODO: Rename ColoredText => +Stream?
+            _text.Receive(_colorings.Unwrap());
+            _colorings.Clear();
+        }
 
         private static long MakeColoring(Color color, int count)
         {

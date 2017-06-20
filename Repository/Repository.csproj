@@ -132,8 +132,11 @@
     <Compile Include="Internal\EditorServices\Highlighting\NoCopyEditableFactory.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
+    <Compile Include="Internal\Jni.cs" />
+    <Compile Include="Internal\NativeBuffer.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
+    <Compile Include="Internal\WrappedByteBuffer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="BrowseFilesActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

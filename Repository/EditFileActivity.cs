@@ -65,8 +65,8 @@ namespace Repository
             var highlighter = GetHighlighter();
             using (var colorer = TextColorer.Create(_content, theme))
             {
-                var coloredContent = highlighter.Highlight(_content, colorer);
-                _editor.SetText(coloredContent, TextView.BufferType.Editable);
+                _editor.SetText(colorer.Text, TextView.BufferType.Editable);
+                highlighter.Highlight(_content, colorer);
             }
         }
 
