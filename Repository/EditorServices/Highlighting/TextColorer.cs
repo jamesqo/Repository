@@ -46,13 +46,22 @@ namespace Repository.EditorServices.Highlighting
             }
         }
 
-        public void Dispose() => _colorings.Dispose();
+        public void Dispose()
+        {
+            // TODO: Make sure we're not disposed twice?
+            Flush();
+            _colorings.Dispose();
+        }
 
         private void Flush()
         {
-            // TODO: Rename ColoredText => +Stream?
-            _text.Receive(_colorings.Unwrap());
-            _colorings.Clear();
+            int byteCount = _colorings.ByteCount;
+            if (byteCount > 0)
+            {
+                // TODO: Rename ColoredText => +Stream?
+                _text.Receive(_colorings.Unwrap(), byteCount / 8);
+                _colorings.Clear();
+            }
         }
 
         private static long MakeColoring(Color color, int count)

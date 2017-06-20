@@ -17,6 +17,8 @@ namespace Repository.Internal
             _javaBuffer = Jni.NewDirectByteBuffer(_buffer.Address, capacity);
         }
 
+        public int ByteCount => _buffer.ByteCount;
+
         public bool IsFull => _buffer.IsFull;
 
         public void Add(long value) => _buffer.Add(value);

@@ -2,31 +2,25 @@ package com.bluejay.repository;
 
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.nio.ByteBuffer;
 
 public class ColoredText implements Editable {
     private final SpannableStringBuilder builder;
 
-    public ColoredText(String rawText, FragmentedReadStream colorings) {
+    public ColoredText(String rawText) {
         assert rawText != null;
-        assert colorings != null;
-
         this.builder = new SpannableStringBuilder(rawText);
-        this.colorWith(colorings);
     }
 
-    private void colorWith(FragmentedReadStream colorings) {
+    public void receive(ByteBuffer colorings, int coloringCount) {
         int index = 0;
-        while (colorings.hasMore()) {
-            long coloring = colorings.readLong();
+        int byteCount = coloringCount * 8;
+
+        for (int i = 0; i < byteCount; i += 8) {
+            long coloring = colorings.getLong(i);
             int color = getColor(coloring);
             int count = getCount(coloring);
 
