@@ -10,26 +10,25 @@ import java.nio.ByteBuffer;
 public class ColoredText implements Editable {
     private final SpannableStringBuilder builder;
 
+    private int index;
+
     public ColoredText(String rawText) {
         assert rawText != null;
         this.builder = new SpannableStringBuilder(rawText);
     }
 
     public void receive(ByteBuffer colorings, int coloringCount) {
-        int index = 0;
         int byteCount = coloringCount * 8;
-
         for (int i = 0; i < byteCount; i += 8) {
             long coloring = colorings.getLong(i);
-            int color = getColor(coloring);
-            int count = getCount(coloring);
-
-            Object span = new ForegroundColorSpan(color);
-            this.setSpan(span, index, index + count, SPAN_INCLUSIVE_EXCLUSIVE);
-            index += count;
+            this.advance(getColor(coloring), getCount(coloring));
         }
+    }
 
-        assert index == this.length();
+    private void advance(int color, int count) {
+        Object span = new ForegroundColorSpan(color);
+        this.setSpan(span, this.index, this.index + count, SPAN_INCLUSIVE_EXCLUSIVE);
+        this.index += count;
     }
 
     private static int getColor(long coloring) {
