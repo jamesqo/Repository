@@ -13,21 +13,21 @@ namespace Repository.EditorServices.Highlighting
     {
         private const int BatchCount = 256;
 
+        private readonly ColoredText _text;
         private readonly IColorTheme _theme;
         private readonly WrappedByteBuffer _colorings;
-        private readonly ColoredText _text;
 
-        private TextColorer(string text, IColorTheme theme)
+        private TextColorer(ColoredText text, IColorTheme theme)
         {
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
+            _text = text;
             _theme = theme;
             _colorings = new WrappedByteBuffer(BatchCount * 8);
-            _text = new ColoredText(text);
         }
 
-        public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
+        public static TextColorer Create(ColoredText text, IColorTheme theme) => new TextColorer(text, theme);
 
         public ColoredText Text => _text;
 
