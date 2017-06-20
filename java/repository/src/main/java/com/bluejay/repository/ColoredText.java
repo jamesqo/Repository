@@ -23,7 +23,7 @@ public class ColoredText implements Editable {
         this.uiThreadWatchers = new IdentityHashMap<>();
     }
 
-    public void receive(ByteBuffer colorings, int coloringCount) {
+    public synchronized void receive(ByteBuffer colorings, int coloringCount) {
         int byteCount = coloringCount * 8;
         for (int i = 0; i < byteCount; i += 8) {
             long coloring = colorings.getLong(i);
@@ -130,7 +130,7 @@ public class ColoredText implements Editable {
     }
 
     @Override
-    public <T> T[] getSpans(int i, int i1, Class<T> aClass) {
+    public synchronized <T> T[] getSpans(int i, int i1, Class<T> aClass) {
         return this.builder.getSpans(i, i1, aClass);
     }
 
