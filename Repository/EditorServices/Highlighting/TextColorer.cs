@@ -8,7 +8,7 @@ using Repository.JavaInterop;
 
 namespace Repository.EditorServices.Highlighting
 {
-    public class TextColorer : ITextColorer<ColoredText>, IDisposable
+    public class TextColorer : ITextColorer, IDisposable
     {
         private readonly string _text;
         private readonly IColorTheme _theme;
@@ -25,8 +25,6 @@ namespace Repository.EditorServices.Highlighting
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
-
-        public ColoredText Result => new ColoredText(_text, _colorings.ToReadStream());
 
         public void Color(SyntaxKind kind, int count)
         {

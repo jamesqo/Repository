@@ -7,6 +7,6 @@ namespace Repository.EditorServices.Highlighting
 {
     public interface IHighlighter
     {
-        TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer);
+        void Highlight(string text, ITextColorer colorer);
     }
 }

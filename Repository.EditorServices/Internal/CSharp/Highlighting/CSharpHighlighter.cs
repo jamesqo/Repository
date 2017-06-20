@@ -133,10 +133,6 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
             }
         }
 
-        public TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer)
-        {
-            new Worker(text, colorer).Run();
-            return colorer.Result;
-        }
+        public void Highlight(string text, ITextColorer colorer) => new Worker(text, colorer).Run();
     }
 }

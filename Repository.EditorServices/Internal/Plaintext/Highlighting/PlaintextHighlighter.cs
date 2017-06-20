@@ -8,10 +8,6 @@ namespace Repository.EditorServices.Internal.Plaintext.Highlighting
 {
     internal class PlaintextHighlighter : IHighlighter
     {
-        public TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer)
-        {
-            colorer.Color(SyntaxKind.Plaintext, text.Length);
-            return colorer.Result;
-        }
+        public void Highlight(string text, ITextColorer colorer) => colorer.Color(SyntaxKind.Plaintext, text.Length);
     }
 }

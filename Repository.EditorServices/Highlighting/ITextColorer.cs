@@ -4,9 +4,4 @@ namespace Repository.EditorServices.Highlighting
     {
         void Color(SyntaxKind kind, int count);
     }
-
-    public interface ITextColorer<out TResult> : ITextColorer
-    {
-        TResult Result { get; }
-    }
 }
