@@ -101,6 +101,7 @@ public class ColoredText implements Editable {
     @Override
     public void clearSpans() {
         this.builder.clearSpans();
+        this.uiThreadWatchers.clear();
     }
 
     @Override
@@ -169,22 +170,13 @@ public class ColoredText implements Editable {
     }
 
     private UiThreadWatcher createWrapper(Object span) {
-        UiThreadWatcher wrapper = null;
-        if (span instanceof SpanWatcher) {
-            wrapper = new UiThreadSpanWatcher((SpanWatcher) span);
-        }
-        else {
-            wrapper = new UiThreadTextWatcher((TextWatcher) span);
-        }
+        UiThreadWatcher wrapper = UiThreadWatcher.create(span);
         this.uiThreadWatchers.put(span, wrapper);
         return wrapper;
     }
 
     private Object findWrapper(Object span) {
-        if (span instanceof SpanWatcher || span instanceof TextWatcher) {
-            return this.uiThreadWatchers.get(span);
-        }
-        return span;
+        return UiThreadWatcher.canCreate(span) ? this.uiThreadWatchers.get(span) : span;
     }
 
     private Object wrap(Object span) {
