@@ -9,17 +9,17 @@ using Repository.EditorServices.Internal.Plaintext.Highlighting;
 
 namespace Repository.EditorServices.Highlighting
 {
-    public static class SyntaxHighlighter
+    public static class Highlighter
     {
-        public static ISyntaxHighlighter CSharp { get; } = new CSharpSyntaxHighlighter();
+        public static IHighlighter CSharp { get; } = new CSharpHighlighter();
 
-        public static ISyntaxHighlighter Java { get; } = new JavaSyntaxHighlighter();
+        public static IHighlighter Java { get; } = new JavaHighlighter();
 
-        public static ISyntaxHighlighter Plaintext { get; } = new PlaintextSyntaxHighlighter();
+        public static IHighlighter Plaintext { get; } = new PlaintextHighlighter();
 
         // TODO: Consider whether appropriate for this assembly.
 
-        public static ISyntaxHighlighter FromFileExtension(string fileExtension)
+        public static IHighlighter FromFileExtension(string fileExtension)
         {
             Verify.NotNullOrEmpty(fileExtension, nameof(fileExtension));
 
@@ -37,7 +37,7 @@ namespace Repository.EditorServices.Highlighting
             return null;
         }
 
-        public static ISyntaxHighlighter FromFirstLine(string firstLine)
+        public static IHighlighter FromFirstLine(string firstLine)
         {
             Verify.NotNull(firstLine, nameof(firstLine));
 

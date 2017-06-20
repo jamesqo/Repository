@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Repository.EditorServices.Highlighting
 {
-    public interface ISyntaxHighlighter
+    public interface IHighlighter
     {
         TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer);
     }

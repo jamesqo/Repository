@@ -62,7 +62,7 @@ namespace Repository
             _editor.SetBackgroundColor(theme.BackgroundColor);
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
 
-            var highlighter = GetSyntaxHighlighter();
+            var highlighter = GetHighlighter();
             using (var colorer = TextColorer.Create(_content, theme))
             {
                 var coloredContent = highlighter.Highlight(_content, colorer);
@@ -70,10 +70,10 @@ namespace Repository
             }
         }
 
-        private ISyntaxHighlighter GetSyntaxHighlighter()
+        private IHighlighter GetHighlighter()
         {
             var fileExtension = System.IO.Path.GetExtension(_path).TrimStart('.');
-            var highlighter = SyntaxHighlighter.FromFileExtension(fileExtension);
+            var highlighter = Highlighter.FromFileExtension(fileExtension);
 
             if (highlighter != null)
             {
@@ -82,7 +82,7 @@ namespace Repository
 
             int firstLineEnd = _content.IndexOf('\n');
             var firstLine = _content.Substring(0, firstLineEnd);
-            return SyntaxHighlighter.FromFirstLine(firstLine) ?? SyntaxHighlighter.Plaintext;
+            return Highlighter.FromFirstLine(firstLine) ?? Highlighter.Plaintext;
         }
 
         private void HideActionBar()

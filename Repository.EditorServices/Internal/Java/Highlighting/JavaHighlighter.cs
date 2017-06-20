@@ -9,7 +9,7 @@ using static Repository.EditorServices.Internal.Java.Highlighting.JavaParser;
 
 namespace Repository.EditorServices.Internal.Java.Highlighting
 {
-    internal partial class JavaSyntaxHighlighter : ISyntaxHighlighter
+    internal partial class JavaHighlighter : IHighlighter
     {
         private partial class Visitor : JavaBaseVisitor<object>
         {

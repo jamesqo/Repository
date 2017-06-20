@@ -6,7 +6,7 @@ using Repository.EditorServices.Highlighting;
 
 namespace Repository.EditorServices.Internal.Plaintext.Highlighting
 {
-    internal class PlaintextSyntaxHighlighter : ISyntaxHighlighter
+    internal class PlaintextHighlighter : IHighlighter
     {
         public TResult Highlight<TResult>(string text, ITextColorer<TResult> colorer)
         {

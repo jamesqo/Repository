@@ -9,7 +9,7 @@ using static Microsoft.CodeAnalysis.Classification.ClassificationTypeNames;
 
 namespace Repository.EditorServices.Internal.CSharp.Highlighting
 {
-    internal class CSharpSyntaxHighlighter : ISyntaxHighlighter
+    internal class CSharpHighlighter : IHighlighter
     {
         private class Worker
         {
@@ -62,7 +62,8 @@ namespace Repository.EditorServices.Internal.CSharp.Highlighting
             private static IEnumerable<ClassifiedSpan> GetClassifiedSpans(string sourceText)
             {
                 var document = CreateDocument(sourceText);
-                // TODO: Add async support to ISyntaxHighlighter? IsAsync, or just force everything to return a Task?
+                // TODO: Add async support to IHighlighter? IsAsync, or just force everything to return a Task?
+                // Probably won't be an issue after this class is rewritten to do manual classification.
                 return Classifier.GetClassifiedSpansAsync(document, new TextSpan(0, sourceText.Length)).Result;
             }
 
