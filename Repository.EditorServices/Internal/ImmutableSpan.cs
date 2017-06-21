@@ -5,10 +5,11 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Repository.Common;
 
 namespace Repository.EditorServices.Internal
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct ImmutableSpan<T> : IEnumerable<T>
     {
         private ImmutableSpan(ImmutableArray<T> array, int index, int count)

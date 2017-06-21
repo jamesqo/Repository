@@ -9,7 +9,7 @@ using Repository.Common;
 
 namespace Repository.EditorServices.Internal.Common.Highlighting
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct SyntaxReplacement
     {
         public static SyntaxReplacement None => default(SyntaxReplacement);

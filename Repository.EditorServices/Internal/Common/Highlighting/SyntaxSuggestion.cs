@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Repository.Common;
 using Repository.EditorServices.Highlighting;
 
 namespace Repository.EditorServices.Internal.Common.Highlighting
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct SyntaxSuggestion
     {
         private readonly int _value;

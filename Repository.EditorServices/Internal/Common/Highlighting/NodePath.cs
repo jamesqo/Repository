@@ -10,7 +10,7 @@ using Repository.Common;
 
 namespace Repository.EditorServices.Internal.Common.Highlighting
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct NodePath : IEquatable<NodePath>
     {
         // TODO: This is ANTLR-specific. Maybe subclass NodePath with AntlrPath?
