@@ -3,12 +3,23 @@ package com.bluejay.repository;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
+import android.text.style.*;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Set;
 
 public class ColoredText implements Editable {
+    private static final Set<Class> noSpans = new HashSet<Class>(Arrays.asList(
+            LeadingMarginSpan.class,
+            TabStopSpan.class,
+            LineHeightSpan.class,
+            ReplacementSpan.class,
+            MetricAffectingSpan.class
+    ));
+
     private final SpannableStringBuilder builder;
     private final IdentityHashMap<Object, UiThreadWatcher> uiThreadWatchers;
 
@@ -132,8 +143,13 @@ public class ColoredText implements Editable {
     }
 
     @Override
-    public synchronized <T> T[] getSpans(int i, int i1, Class<T> aClass) {
-        return this.builder.getSpans(i, i1, aClass);
+    public <T> T[] getSpans(int i, int i1, Class<T> aClass) {
+        if (noSpans.contains(aClass)) {
+            return EmptyArray.get(aClass);
+        }
+        synchronized (this) {
+            return this.builder.getSpans(i, i1, aClass);
+        }
     }
 
     @Override
@@ -153,6 +169,9 @@ public class ColoredText implements Editable {
 
     @Override
     public int nextSpanTransition(int i, int i1, Class aClass) {
+        if (noSpans.contains(aClass)) {
+            return i1;
+        }
         return this.builder.nextSpanTransition(i, i1, aClass);
     }
 

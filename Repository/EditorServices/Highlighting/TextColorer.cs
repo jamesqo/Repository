@@ -11,6 +11,9 @@ namespace Repository.EditorServices.Highlighting
 {
     public class TextColorer : ITextColorer, IDisposable
     {
+        // TODO: Consider increasing the batch size geometrically, which would cause O(log n)
+        // callbacks to be posted to the UI thread instead of O(n).
+        // Or not. One reason for keeping it small is to reduce lock contention.
         private const int BatchCount = 256;
 
         private readonly ColoredText _text;

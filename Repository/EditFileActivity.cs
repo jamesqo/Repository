@@ -91,6 +91,8 @@ namespace Repository
 
         private void HighlightContent(object state)
         {
+            Process.SetThreadPriority(ThreadPriority.Background);
+
             var (text, theme) = ((ColoredText, IColorTheme))state;
             using (var colorer = TextColorer.Create(text, theme))
             {
