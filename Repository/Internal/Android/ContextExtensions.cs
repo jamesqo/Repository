@@ -10,7 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace Repository.Internal
+namespace Repository.Internal.Android
 {
     internal static class ContextExtensions
     {

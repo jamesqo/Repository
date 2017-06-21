@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
-using Repository.Internal;
-using Repository.Internal.EditorServices.Highlighting;
+using Repository.Internal.Java;
 using Repository.JavaInterop;
 
 namespace Repository.EditorServices.Highlighting

@@ -6,7 +6,7 @@ using Android.Runtime;
 using Java.Nio;
 using JavaObject = Java.Lang.Object;
 
-namespace Repository.Internal
+namespace Repository.Internal.Java
 {
     internal static class Jni
     {

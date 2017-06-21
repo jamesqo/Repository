@@ -6,7 +6,7 @@ using System.Text;
 using Java.Nio;
 using Repository.Common;
 
-namespace Repository.Internal
+namespace Repository.Internal.Java
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal class WrappedByteBuffer : IDisposable
