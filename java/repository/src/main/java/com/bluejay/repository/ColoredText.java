@@ -2,9 +2,7 @@ package com.bluejay.repository;
 
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.SpanWatcher;
 import android.text.SpannableStringBuilder;
-import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 
 import java.nio.ByteBuffer;
@@ -23,12 +21,16 @@ public class ColoredText implements Editable {
         this.uiThreadWatchers = new IdentityHashMap<>();
     }
 
-    public synchronized void receive(ByteBuffer colorings, int coloringCount) {
-        int byteCount = coloringCount * 8;
-        for (int i = 0; i < byteCount; i += 8) {
-            long coloring = colorings.getLong(i);
-            this.advance(getColor(coloring), getCount(coloring));
+    public void receive(ByteBuffer colorings, int coloringCount) {
+        synchronized (this) {
+            int byteCount = coloringCount * 8;
+            for (int i = 0; i < byteCount; i += 8) {
+                long coloring = colorings.getLong(i);
+                this.advance(getColor(coloring), getCount(coloring));
+            }
         }
+
+        this.flushUiThreadWatchers();
     }
 
     private void advance(int color, int count) {
@@ -101,7 +103,7 @@ public class ColoredText implements Editable {
     @Override
     public void clearSpans() {
         this.builder.clearSpans();
-        this.uiThreadWatchers.clear();
+        this.clearUiThreadWatchers();
     }
 
     @Override
@@ -169,6 +171,10 @@ public class ColoredText implements Editable {
         return this.builder.subSequence(i, i1);
     }
 
+    private void clearUiThreadWatchers() {
+        this.uiThreadWatchers.clear();
+    }
+
     private UiThreadWatcher createWrapper(Object span) {
         UiThreadWatcher wrapper = UiThreadWatcher.create(span);
         this.uiThreadWatchers.put(span, wrapper);
@@ -177,6 +183,12 @@ public class ColoredText implements Editable {
 
     private Object findWrapper(Object span) {
         return UiThreadWatcher.canCreate(span) ? this.uiThreadWatchers.get(span) : span;
+    }
+
+    private void flushUiThreadWatchers() {
+        for (UiThreadWatcher watcher : this.uiThreadWatchers.values()) {
+            watcher.flush();
+        }
     }
 
     private Object wrap(Object span) {
