@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Repository.Internal.Editor.Highlighting;
 
-namespace Repository.Editor.Highlighting
+namespace Repository.Internal.Editor.Highlighting
 {
     public static class ColorTheme
     {

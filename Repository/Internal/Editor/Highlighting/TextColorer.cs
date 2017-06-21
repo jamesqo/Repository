@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
+using Repository.Editor.Highlighting;
 using Repository.Internal.Java;
 using Repository.JavaInterop;
 
-namespace Repository.Editor.Highlighting
+namespace Repository.Internal.Editor.Highlighting
 {
     public class TextColorer : ITextColorer, IDisposable
     {
