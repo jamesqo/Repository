@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Repository.Internal.Editor.Highlighting
 {
-    public static class ColorTheme
+    internal static class ColorTheme
     {
         public static IColorTheme Default => Monokai;
 

@@ -7,7 +7,7 @@ using Repository.Editor.Highlighting;
 
 namespace Repository.Internal.Editor.Highlighting
 {
-    public interface IColorTheme
+    internal interface IColorTheme
     {
         Color BackgroundColor { get; }
 

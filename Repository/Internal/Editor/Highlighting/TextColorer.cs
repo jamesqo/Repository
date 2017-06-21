@@ -9,7 +9,7 @@ using Repository.JavaInterop;
 
 namespace Repository.Internal.Editor.Highlighting
 {
-    public class TextColorer : ITextColorer, IDisposable
+    internal class TextColorer : ITextColorer, IDisposable
     {
         // TODO: Consider increasing the batch size geometrically, which would cause O(log n)
         // callbacks to be posted to the UI thread instead of O(n).
