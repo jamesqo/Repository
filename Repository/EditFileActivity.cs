@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
+using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using Repository.JavaInterop;
 using static Repository.Common.Verify;

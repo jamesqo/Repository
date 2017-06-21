@@ -127,7 +127,7 @@
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
-    <Compile Include="Internal\EditorContent.cs" />
+    <Compile Include="Internal\Editor\EditorContent.cs" />
     <Compile Include="Internal\Editor\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\NoCopyEditableFactory.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
