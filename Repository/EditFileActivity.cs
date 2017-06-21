@@ -9,9 +9,9 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Repository.EditorServices.Highlighting;
+using Repository.Editor.Highlighting;
 using Repository.Internal;
-using Repository.Internal.EditorServices.Highlighting;
+using Repository.Internal.Editor.Highlighting;
 using Repository.JavaInterop;
 using static Repository.Common.Verify;
 

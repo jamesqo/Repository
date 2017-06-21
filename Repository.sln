@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{F8475452-CA0A-4CC5-9F2E-1EA3A72CDD57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.EditorServices", "Repository.EditorServices\Repository.EditorServices.csproj", "{4490BE7B-C620-40B1-8C62-5396EECC6F3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Editor", "Repository.Editor\Repository.Editor.csproj", "{4490BE7B-C620-40B1-8C62-5396EECC6F3E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Common", "Repository.Common\Repository.Common.csproj", "{50FB1CDA-38B0-4E70-A175-7D733E2B5C9F}"
 EndProject
