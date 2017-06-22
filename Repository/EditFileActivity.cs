@@ -80,6 +80,7 @@ namespace Repository
                 return highlighter;
             }
 
+            // TODO: What if there is no \n, or there's a very long first line?
             int firstLineEnd = _content.IndexOf('\n');
             var firstLine = _content.Substring(0, firstLineEnd);
             return Highlighter.FromFirstLine(firstLine) ?? Highlighter.Plaintext;
