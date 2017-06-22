@@ -12,6 +12,7 @@ using Android.Views;
 using Android.Webkit;
 using Android.Widget;
 using Repository.Internal;
+using Repository.Internal.Android;
 using static Repository.Common.Verify;
 using static System.Diagnostics.Debug;
 

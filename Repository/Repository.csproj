@@ -120,23 +120,24 @@
     <Compile Include="ChooseProviderActivity.cs" />
     <Compile Include="ChooseRepositoryActivity.cs" />
     <Compile Include="EditFileActivity.cs" />
-    <Compile Include="EditorServices\Highlighting\ColorTheme.cs" />
-    <Compile Include="EditorServices\Highlighting\IColorTheme.cs" />
-    <Compile Include="EditorServices\Highlighting\TextColorer.cs" />
-    <Compile Include="Internal\ArrayBuilder.cs" />
-    <Compile Include="Internal\ContextExtensions.cs" />
+    <Compile Include="Internal\Editor\Highlighting\ColorTheme.cs" />
+    <Compile Include="Internal\Editor\Highlighting\IColorTheme.cs" />
+    <Compile Include="Internal\Editor\Highlighting\TextColorer.cs" />
+    <Compile Include="Internal\Android\ContextExtensions.cs" />
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\DebugAssertException.cs" />
     <Compile Include="Internal\DebugListener.cs" />
-    <Compile Include="Internal\EditorContent.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\FragmentedByteBuffer.DebuggerProxy.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\MonokaiColorTheme.cs" />
-    <Compile Include="Internal\EditorServices\Highlighting\NoCopyEditableFactory.cs" />
+    <Compile Include="Internal\Editor\EditorContent.cs" />
+    <Compile Include="Internal\Editor\Highlighting\MonokaiColorTheme.cs" />
+    <Compile Include="Internal\Editor\Highlighting\NoCopyEditableFactory.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
+    <Compile Include="Internal\Java\Jni.cs" />
+    <Compile Include="Internal\NativeBuffer.cs" />
+    <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
+    <Compile Include="Internal\Java\WrappedByteBuffer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="BrowseFilesActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -190,9 +191,9 @@
       <Project>{50fb1cda-38b0-4e70-a175-7d733e2b5c9f}</Project>
       <Name>Repository.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Repository.EditorServices\Repository.EditorServices.csproj">
+    <ProjectReference Include="..\Repository.Editor\Repository.Editor.csproj">
       <Project>{4490be7b-c620-40b1-8c62-5396eecc6f3e}</Project>
-      <Name>Repository.EditorServices</Name>
+      <Name>Repository.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repository.JavaInterop\Repository.JavaInterop.csproj">
       <Project>{d84b83dc-37b4-443a-bb4b-4a9acc01d4ab}</Project>
