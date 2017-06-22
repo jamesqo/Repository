@@ -2,40 +2,52 @@ package com.bluejay.repository;
 
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
+import android.text.style.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
 public class ColoredText implements Editable {
-    private final SpannableStringBuilder builder;
+    private static final Set<Class> noSpans = new HashSet<Class>(Arrays.asList(
+            LeadingMarginSpan.class,
+            TabStopSpan.class,
+            LineHeightSpan.class,
+            ReplacementSpan.class,
+            MetricAffectingSpan.class
+    ));
 
-    public ColoredText(String rawText, FragmentedReadStream colorings) {
+    private final SpannableStringBuilder builder;
+    private final IdentityHashMap<Object, UiThreadWatcher> uiThreadWatchers;
+
+    private int index;
+
+    public ColoredText(String rawText) {
         assert rawText != null;
-        assert colorings != null;
 
         this.builder = new SpannableStringBuilder(rawText);
-        this.colorWith(colorings);
+        this.uiThreadWatchers = new IdentityHashMap<>();
     }
 
-    private void colorWith(FragmentedReadStream colorings) {
-        int index = 0;
-        while (colorings.hasMore()) {
-            long coloring = colorings.readLong();
-            int color = getColor(coloring);
-            int count = getCount(coloring);
-
-            Object span = new ForegroundColorSpan(color);
-            this.setSpan(span, index, index + count, SPAN_INCLUSIVE_EXCLUSIVE);
-            index += count;
+    public void receive(ByteBuffer colorings, int coloringCount) {
+        synchronized (this) {
+            int byteCount = coloringCount * 8;
+            for (int i = 0; i < byteCount; i += 8) {
+                long coloring = colorings.getLong(i);
+                this.advance(getColor(coloring), getCount(coloring));
+            }
         }
 
-        assert index == this.length();
+        this.flushUiThreadWatchers();
+    }
+
+    private void advance(int color, int count) {
+        Object span = new ForegroundColorSpan(color);
+        this.setSpan(span, this.index, this.index + count, SPAN_INCLUSIVE_EXCLUSIVE);
+        this.index += count;
     }
 
     private static int getColor(long coloring) {
@@ -102,6 +114,7 @@ public class ColoredText implements Editable {
     @Override
     public void clearSpans() {
         this.builder.clearSpans();
+        this.clearUiThreadWatchers();
     }
 
     @Override
@@ -121,36 +134,44 @@ public class ColoredText implements Editable {
 
     @Override
     public void setSpan(Object o, int i, int i1, int i2) {
-        this.builder.setSpan(o, i, i1, i2);
+        this.builder.setSpan(this.wrap(o), i, i1, i2);
     }
 
     @Override
     public void removeSpan(Object o) {
-        this.builder.removeSpan(o);
+        this.builder.removeSpan(this.findWrapper(o));
     }
 
     @Override
     public <T> T[] getSpans(int i, int i1, Class<T> aClass) {
-        return this.builder.getSpans(i, i1, aClass);
+        if (noSpans.contains(aClass)) {
+            return EmptyArray.get(aClass);
+        }
+        synchronized (this) {
+            return this.builder.getSpans(i, i1, aClass);
+        }
     }
 
     @Override
     public int getSpanStart(Object o) {
-        return this.builder.getSpanStart(o);
+        return this.builder.getSpanStart(this.findWrapper(o));
     }
 
     @Override
     public int getSpanEnd(Object o) {
-        return this.builder.getSpanEnd(o);
+        return this.builder.getSpanEnd(this.findWrapper(o));
     }
 
     @Override
     public int getSpanFlags(Object o) {
-        return this.builder.getSpanFlags(o);
+        return this.builder.getSpanFlags(this.findWrapper(o));
     }
 
     @Override
     public int nextSpanTransition(int i, int i1, Class aClass) {
+        if (noSpans.contains(aClass)) {
+            return i1;
+        }
         return this.builder.nextSpanTransition(i, i1, aClass);
     }
 
@@ -167,5 +188,30 @@ public class ColoredText implements Editable {
     @Override
     public CharSequence subSequence(int i, int i1) {
         return this.builder.subSequence(i, i1);
+    }
+
+    private void clearUiThreadWatchers() {
+        this.uiThreadWatchers.clear();
+    }
+
+    private UiThreadWatcher createWrapper(Object span) {
+        UiThreadWatcher wrapper = UiThreadWatcher.create(span);
+        this.uiThreadWatchers.put(span, wrapper);
+        return wrapper;
+    }
+
+    private Object findWrapper(Object span) {
+        return UiThreadWatcher.canCreate(span) ? this.uiThreadWatchers.get(span) : span;
+    }
+
+    private void flushUiThreadWatchers() {
+        for (UiThreadWatcher watcher : this.uiThreadWatchers.values()) {
+            watcher.flush();
+        }
+    }
+
+    private Object wrap(Object span) {
+        Object wrapper = this.findWrapper(span);
+        return wrapper != null ? wrapper : this.createWrapper(span);
     }
 }

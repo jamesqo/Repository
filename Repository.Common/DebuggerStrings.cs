@@ -6,7 +6,6 @@ namespace Repository.Common
 {
     public static class DebuggerStrings
     {
-        // TODO: Use in all DebuggerDisplays everywhere.
         public const string DisplayFormat = "{DebuggerDisplay,nq}";
     }
 }

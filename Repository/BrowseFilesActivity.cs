@@ -13,6 +13,7 @@ using Android.Widget;
 using Repository.Internal;
 using static Repository.Common.Verify;
 using static System.Diagnostics.Debug;
+using Repository.Internal.Editor;
 
 namespace Repository
 {

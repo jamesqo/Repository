@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Repository.Internal;
+using Repository.Internal.Android;
 
 namespace Repository
 {
