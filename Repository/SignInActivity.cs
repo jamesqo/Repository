@@ -78,7 +78,7 @@ namespace Repository
             Argument(WriteAccessToken(key: Strings.SPKey_AccessTokens_GitHubAccessToken, token: token));
             GitHub.Client.Credentials = new Octokit.Credentials(token);
 
-            StartChooseRepository();
+            StartChooseRepo();
         }
 
         private static async Task<string> RequestAccessToken(string code)
@@ -88,9 +88,9 @@ namespace Repository
             return oauthToken.AccessToken;
         }
 
-        private void StartChooseRepository()
+        private void StartChooseRepo()
         {
-            var intent = new Intent(this, typeof(ChooseRepositoryActivity));
+            var intent = new Intent(this, typeof(ChooseRepoActivity));
             StartActivity(intent);
         }
 

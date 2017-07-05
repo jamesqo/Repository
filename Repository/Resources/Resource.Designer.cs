@@ -211,10 +211,10 @@ namespace Repository
 			public const int ChooseProvider = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int ChooseRepository = 2130903043;
+			public const int ChooseRepo = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int ChooseRepository_CardView = 2130903044;
+			public const int ChooseRepo_CardView = 2130903044;
 			
 			// aapt resource value: 0x7f030005
 			public const int EditFile = 2130903045;

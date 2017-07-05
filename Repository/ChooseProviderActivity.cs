@@ -72,7 +72,7 @@ namespace Repository
 
         private void SkipSignIn()
         {
-            var intent = new Intent(this, typeof(ChooseRepositoryActivity));
+            var intent = new Intent(this, typeof(ChooseRepoActivity));
             StartActivity(intent);
         }
     }

@@ -16,9 +16,9 @@ using static Repository.Common.Verify;
 namespace Repository
 {
     [Activity(Label = "Choose a Repository")]
-    public class ChooseRepositoryActivity : Activity
+    public class ChooseRepoActivity : Activity
     {
-        private class GitHubRepositoryAdapter : RecyclerView.Adapter
+        private class GitHubRepoAdapter : RecyclerView.Adapter
         {
             private class ViewHolder : RecyclerView.ViewHolder
             {
@@ -33,7 +33,7 @@ namespace Repository
                 }
             }
 
-            internal GitHubRepositoryAdapter(IReadOnlyList<Octokit.Repository> repos)
+            internal GitHubRepoAdapter(IReadOnlyList<Octokit.Repository> repos)
             {
                 // TODO: What if there are no repos?
                 Repos = NotNull(repos, nameof(repos));
@@ -54,7 +54,7 @@ namespace Repository
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
                 var inflater = LayoutInflater.From(parent.Context);
-                var view = inflater.Inflate(Resource.Layout.ChooseRepository_CardView, parent, attachToRoot: false);
+                var view = inflater.Inflate(Resource.Layout.ChooseRepo_CardView, parent, attachToRoot: false);
                 return new ViewHolder(view, OnClick);
             }
 
@@ -72,7 +72,7 @@ namespace Repository
 
             base.OnCreate(savedInstanceState);
 
-            SetContentView(Resource.Layout.ChooseRepository);
+            SetContentView(Resource.Layout.ChooseRepo);
             CacheViews();
 
             _repoView.SetAdapter(await GetRepoViewAdapter());
@@ -81,7 +81,7 @@ namespace Repository
 
         private void Adapter_ItemClick(object sender, int e)
         {
-            var adapter = (GitHubRepositoryAdapter)sender;
+            var adapter = (GitHubRepoAdapter)sender;
             var repo = adapter.Repos[e];
             StartBrowseFiles(repoId: repo.Id);
         }
@@ -89,7 +89,7 @@ namespace Repository
         private async Task<RecyclerView.Adapter> GetRepoViewAdapter()
         {
             var repos = await GitHub.Client.Repository.GetAllForCurrent();
-            var adapter = new GitHubRepositoryAdapter(repos);
+            var adapter = new GitHubRepoAdapter(repos);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
         }
