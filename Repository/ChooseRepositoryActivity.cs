@@ -23,7 +23,7 @@ namespace Repository
             internal GitHubRepositoryAdapter(IReadOnlyList<Octokit.Repository> repos)
             {
                 // TODO: What if there are no repos?
-                Repos = NotNull(repos);
+                Repos = NotNull(repos, nameof(repos));
             }
 
             public event EventHandler<int> ItemClick;
