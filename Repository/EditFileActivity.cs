@@ -15,6 +15,7 @@ using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using Repository.JavaInterop;
 using static Repository.Common.Verify;
+using Path = System.IO.Path;
 
 namespace Repository
 {
@@ -71,18 +72,10 @@ namespace Repository
 
         private IHighlighter GetHighlighter()
         {
-            var fileExtension = System.IO.Path.GetExtension(_path).TrimStart('.');
-            var highlighter = Highlighter.FromFileExtension(fileExtension);
-
-            if (highlighter != null)
-            {
-                return highlighter;
-            }
-
-            // TODO: What if there is no \n, or there's a very long first line?
-            int firstLineEnd = _content.IndexOf('\n');
-            var firstLine = _content.Substring(0, firstLineEnd);
-            return Highlighter.FromFirstLine(firstLine) ?? Highlighter.Plaintext;
+            var fileExtension = Path.GetExtension(_path).TrimStart('.');
+            return Highlighter.FromFileExtension(fileExtension)
+                ?? Highlighter.FromFirstLine(_content.FirstLine())
+                ?? Highlighter.Plaintext;
         }
 
         private void HideActionBar()
