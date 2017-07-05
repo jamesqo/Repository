@@ -9,8 +9,10 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Octokit;
 using Repository.Internal;
 using Repository.Internal.Android;
+using Activity = Android.App.Activity;
 
 namespace Repository
 {
@@ -39,7 +41,7 @@ namespace Repository
             var token = ReadAccessToken(Strings.SPKey_AccessTokens_GitHubAccessToken);
             if (token != null)
             {
-                GitHub.Client.Credentials = new Octokit.Credentials(token);
+                GitHub.Client.Credentials = new Credentials(token);
                 SkipSignIn();
                 return;
             }
@@ -49,7 +51,7 @@ namespace Repository
 
         private static string GetGitHubLoginUrl()
         {
-            var request = new Octokit.OauthLoginRequest(Creds.ClientId)
+            var request = new OauthLoginRequest(Creds.ClientId)
             {
                 Scopes = { "repo" }
             };

@@ -135,9 +135,10 @@
     <Compile Include="Internal\Java\Jni.cs" />
     <Compile Include="Internal\NativeBuffer.cs" />
     <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
+    <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
-    <Compile Include="Internal\Java\WrappedByteBuffer.cs" />
+    <Compile Include="Internal\Java\ByteBufferWrapper.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="BrowseFilesActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

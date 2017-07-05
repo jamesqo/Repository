@@ -10,9 +10,11 @@ using Android.Runtime;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using Octokit;
 using Repository.Internal;
 using Repository.Internal.Editor;
 using static Repository.Common.Verify;
+using Activity = Android.App.Activity;
 using Debug = System.Diagnostics.Debug;
 
 namespace Repository
@@ -40,7 +42,7 @@ namespace Repository
             private readonly long _repoId;
             private readonly Stack<string> _directoryStack;
 
-            private IReadOnlyList<Octokit.RepositoryContent> _contents;
+            private IReadOnlyList<RepositoryContent> _contents;
 
             private GitHubFileAdapter(long repoId)
             {
@@ -55,7 +57,7 @@ namespace Repository
                 return adapter;
             }
 
-            public IReadOnlyList<Octokit.RepositoryContent> Contents => _contents;
+            public IReadOnlyList<RepositoryContent> Contents => _contents;
 
             public string CurrentDirectory => _directoryStack.Peek();
 
@@ -79,7 +81,7 @@ namespace Repository
                 return new ViewHolder(view, OnClick);
             }
 
-            internal async Task<Octokit.RepositoryContent> GetFullContent(string filePath)
+            internal async Task<RepositoryContent> GetFullContent(string filePath)
             {
                 var fullContents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, filePath);
                 return fullContents.Single();
@@ -100,14 +102,14 @@ namespace Repository
 
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
 
-            private IEnumerable<Octokit.RepositoryContent> SortContents(IEnumerable<Octokit.RepositoryContent> contents)
+            private IEnumerable<RepositoryContent> SortContents(IEnumerable<RepositoryContent> contents)
             {
-                int GetPriority(Octokit.ContentType type)
+                int GetPriority(ContentType type)
                 {
                     switch (type)
                     {
-                        case Octokit.ContentType.Dir: return 0;
-                        case Octokit.ContentType.File: return 1;
+                        case ContentType.Dir: return 0;
+                        case ContentType.File: return 1;
                         default: throw new NotImplementedException();
                     }
                 }
@@ -175,10 +177,10 @@ namespace Repository
 
             switch (content.Type)
             {
-                case Octokit.ContentType.Dir:
+                case ContentType.Dir:
                     HandleDirectoryClick();
                     break;
-                case Octokit.ContentType.File:
+                case ContentType.File:
                     HandleFileClick();
                     break;
                 default:

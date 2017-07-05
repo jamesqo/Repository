@@ -11,9 +11,11 @@ using Android.Runtime;
 using Android.Views;
 using Android.Webkit;
 using Android.Widget;
+using Octokit;
 using Repository.Internal;
 using Repository.Internal.Android;
 using static Repository.Common.Verify;
+using Activity = Android.App.Activity;
 using Debug = System.Diagnostics.Debug;
 
 namespace Repository
@@ -49,7 +51,7 @@ namespace Repository
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Debug.Assert(
-                GitHub.Client.Credentials.AuthenticationType != Octokit.AuthenticationType.Oauth,
+                GitHub.Client.Credentials.AuthenticationType != AuthenticationType.Oauth,
                 "The point of being here is to get an OAuth access token.");
 
             void CacheViews()
@@ -76,14 +78,14 @@ namespace Repository
         {
             var token = await RequestAccessToken(code);
             Argument(WriteAccessToken(key: Strings.SPKey_AccessTokens_GitHubAccessToken, token: token));
-            GitHub.Client.Credentials = new Octokit.Credentials(token);
+            GitHub.Client.Credentials = new Credentials(token);
 
             StartChooseRepo();
         }
 
         private static async Task<string> RequestAccessToken(string code)
         {
-            var request = new Octokit.OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
+            var request = new OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
             var oauthToken = await GitHub.Client.Oauth.CreateAccessToken(request);
             return oauthToken.AccessToken;
         }
