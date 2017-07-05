@@ -14,7 +14,7 @@ using Android.Widget;
 using Repository.Internal;
 using Repository.Internal.Android;
 using static Repository.Common.Verify;
-using static System.Diagnostics.Debug;
+using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
@@ -48,7 +48,7 @@ namespace Repository
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            Assert(
+            Debug.Assert(
                 GitHub.Client.Credentials.AuthenticationType != Octokit.AuthenticationType.Oauth,
                 "The point of being here is to get an OAuth access token.");
 

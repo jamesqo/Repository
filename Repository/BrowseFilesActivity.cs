@@ -11,9 +11,9 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Repository.Internal;
-using static Repository.Common.Verify;
-using static System.Diagnostics.Debug;
 using Repository.Internal.Editor;
+using static Repository.Common.Verify;
+using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
@@ -87,7 +87,7 @@ namespace Repository
 
             internal Task PopDirectory()
             {
-                Assert(!IsAtRoot);
+                Debug.Assert(!IsAtRoot);
                 _directoryStack.Pop();
                 return UpdateContents();
             }
