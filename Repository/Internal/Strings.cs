@@ -24,6 +24,10 @@ namespace Repository.Internal
 
         public const string Extra_SignIn_CallbackDomain = nameof(Extra_SignIn_CallbackDomain);
 
+        public const string Label_ChooseProvider = "Choose a Provider";
+
+        public const string Label_ChooseRepo = "Choose a Repository";
+
         public const string SPFile_AccessTokens = nameof(SPFile_AccessTokens);
 
         public const string SPKey_AccessTokens_GitHubAccessToken = nameof(SPKey_AccessTokens_GitHubAccessToken);

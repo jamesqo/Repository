@@ -15,7 +15,7 @@ using static Repository.Common.Verify;
 
 namespace Repository
 {
-    [Activity(Label = "Choose a Repository")]
+    [Activity(Label = Strings.Label_ChooseRepo)]
     public class ChooseRepoActivity : Activity
     {
         private class GitHubRepoAdapter : RecyclerView.Adapter

@@ -19,8 +19,7 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
-    // TODO: "Select a File" instead?
-    // TODO: Put the current directory path in tiny text below the activity label?
+    // TODO: Put the current directory path as the label.
     [Activity(Label = "File View")]
     public class BrowseFilesActivity : Activity
     {

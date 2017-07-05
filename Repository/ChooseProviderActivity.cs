@@ -16,7 +16,7 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity(Label = "Choose a Provider")]
+    [Activity(Label = Strings.Label_ChooseProvider)]
     public class ChooseProviderActivity : Activity
     {
         private Button _githubButton;
