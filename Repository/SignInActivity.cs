@@ -21,7 +21,7 @@ namespace Repository
     [Activity(Label = "Sign In")]
     public class SignInActivity : Activity
     {
-        private sealed class LoginSuccessListener : WebViewClient
+        private class LoginSuccessListener : WebViewClient
         {
             private readonly SignInActivity _activity;
             private readonly string _callbackDomain;

@@ -18,7 +18,7 @@ namespace Repository
     [Activity(Label = "Choose a Repository")]
     public class ChooseRepositoryActivity : Activity
     {
-        private sealed class GitHubRepositoryAdapter : RecyclerView.Adapter
+        private class GitHubRepositoryAdapter : RecyclerView.Adapter
         {
             internal GitHubRepositoryAdapter(IReadOnlyList<Octokit.Repository> repos)
             {
@@ -48,7 +48,7 @@ namespace Repository
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
         }
 
-        private sealed class GitHubRepositoryViewHolder : RecyclerView.ViewHolder
+        private class GitHubRepositoryViewHolder : RecyclerView.ViewHolder
         {
             public TextView RepoNameView { get; }
 

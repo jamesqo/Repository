@@ -22,7 +22,7 @@ namespace Repository
     [Activity(Label = "File View")]
     public class BrowseFilesActivity : Activity
     {
-        private sealed class GitHubFileAdapter : RecyclerView.Adapter
+        private class GitHubFileAdapter : RecyclerView.Adapter
         {
             private readonly long _repoId;
             private readonly Stack<string> _directoryStack;
@@ -110,7 +110,7 @@ namespace Repository
             }
         }
 
-        private sealed class GitHubFileViewHolder : RecyclerView.ViewHolder
+        private class GitHubFileViewHolder : RecyclerView.ViewHolder
         {
             public TextView RepoNameView { get; }
 
