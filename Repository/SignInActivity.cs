@@ -20,7 +20,7 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
-    [Activity(Label = "Sign In")]
+    [Activity]
     public class SignInActivity : Activity
     {
         private class LoginSuccessListener : WebViewClient
@@ -60,6 +60,8 @@ namespace Repository
             }
 
             base.OnCreate(savedInstanceState);
+
+            this.HideActionBar();
 
             SetContentView(Resource.Layout.SignIn);
             CacheViews();

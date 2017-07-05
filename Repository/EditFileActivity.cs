@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
+using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using Repository.JavaInterop;
@@ -43,7 +44,7 @@ namespace Repository
 
             base.OnCreate(savedInstanceState);
 
-            HideActionBar();
+            this.HideActionBar();
 
             SetContentView(Resource.Layout.EditFile);
             CacheViews();
@@ -76,12 +77,6 @@ namespace Repository
             return Highlighter.FromFileExtension(fileExtension)
                 ?? Highlighter.FromFirstLine(_content.FirstLine())
                 ?? Highlighter.Plaintext;
-        }
-
-        private void HideActionBar()
-        {
-            RequestWindowFeature(WindowFeatures.NoTitle);
-            Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
         }
 
         private void HighlightContent(object state)
