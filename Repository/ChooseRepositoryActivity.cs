@@ -20,6 +20,19 @@ namespace Repository
     {
         private class GitHubRepositoryAdapter : RecyclerView.Adapter
         {
+            private class ViewHolder : RecyclerView.ViewHolder
+            {
+                public TextView RepoNameView { get; }
+
+                internal ViewHolder(View view, Action<int> onClick)
+                    : base(view)
+                {
+                    RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.RepoNameView));
+
+                    view.Click += (sender, e) => onClick(AdapterPosition);
+                }
+            }
+
             internal GitHubRepositoryAdapter(IReadOnlyList<Octokit.Repository> repos)
             {
                 // TODO: What if there are no repos?
@@ -34,31 +47,18 @@ namespace Repository
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
-                var githubHolder = (GitHubRepositoryViewHolder)holder;
-                githubHolder.RepoNameView.Text = Repos[position].Name;
+                var viewHolder = (ViewHolder)holder;
+                viewHolder.RepoNameView.Text = Repos[position].Name;
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
                 var inflater = LayoutInflater.From(parent.Context);
                 var view = inflater.Inflate(Resource.Layout.ChooseRepository_CardView, parent, attachToRoot: false);
-                return new GitHubRepositoryViewHolder(view, OnClick);
+                return new ViewHolder(view, OnClick);
             }
 
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
-        }
-
-        private class GitHubRepositoryViewHolder : RecyclerView.ViewHolder
-        {
-            public TextView RepoNameView { get; }
-
-            internal GitHubRepositoryViewHolder(View view, Action<int> onClick)
-                : base(view)
-            {
-                RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.RepoNameView));
-
-                view.Click += (sender, e) => onClick(AdapterPosition);
-            }
         }
 
         private RecyclerView _repoView;

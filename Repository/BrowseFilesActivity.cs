@@ -24,6 +24,19 @@ namespace Repository
     {
         private class GitHubFileAdapter : RecyclerView.Adapter
         {
+            private class ViewHolder : RecyclerView.ViewHolder
+            {
+                public TextView RepoNameView { get; }
+
+                internal ViewHolder(View view, Action<int> onClick)
+                    : base(view)
+                {
+                    RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.FilenameView));
+
+                    view.Click += (sender, e) => onClick(AdapterPosition);
+                }
+            }
+
             private readonly long _repoId;
             private readonly Stack<string> _directoryStack;
 
@@ -54,16 +67,16 @@ namespace Repository
 
             public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
-                var githubHolder = (GitHubFileViewHolder)holder;
+                var viewHolder = (ViewHolder)holder;
                 var content = Contents[position];
-                githubHolder.RepoNameView.Text = content.Name;
+                viewHolder.RepoNameView.Text = content.Name;
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
                 var inflater = LayoutInflater.From(parent.Context);
                 var view = inflater.Inflate(Resource.Layout.BrowseFiles_CardView, parent, attachToRoot: false);
-                return new GitHubFileViewHolder(view, OnClick);
+                return new ViewHolder(view, OnClick);
             }
 
             internal async Task<Octokit.RepositoryContent> GetFullContent(string filePath)
@@ -107,19 +120,6 @@ namespace Repository
                 var unsortedContents = await GitHub.Client.Repository.Content.GetAllContents(_repoId, CurrentDirectory);
                 _contents = SortContents(unsortedContents).ToReadOnly();
                 NotifyDataSetChanged();
-            }
-        }
-
-        private class GitHubFileViewHolder : RecyclerView.ViewHolder
-        {
-            public TextView RepoNameView { get; }
-
-            internal GitHubFileViewHolder(View view, Action<int> onClick)
-                : base(view)
-            {
-                RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.FilenameView));
-
-                view.Click += (sender, e) => onClick(AdapterPosition);
             }
         }
 
