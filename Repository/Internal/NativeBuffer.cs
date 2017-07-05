@@ -65,6 +65,8 @@ namespace Repository.Internal
 
         public byte[] ToByteArray()
         {
+            Verify.State(IsValid);
+
             var array = new byte[_count];
             Marshal.Copy(Address, array, 0, _count);
             return array;

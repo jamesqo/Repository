@@ -9,12 +9,12 @@ using Repository.Common;
 namespace Repository.Internal.Java
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
-    internal class WrappedByteBuffer : IDisposable
+    internal class ByteBufferWrapper : IDisposable
     {
         private readonly NativeBuffer _buffer;
         private readonly ByteBuffer _javaBuffer;
 
-        public WrappedByteBuffer(int capacity)
+        public ByteBufferWrapper(int capacity)
         {
             _buffer = new NativeBuffer(capacity);
             _javaBuffer = Jni.NewDirectByteBuffer(_buffer.Address, capacity);

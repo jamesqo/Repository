@@ -18,7 +18,7 @@ namespace Repository.Internal.Editor.Highlighting
 
         private readonly ColoredText _text;
         private readonly IColorTheme _theme;
-        private readonly WrappedByteBuffer _colorings;
+        private readonly ByteBufferWrapper _colorings;
 
         private TextColorer(ColoredText text, IColorTheme theme)
         {
@@ -27,7 +27,7 @@ namespace Repository.Internal.Editor.Highlighting
 
             _text = text;
             _theme = theme;
-            _colorings = new WrappedByteBuffer(BatchCount * 8);
+            _colorings = new ByteBufferWrapper(BatchCount * 8);
         }
 
         public static TextColorer Create(ColoredText text, IColorTheme theme) => new TextColorer(text, theme);
