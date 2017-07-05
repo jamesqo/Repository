@@ -5,6 +5,7 @@ using System;
 using Android.Content;
 using Repository.Internal;
 using System.Diagnostics;
+using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
@@ -33,7 +34,7 @@ namespace Repository
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = ((Exception)e.ExceptionObject).GetBaseException();
-            System.Diagnostics.Debug.WriteLine(exception);
+            Debug.WriteLine(exception);
 
             if (Debugger.IsAttached)
             {
@@ -54,10 +55,7 @@ namespace Repository
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
-        private static void SetupDebug()
-        {
-            System.Diagnostics.Debug.Listeners.Add(new DebugListener());
-        }
+        private static void SetupDebug() => Debug.Listeners.Add(new DebugListener());
 
         private void StartChooseProvider()
         {
