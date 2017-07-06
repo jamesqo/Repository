@@ -35,7 +35,6 @@ namespace Repository
                 _editor = FindViewById<EditText>(Resource.Id.Editor);
             }
 
-            // TODO: Do this in other Activities, too?
             void CacheParameters()
             {
                 _content = NotNull(ReadEditorContent());
