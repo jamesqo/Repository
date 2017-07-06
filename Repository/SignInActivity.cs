@@ -83,9 +83,8 @@ namespace Repository
         {
             var token = await RequestAccessToken(code);
             Argument(WriteAccessToken(key: Strings.SPKey_AccessTokens_GitHubAccessToken, token: token));
-            GitHub.Client.Credentials = new Credentials(token);
 
-            StartChooseRepo();
+            StartChooseRepo(token);
         }
 
         private static async Task<string> RequestAccessToken(string code)
@@ -103,9 +102,10 @@ namespace Repository
             _signInWebView.SetWebViewClient(new LoginSuccessListener(this, _callbackDomain));
         }
 
-        private void StartChooseRepo()
+        private void StartChooseRepo(string token)
         {
             var intent = new Intent(this, typeof(ChooseRepoActivity));
+            GitHub.Client.Credentials = new Credentials(token);
             StartActivity(intent);
         }
 

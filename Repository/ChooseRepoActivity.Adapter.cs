@@ -27,7 +27,7 @@ namespace Repository
 
             internal Adapter(IReadOnlyList<Octokit.Repository> repos)
             {
-                // TODO: What if there are no repos?
+                // TODO: What if there are no repos? The user will be stuck on a blank screen.
                 Repos = NotNull(repos, nameof(repos));
             }
 

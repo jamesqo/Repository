@@ -41,8 +41,7 @@ namespace Repository
             var token = ReadAccessToken(Strings.SPKey_AccessTokens_GitHubAccessToken);
             if (token != null)
             {
-                GitHub.Client.Credentials = new Credentials(token);
-                SkipSignIn();
+                SkipSignIn(token);
                 return;
             }
 
@@ -72,9 +71,10 @@ namespace Repository
             StartActivity(intent);
         }
 
-        private void SkipSignIn()
+        private void SkipSignIn(string token)
         {
             var intent = new Intent(this, typeof(ChooseRepoActivity));
+            GitHub.Client.Credentials = new Credentials(token);
             StartActivity(intent);
         }
     }

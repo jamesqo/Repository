@@ -102,8 +102,6 @@ namespace Repository
 
         private void StartEditFile(string content, string path)
         {
-            // TODO: Other places where we don't pass in 'parameters' via the intent, but the other
-            // activity still needs them, should accept those parameters in Start*?
             var intent = new Intent(this, typeof(EditFileActivity));
             WriteEditorContent(content);
             intent.PutExtra(Strings.Extra_EditFile_Path, path);
