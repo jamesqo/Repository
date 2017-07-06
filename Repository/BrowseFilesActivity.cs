@@ -126,6 +126,8 @@ namespace Repository
 
         private RecyclerView _fileView;
 
+        private long _repoId;
+
         public override async void OnBackPressed()
         {
             var adapter = (GitHubFileAdapter)_fileView.GetAdapter();
@@ -146,13 +148,18 @@ namespace Repository
                 _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
             }
 
+            void CacheParameters()
+            {
+                _repoId = Intent.Extras.GetLong(Strings.Extra_BrowseFiles_RepoId);
+            }
+
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.BrowseFiles);
             CacheViews();
+            CacheParameters();
 
-            _fileView.SetAdapter(await GetFileViewAdapter());
-            _fileView.SetLayoutManager(new LinearLayoutManager(this));
+            await SetupFileView();
         }
 
         private void Adapter_ItemClick(object sender, int e)
@@ -189,10 +196,15 @@ namespace Repository
 
         private async Task<RecyclerView.Adapter> GetFileViewAdapter()
         {
-            long repoId = Intent.Extras.GetLong(Strings.Extra_BrowseFiles_RepoId);
-            var adapter = await GitHubFileAdapter.Create(repoId);
+            var adapter = await GitHubFileAdapter.Create(_repoId);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
+        }
+
+        private async Task SetupFileView()
+        {
+            _fileView.SetAdapter(await GetFileViewAdapter());
+            _fileView.SetLayoutManager(new LinearLayoutManager(this));
         }
 
         private void StartEditFile(string content, string path)

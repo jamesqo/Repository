@@ -48,6 +48,9 @@ namespace Repository
 
         private WebView _signInWebView;
 
+        private string _url;
+        private string _callbackDomain;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Debug.Assert(
@@ -59,21 +62,21 @@ namespace Repository
                 _signInWebView = FindViewById<WebView>(Resource.Id.SignInWebView);
             }
 
+            void CacheParameters()
+            {
+                _url = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_Url));
+                _callbackDomain = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_CallbackDomain));
+            }
+
             base.OnCreate(savedInstanceState);
 
             this.HideActionBar();
 
             SetContentView(Resource.Layout.SignIn);
             CacheViews();
+            CacheParameters();
 
-            // GitHub needs JS enabled to un-grey the authorization button
-            _signInWebView.Settings.JavaScriptEnabled = true;
-
-            var url = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_Url));
-            _signInWebView.LoadUrl(url);
-
-            var callbackDomain = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_CallbackDomain));
-            _signInWebView.SetWebViewClient(new LoginSuccessListener(this, callbackDomain));
+            SetupWebView();
         }
 
         private async void HandleSessionCode(string code)
@@ -90,6 +93,14 @@ namespace Repository
             var request = new OauthTokenRequest(Creds.ClientId, Creds.ClientSecret, code);
             var oauthToken = await GitHub.Client.Oauth.CreateAccessToken(request);
             return oauthToken.AccessToken;
+        }
+
+        private void SetupWebView()
+        {
+            // GitHub needs JS enabled to un-grey the authorization button
+            _signInWebView.Settings.JavaScriptEnabled = true;
+            _signInWebView.LoadUrl(_url);
+            _signInWebView.SetWebViewClient(new LoginSuccessListener(this, _callbackDomain));
         }
 
         private void StartChooseRepo()
