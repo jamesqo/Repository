@@ -75,8 +75,7 @@ namespace Repository
             SetContentView(Resource.Layout.ChooseRepo);
             CacheViews();
 
-            _repoView.SetAdapter(await GetRepoViewAdapter());
-            _repoView.SetLayoutManager(new LinearLayoutManager(this));
+            await SetupRepoView();
         }
 
         private void Adapter_ItemClick(object sender, int e)
@@ -92,6 +91,12 @@ namespace Repository
             var adapter = new GitHubRepoAdapter(repos);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
+        }
+
+        private async Task SetupRepoView()
+        {
+            _repoView.SetAdapter(await GetRepoViewAdapter());
+            _repoView.SetLayoutManager(new LinearLayoutManager(this));
         }
 
         private void StartBrowseFiles(long repoId)
