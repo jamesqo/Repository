@@ -117,7 +117,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BrowseFilesActivity.Adapter.cs" />
     <Compile Include="ChooseProviderActivity.cs" />
+    <Compile Include="ChooseRepoActivity.Adapter.cs" />
     <Compile Include="ChooseRepoActivity.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Internal\Editor\EditorContent.cs" />
     <Compile Include="Internal\Editor\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\NoCopyEditableFactory.cs" />
+    <Compile Include="Internal\Editor\Typefaces.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
