@@ -23,7 +23,7 @@ namespace Repository
     [Activity(Label = "File View")]
     public class BrowseFilesActivity : Activity
     {
-        private class GitHubFileAdapter : RecyclerView.Adapter
+        private class Adapter : RecyclerView.Adapter
         {
             private class ViewHolder : RecyclerView.ViewHolder
             {
@@ -43,15 +43,15 @@ namespace Repository
 
             private IReadOnlyList<RepositoryContent> _contents;
 
-            private GitHubFileAdapter(long repoId)
+            private Adapter(long repoId)
             {
                 _repoId = repoId;
                 _directoryStack = new Stack<string>();
             }
 
-            internal static async Task<GitHubFileAdapter> Create(long repoId)
+            internal static async Task<Adapter> Create(long repoId)
             {
-                var adapter = new GitHubFileAdapter(repoId);
+                var adapter = new Adapter(repoId);
                 await adapter.PushDirectory("/");
                 return adapter;
             }
@@ -130,7 +130,7 @@ namespace Repository
 
         public override async void OnBackPressed()
         {
-            var adapter = (GitHubFileAdapter)_fileView.GetAdapter();
+            var adapter = (Adapter)_fileView.GetAdapter();
             if (adapter.IsAtRoot)
             {
                 base.OnBackPressed();
@@ -164,7 +164,7 @@ namespace Repository
 
         private void Adapter_ItemClick(object sender, int e)
         {
-            var adapter = (GitHubFileAdapter)sender;
+            var adapter = (Adapter)sender;
             var content = adapter.Contents[e];
 
             async void HandleDirectoryClick()
@@ -194,9 +194,9 @@ namespace Repository
             }
         }
 
-        private async Task<RecyclerView.Adapter> GetFileViewAdapter()
+        private async Task<Adapter> GetFileViewAdapter()
         {
-            var adapter = await GitHubFileAdapter.Create(_repoId);
+            var adapter = await Adapter.Create(_repoId);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
         }

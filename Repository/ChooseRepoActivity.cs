@@ -18,7 +18,7 @@ namespace Repository
     [Activity(Label = Strings.Label_ChooseRepo)]
     public class ChooseRepoActivity : Activity
     {
-        private class GitHubRepoAdapter : RecyclerView.Adapter
+        private class Adapter : RecyclerView.Adapter
         {
             private class ViewHolder : RecyclerView.ViewHolder
             {
@@ -33,7 +33,7 @@ namespace Repository
                 }
             }
 
-            internal GitHubRepoAdapter(IReadOnlyList<Octokit.Repository> repos)
+            internal Adapter(IReadOnlyList<Octokit.Repository> repos)
             {
                 // TODO: What if there are no repos?
                 Repos = NotNull(repos, nameof(repos));
@@ -80,15 +80,15 @@ namespace Repository
 
         private void Adapter_ItemClick(object sender, int e)
         {
-            var adapter = (GitHubRepoAdapter)sender;
+            var adapter = (Adapter)sender;
             var repo = adapter.Repos[e];
             StartBrowseFiles(repoId: repo.Id);
         }
 
-        private async Task<RecyclerView.Adapter> GetRepoViewAdapter()
+        private async Task<Adapter> GetRepoViewAdapter()
         {
             var repos = await GitHub.Client.Repository.GetAllForCurrent();
-            var adapter = new GitHubRepoAdapter(repos);
+            var adapter = new Adapter(repos);
             adapter.ItemClick += Adapter_ItemClick;
             return adapter;
         }
