@@ -121,8 +121,11 @@
     <Compile Include="ChooseProviderActivity.cs" />
     <Compile Include="ChooseRepoActivity.Adapter.cs" />
     <Compile Include="ChooseRepoActivity.cs" />
+    <Compile Include="EditFileActivity.Adapter.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
+    <Compile Include="Internal\Editor\EditorTheme.cs" />
+    <Compile Include="Internal\Editor\Highlighting\ColoredTextList.cs" />
     <Compile Include="Internal\Editor\Highlighting\ColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\IColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\TextColorer.cs" />
@@ -137,6 +140,7 @@
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
+    <Compile Include="Internal\LazyList.cs" />
     <Compile Include="Internal\NativeBuffer.cs" />
     <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\StringExtensions.cs" />

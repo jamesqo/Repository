@@ -21,7 +21,7 @@ using Path = System.IO.Path;
 namespace Repository
 {
     [Activity]
-    public class EditFileActivity : Activity
+    public partial class EditFileActivity : Activity
     {
         private EditText _editor;
 
@@ -75,11 +75,13 @@ namespace Repository
         {
             Process.SetThreadPriority(ThreadPriority.Background);
 
+            /* TODO
             var (text, theme) = ((ColoredText, IColorTheme))state;
             using (var colorer = TextColorer.Create(text, theme))
             {
                 GetHighlighter().Highlight(_content, colorer);
             }
+            */
         }
 
         private string ReadEditorContent() => EditorContent.Current;
