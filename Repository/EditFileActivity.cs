@@ -50,15 +50,8 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            ConfigureFont();
+            SetupFont();
             DisplayContent(ColorTheme.Default);
-        }
-
-        private void ConfigureFont()
-        {
-            // TODO: Cache?
-            var typeface = Typeface.CreateFromAsset(Assets, "fonts/Inconsolata.ttf");
-            _editor.Typeface = typeface;
         }
 
         private void DisplayContent(IColorTheme theme)
@@ -91,5 +84,7 @@ namespace Repository
         }
 
         private string ReadEditorContent() => EditorContent.Current;
+
+        private void SetupFont() => _editor.Typeface = Typefaces.Inconsolata;
     }
 }

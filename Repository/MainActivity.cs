@@ -6,6 +6,7 @@ using Android.Content;
 using Repository.Internal;
 using System.Diagnostics;
 using Debug = System.Diagnostics.Debug;
+using Repository.Internal.Editor;
 
 namespace Repository
 {
@@ -44,10 +45,11 @@ namespace Repository
 
         private void GetStartedButton_Click(object sender, EventArgs e) => StartChooseProvider();
 
-        private static void SetupApp()
+        private void SetupApp()
         {
             SetupAppDomain();
             SetupDebug();
+            SetupTypefaces();
         }
 
         private static void SetupAppDomain()
@@ -56,6 +58,8 @@ namespace Repository
         }
 
         private static void SetupDebug() => Debug.Listeners.Add(new DebugListener());
+
+        private void SetupTypefaces() => Typefaces.Initialize(Assets);
 
         private void StartChooseProvider()
         {
