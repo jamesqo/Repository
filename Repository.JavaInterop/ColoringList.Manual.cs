@@ -9,10 +9,10 @@ namespace Repository.JavaInterop
     {
         public int Count => _Count();
 
-        public long this[int index]
+        public Coloring this[int index]
         {
-            get => Get(index);
-            set => Set(index, value);
+            get => Coloring.FromLong(Get(index));
+            set => Set(index, value.ToLong());
         }
     }
 }

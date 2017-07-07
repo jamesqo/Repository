@@ -43,15 +43,14 @@ namespace Repository.Internal.Editor.Highlighting
                 // Remove the separator from consideration for the next coloring.
                 // We skip coloring the separator, so we don't want to include it in the coloring
                 // and misalign colorings in the next segment.
-                var next = Coloring.FromLong(colorings[0]);
+                var next = colorings[0];
                 if (next.Count == 1)
                 {
                     colorings = colorings.Slice(1);
                 }
                 else
                 {
-                    next = next.WithCount(next.Count - 1);
-                    colorings[0] = next.ToLong();
+                    colorings[0] = next.WithCount(next.Count - 1);
                 }
 
                 _currentTextIndex++;
