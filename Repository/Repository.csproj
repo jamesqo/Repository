@@ -124,6 +124,7 @@
     <Compile Include="EditFileActivity.Adapter.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
+    <Compile Include="Internal\Disposable.cs" />
     <Compile Include="Internal\Editor\EditorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\ColoredTextList.cs" />
     <Compile Include="Internal\Editor\Highlighting\ColorTheme.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
     <Compile Include="Internal\LazyList.cs" />
+    <Compile Include="Internal\MathUtilities.cs" />
     <Compile Include="Internal\NativeBuffer.cs" />
     <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
@@ -178,6 +180,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\EditFile.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\EditFile_EditorSegment.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

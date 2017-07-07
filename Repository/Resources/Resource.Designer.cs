@@ -164,14 +164,17 @@ namespace Repository
 			// aapt resource value: 0x7f050006
 			public const int Editor = 2131034118;
 			
+			// aapt resource value: 0x7f050007
+			public const int EditorSegment = 2131034119;
+			
 			// aapt resource value: 0x7f050001
 			public const int FileView = 2131034113;
 			
 			// aapt resource value: 0x7f050002
 			public const int FilenameView = 2131034114;
 			
-			// aapt resource value: 0x7f050007
-			public const int GetStartedButton = 2131034119;
+			// aapt resource value: 0x7f050008
+			public const int GetStartedButton = 2131034120;
 			
 			// aapt resource value: 0x7f050003
 			public const int GitHubButton = 2131034115;
@@ -182,8 +185,8 @@ namespace Repository
 			// aapt resource value: 0x7f050004
 			public const int RepoView = 2131034116;
 			
-			// aapt resource value: 0x7f050008
-			public const int SignInWebView = 2131034120;
+			// aapt resource value: 0x7f050009
+			public const int SignInWebView = 2131034121;
 			
 			// aapt resource value: 0x7f050000
 			public const int item_touch_helper_previous_elevation = 2131034112;
@@ -220,10 +223,13 @@ namespace Repository
 			public const int EditFile = 2130903045;
 			
 			// aapt resource value: 0x7f030006
-			public const int Main = 2130903046;
+			public const int EditFile_EditorSegment = 2130903046;
 			
 			// aapt resource value: 0x7f030007
-			public const int SignIn = 2130903047;
+			public const int Main = 2130903047;
+			
+			// aapt resource value: 0x7f030008
+			public const int SignIn = 2130903048;
 			
 			static Layout()
 			{

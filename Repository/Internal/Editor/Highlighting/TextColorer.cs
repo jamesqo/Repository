@@ -9,7 +9,7 @@ using Repository.JavaInterop;
 
 namespace Repository.Internal.Editor.Highlighting
 {
-    internal class TextColorer : ITextColorer, IDisposable
+    internal class TextColorer : ITextColorer
     {
         private const int BatchCount = 256;
         private const int MaxLinesPerSegment = 50;
@@ -17,7 +17,8 @@ namespace Repository.Internal.Editor.Highlighting
         private readonly ColoredTextList _segments;
         private readonly int _segmentCount;
         private readonly IColorTheme _theme;
-        private readonly ByteBufferWrapper _colorings;
+
+        private ByteBufferWrapper _colorings;
 
         private TextColorer(string text, IColorTheme theme)
         {
@@ -27,7 +28,6 @@ namespace Repository.Internal.Editor.Highlighting
             _segments = ColoredTextList.Create(MakeSegments(text));
             _segmentCount = MathUtilities.Ceiling(text.LineCount(), MaxLinesPerSegment);
             _theme = theme;
-            _colorings = new ByteBufferWrapper(BatchCount * 8);
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
@@ -47,14 +47,13 @@ namespace Repository.Internal.Editor.Highlighting
             }
         }
 
-        public void Dispose()
-        {
-            // TODO: Make sure we're not disposed twice?
-            Flush();
-            _colorings.Dispose();
-        }
-
         public ColoredText GetSegment(int index) => _segments.GetText(index);
+
+        public IDisposable Setup()
+        {
+            _colorings = new ByteBufferWrapper(BatchCount * 8);
+            return Disposable.Create(Teardown);
+        }
 
         private void Flush()
         {
@@ -94,6 +93,13 @@ namespace Repository.Internal.Editor.Highlighting
                 // TODO: Return a StringSegment instead to avoid copying?
                 yield return content.Substring(start, end - start);
             }
+        }
+
+        private void Teardown()
+        {
+            Flush();
+            _colorings.Dispose();
+            _colorings = null;
         }
     }
 }

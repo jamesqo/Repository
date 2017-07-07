@@ -24,19 +24,19 @@ namespace Repository
                 internal ViewHolder(View view)
                     : base(view)
                 {
-                    // TODO: EditorSegment = NotNull(view.FindViewById<EditText>(Resource.Id.EditorSegment));
+                    EditorSegment = NotNull(view.FindViewById<EditText>(Resource.Id.EditorSegment));
                 }
             }
 
             private readonly TextColorer _colorer;
             private readonly EditorTheme _theme;
 
-            internal Adapter(string content, EditorTheme theme)
+            internal Adapter(TextColorer colorer, EditorTheme theme)
             {
-                NotNull(content, nameof(content));
+                NotNull(colorer, nameof(colorer));
                 NotNull(theme, nameof(theme));
 
-                _colorer = TextColorer.Create(content, theme.Colors);
+                _colorer = colorer;
                 _theme = theme;
             }
 
@@ -54,7 +54,7 @@ namespace Repository
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
                 var inflater = LayoutInflater.From(parent.Context);
-                var view = inflater.Inflate(/* TODO: Resource.Layout.EditFile_EditorSegment */ 0, parent, attachToRoot: false);
+                var view = inflater.Inflate(Resource.Layout.EditFile_EditorSegment, parent, attachToRoot: false);
                 return new ViewHolder(view);
             }
         }
