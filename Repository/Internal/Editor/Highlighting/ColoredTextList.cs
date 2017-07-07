@@ -23,8 +23,10 @@ namespace Repository.Internal.Editor.Highlighting
 
         public static ColoredTextList Create(IEnumerable<string> texts) => new ColoredTextList(texts);
 
-        public void ColorWith(ColoringList colorings)
+        public void ColorWith(ColoringList colorings, int separatorLength)
         {
+            Debug.Assert(separatorLength == 1);
+
             while (true)
             {
                 var text = GetText(_currentTextIndex);
@@ -37,6 +39,21 @@ namespace Repository.Internal.Editor.Highlighting
 
                 // We've finished coloring this text. Move to the next one.
                 colorings = colorings.Slice(processed);
+
+                // Remove the separator from consideration for the next coloring.
+                // We skip coloring the separator, so we don't want to include it in the coloring
+                // and misalign colorings in the next segment.
+                var next = Coloring.FromLong(colorings.Get(0));
+                if (next.Count == 1)
+                {
+                    colorings = colorings.Slice(1);
+                }
+                else
+                {
+                    next = next.WithCount(next.Count - 1);
+                    colorings.Set(0, next.ToLong());
+                }
+
                 _currentTextIndex++;
             }
         }

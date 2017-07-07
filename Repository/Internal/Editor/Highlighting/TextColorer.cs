@@ -39,7 +39,7 @@ namespace Repository.Internal.Editor.Highlighting
             Debug.Assert(count > 0);
 
             var color = _theme.GetForegroundColor(kind);
-            _colorings.Add(MakeColoring(color, count));
+            _colorings.Add(Coloring.Create(color, count).ToLong());
 
             if (_colorings.IsFull)
             {
@@ -62,14 +62,9 @@ namespace Repository.Internal.Editor.Highlighting
             {
                 var colorings = ColoringList.FromBufferSpan(
                     _colorings.Unwrap(), 0, byteCount / 8);
-                _segments.ColorWith(colorings);
+                _segments.ColorWith(colorings, separatorLength: 1); // Segments are separated by '\n'.
                 _colorings.Clear();
             }
-        }
-
-        private static long MakeColoring(Color color, int count)
-        {
-            return ((long)color.ToArgb() << 32) | (uint)count;
         }
 
         private static IEnumerable<string> MakeSegments(string content)

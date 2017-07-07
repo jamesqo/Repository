@@ -5,8 +5,8 @@ using System;
 using Android.Content;
 using Repository.Internal;
 using System.Diagnostics;
-using Debug = System.Diagnostics.Debug;
 using Repository.Internal.Editor;
+using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {

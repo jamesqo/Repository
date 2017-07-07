@@ -127,6 +127,7 @@
     <Compile Include="Internal\Disposable.cs" />
     <Compile Include="Internal\Editor\EditorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\ColoredTextList.cs" />
+    <Compile Include="Internal\Editor\Highlighting\Coloring.cs" />
     <Compile Include="Internal\Editor\Highlighting\ColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\IColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\TextColorer.cs" />
