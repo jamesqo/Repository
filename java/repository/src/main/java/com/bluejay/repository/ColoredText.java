@@ -32,10 +32,10 @@ public class ColoredText implements Editable {
     }
 
     public int colorWith(ColoringList colorings) {
-        int processed = colorings.getCount();
+        int processed = colorings.count();
 
         synchronized (this) {
-            for (int i = 0; i < colorings.getCount(); i++) {
+            for (int i = 0; i < colorings.count(); i++) {
                 long coloring = colorings.get(i);
                 int color = getColor(coloring);
                 int count = getCount(coloring);

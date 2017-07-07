@@ -21,13 +21,13 @@ public class ColoringList {
         return new ColoringList(buffer, byteStart, count);
     }
 
+    public int count() {
+        return this.count;
+    }
+
     public long get(int index) {
         int byteIndex = this.getByteIndex(index);
         return this.buffer.getLong(byteIndex);
-    }
-
-    public int getCount() {
-        return this.count;
     }
 
     public void set(int index, long element) {
@@ -36,9 +36,9 @@ public class ColoringList {
     }
 
     public ColoringList slice(int index) {
-        assert index < this.getCount();
+        assert index < this.count();
 
-        return new ColoringList(this.buffer, this.getByteIndex(index), this.getCount() - index);
+        return new ColoringList(this.buffer, this.getByteIndex(index), this.count() - index);
     }
 
     private int getByteIndex(int index) {
