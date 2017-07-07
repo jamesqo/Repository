@@ -19,10 +19,9 @@ namespace Repository.Internal
 
         public static int IndexOfNth(this string text, char value, int n, int startIndex)
         {
-            // TODO: Convert these to use Verify.
-            Debug.Assert(text != null);
-            Debug.Assert(n > 0);
-            Debug.Assert(startIndex >= 0 && startIndex <= text.Length);
+            Verify.NotNull(text, nameof(text));
+            Verify.InRange(n > 0, nameof(n));
+            Verify.InRange(startIndex >= 0 && startIndex <= text.Length, nameof(startIndex));
 
             int occurrences = 0;
             for (int i = startIndex; i < text.Length; i++)

@@ -8,7 +8,6 @@ using Repository.Common;
 
 namespace Repository.Internal
 {
-    // TODO: Debugger view
     internal class LazyList<T> : IEnumerable<T>
     {
         private readonly IEnumerable<T> _source;
@@ -28,10 +27,7 @@ namespace Repository.Internal
 
         public T ElementAt(int index)
         {
-            if (!ReadUntil(index))
-            {
-                // TODO: AOORE
-            }
+            Verify.InRange(index >= 0 && ReadUntil(index), nameof(index));
 
             return _list[index];
         }

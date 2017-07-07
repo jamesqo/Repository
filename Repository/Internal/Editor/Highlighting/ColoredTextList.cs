@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Repository.Common;
@@ -8,7 +9,6 @@ using Repository.JavaInterop;
 
 namespace Repository.Internal.Editor.Highlighting
 {
-    // TODO: Debugger view
     internal class ColoredTextList
     {
         private readonly LazyList<ColoredText> _texts;

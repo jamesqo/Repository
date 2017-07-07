@@ -11,14 +11,11 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer, IDisposable
     {
-        // TODO: Consider increasing the batch size geometrically, which would cause O(log n)
-        // callbacks to be posted to the UI thread instead of O(n).
-        // Or not. One reason for keeping it small is to reduce lock contention.
-        private const int BatchCount = 256; // TODO: Remove?
+        private const int BatchCount = 256;
         private const int MaxLinesPerSegment = 50;
 
         private readonly ColoredTextList _segments;
-        private readonly int _lineCount;
+        private readonly int _segmentCount;
         private readonly IColorTheme _theme;
         private readonly ByteBufferWrapper _colorings;
 
@@ -28,15 +25,14 @@ namespace Repository.Internal.Editor.Highlighting
             Verify.NotNull(theme, nameof(theme));
 
             _segments = ColoredTextList.Create(MakeSegments(text));
-            _lineCount = text.LineCount();
+            _segmentCount = MathUtilities.Ceiling(text.LineCount(), MaxLinesPerSegment);
             _theme = theme;
             _colorings = new ByteBufferWrapper(BatchCount * 8);
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
-        // TODO: Cleanup. Maybe cache SegmentCount instead of _lineCount.
-        public int SegmentCount => (int)Math.Ceiling((double)_lineCount / MaxLinesPerSegment);
+        public int SegmentCount => _segmentCount;
 
         public void Color(SyntaxKind kind, int count)
         {
@@ -95,7 +91,6 @@ namespace Repository.Internal.Editor.Highlighting
                 }
 
                 end = newLine;
-                // TODO: Investigate if strings are copied when they cross over to Java.
                 // TODO: Return a StringSegment instead to avoid copying?
                 yield return content.Substring(start, end - start);
             }
