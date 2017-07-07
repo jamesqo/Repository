@@ -39,8 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColoredText.cs" />
-    <Compile Include="ColoringList.cs" />
+    <Compile Include="ColoredText.Manual.cs" />
+    <Compile Include="ColoringList.Manual.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
