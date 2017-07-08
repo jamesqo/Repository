@@ -24,7 +24,7 @@ namespace Repository.Internal.Editor
 
         private static Typeface CheckInitialized(Typeface typeface)
         {
-            Debug.Assert(typeface != null, $"{nameof(Initialize)} was not called yet.");
+            Verify.State(typeface != null, "Typefaces weren't initialized yet.");
             return typeface;
         }
     }

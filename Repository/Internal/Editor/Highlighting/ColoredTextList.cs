@@ -56,7 +56,7 @@ namespace Repository.Internal.Editor.Highlighting
                     break;
                 }
 
-                // We've finished coloring this text. Move to the next one.
+                // We've finished coloring this text. Move on to the next one.
                 colorings = colorings.Slice(processed);
                 SkipSeparator();
                 _currentTextIndex++;
