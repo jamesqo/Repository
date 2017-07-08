@@ -12,7 +12,7 @@ namespace Repository.Internal
     {
         private readonly IEnumerable<T> _source;
         private readonly IEnumerator<T> _enumerator;
-        private readonly List<T> _list;
+        private readonly List<T> _loaded;
 
         private LazyList(IEnumerable<T> source)
         {
@@ -20,31 +20,35 @@ namespace Repository.Internal
 
             _source = source;
             _enumerator = source.GetEnumerator();
-            _list = new List<T>();
+            _loaded = new List<T>();
         }
 
         internal static LazyList<T> Create(IEnumerable<T> source) => new LazyList<T>(source);
 
-        public T ElementAt(int index)
-        {
-            Verify.InRange(index >= 0 && ReadUntil(index), nameof(index));
+        public int LoadedCount => _loaded.Count;
 
-            return _list[index];
+        public T this[int index] => _loaded[index];
+
+        public T GetOrLoad(int index)
+        {
+            Verify.InRange(index >= 0 && LoadUntil(index), nameof(index));
+
+            return _loaded[index];
         }
 
-        private bool ReadUntil(int index)
+        private bool LoadUntil(int index)
         {
             Debug.Assert(index >= 0);
 
-            int toRead = index - (_list.Count - 1);
-            for (int i = 0; i < toRead; i++)
+            int toLoad = index - (LoadedCount - 1);
+            for (int i = 0; i < toLoad; i++)
             {
                 if (!_enumerator.MoveNext())
                 {
                     return false;
                 }
 
-                _list.Add(_enumerator.Current);
+                _loaded.Add(_enumerator.Current);
             }
 
             return true;

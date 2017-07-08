@@ -47,7 +47,7 @@ namespace Repository.Internal.Editor.Highlighting
             }
         }
 
-        public ColoredText GetSegment(int index) => _segments.GetText(index);
+        public ColoredText GetSegment(int index) => _segments[index];
 
         public IDisposable Setup()
         {

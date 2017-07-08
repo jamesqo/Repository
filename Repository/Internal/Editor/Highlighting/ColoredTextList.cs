@@ -23,6 +23,8 @@ namespace Repository.Internal.Editor.Highlighting
 
         public static ColoredTextList Create(IEnumerable<string> texts) => new ColoredTextList(texts);
 
+        public ColoredText this[int index] => _texts[index];
+
         public void ColorWith(ColoringList colorings, int separatorLength)
         {
             // Currently, the separator between segments is \n.
@@ -48,7 +50,7 @@ namespace Repository.Internal.Editor.Highlighting
 
             while (true)
             {
-                var text = GetText(_currentTextIndex);
+                var text = GetOrLoad(_currentTextIndex);
                 int processed = text.ColorWith(colorings);
                 if (processed == colorings.Count)
                 {
@@ -63,6 +65,6 @@ namespace Repository.Internal.Editor.Highlighting
             }
         }
 
-        public ColoredText GetText(int index) => _texts.ElementAt(index);
+        public ColoredText GetOrLoad(int index) => _texts.GetOrLoad(index);
     }
 }
