@@ -28,6 +28,9 @@ namespace Repository
                 }
             }
 
+            // Before the user touches the RecyclerView, OnBindViewHolder is called twice and 2 EditTexts are setup.
+            internal const int InitialSegmentsRequested = 2;
+
             private readonly TextColorer _colorer;
             private readonly EditorTheme _theme;
 

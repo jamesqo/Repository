@@ -60,9 +60,11 @@ namespace Repository
             Process.SetThreadPriority(ThreadPriority.Background);
 
             var (colorer, barrier) = ((TextColorer, Barrier))state;
+            int index = colorer.GetSegmentEnd(Adapter.InitialSegmentsRequested - 1);
+            colorer.WhenIndexPassed(index, barrier.SignalAndWait);
+
             using (colorer.Setup())
             {
-                barrier.SignalAndWait();
                 GetHighlighter().Highlight(_content, colorer);
             }
         }
