@@ -7,7 +7,6 @@ import android.text.style.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Set;
 
 public class ColoredText implements Editable {
@@ -20,15 +19,12 @@ public class ColoredText implements Editable {
     ));
 
     private final SpannableStringBuilder builder;
-    private final IdentityHashMap<Object, UiThreadWatcher> wrappers;
 
     private int index;
 
     public ColoredText(String rawText) {
         assert rawText != null;
-
         this.builder = new SpannableStringBuilder(rawText);
-        this.wrappers = new IdentityHashMap<>();
     }
 
     public int colorWith(ColoringList colorings) {
@@ -62,7 +58,6 @@ public class ColoredText implements Editable {
             }
         }
 
-        this.flushWrappers();
         return processed;
     }
 
@@ -143,7 +138,6 @@ public class ColoredText implements Editable {
     @Override
     public void clearSpans() {
         this.builder.clearSpans();
-        this.clearWrappers();
     }
 
     @Override
@@ -163,12 +157,12 @@ public class ColoredText implements Editable {
 
     @Override
     public void setSpan(Object o, int i, int i1, int i2) {
-        this.builder.setSpan(this.wrap(o), i, i1, i2);
+        this.builder.setSpan(o, i, i1, i2);
     }
 
     @Override
     public void removeSpan(Object o) {
-        this.builder.removeSpan(this.findWrapper(o));
+        this.builder.removeSpan(o);
     }
 
     @Override
@@ -183,17 +177,17 @@ public class ColoredText implements Editable {
 
     @Override
     public int getSpanStart(Object o) {
-        return this.builder.getSpanStart(this.findWrapper(o));
+        return this.builder.getSpanStart(o);
     }
 
     @Override
     public int getSpanEnd(Object o) {
-        return this.builder.getSpanEnd(this.findWrapper(o));
+        return this.builder.getSpanEnd(o);
     }
 
     @Override
     public int getSpanFlags(Object o) {
-        return this.builder.getSpanFlags(this.findWrapper(o));
+        return this.builder.getSpanFlags(o);
     }
 
     @Override
@@ -217,30 +211,5 @@ public class ColoredText implements Editable {
     @Override
     public CharSequence subSequence(int i, int i1) {
         return this.builder.subSequence(i, i1);
-    }
-
-    private void clearWrappers() {
-        this.wrappers.clear();
-    }
-
-    private UiThreadWatcher createWrapper(Object span) {
-        UiThreadWatcher wrapper = UiThreadWatcher.wrap(span);
-        this.wrappers.put(span, wrapper);
-        return wrapper;
-    }
-
-    private Object findWrapper(Object span) {
-        return UiThreadWatcher.canWrap(span) ? this.wrappers.get(span) : span;
-    }
-
-    private void flushWrappers() {
-        for (UiThreadWatcher wrapper : this.wrappers.values()) {
-            wrapper.flush();
-        }
-    }
-
-    private Object wrap(Object span) {
-        Object wrapper = this.findWrapper(span);
-        return wrapper != null ? wrapper : this.createWrapper(span);
     }
 }
