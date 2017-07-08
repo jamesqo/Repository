@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Android.Graphics;
 using Android.Support.V7.Widget;
+using Android.Text;
 using Android.Views;
 using Android.Widget;
 using Repository.Common;
@@ -49,6 +50,7 @@ namespace Repository
             {
                 var segment = ((ViewHolder)holder).EditorSegment;
 
+                segment.InputType |= InputTypes.TextFlagNoSuggestions;
                 segment.SetEditableFactory(NoCopyEditableFactory.Instance);
                 segment.SetTypeface(_theme.Typeface, TypefaceStyle.Normal);
                 segment.SetText(_colorer.GetSegment(position), TextView.BufferType.Editable);
