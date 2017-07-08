@@ -25,7 +25,26 @@ namespace Repository.Internal.Editor.Highlighting
 
         public void ColorWith(ColoringList colorings, int separatorLength)
         {
+            // Currently, the separator between segments is \n.
+            // Handling separators with 2+ chars would require more involved logic.
             Debug.Assert(separatorLength == 1);
+
+            void SkipSeparator()
+            {
+                // Remove the separator from consideration for the next coloring.
+                // The separator is implicitly there, but isn't part of the text of any segment.
+                var next = colorings[0];
+                if (next.Count == 1)
+                {
+                    // The separator spans the entire coloring. Remove the coloring.
+                    colorings = colorings.Slice(1);
+                }
+                else
+                {
+                    // Trim the coloring so it doesn't include the separator.
+                    colorings[0] = next.WithCount(next.Count - 1);
+                }
+            }
 
             while (true)
             {
@@ -39,20 +58,7 @@ namespace Repository.Internal.Editor.Highlighting
 
                 // We've finished coloring this text. Move to the next one.
                 colorings = colorings.Slice(processed);
-
-                // Remove the separator from consideration for the next coloring.
-                // We skip coloring the separator, so we don't want to include it in the coloring
-                // and misalign colorings in the next segment.
-                var next = colorings[0];
-                if (next.Count == 1)
-                {
-                    colorings = colorings.Slice(1);
-                }
-                else
-                {
-                    colorings[0] = next.WithCount(next.Count - 1);
-                }
-
+                SkipSeparator();
                 _currentTextIndex++;
             }
         }
