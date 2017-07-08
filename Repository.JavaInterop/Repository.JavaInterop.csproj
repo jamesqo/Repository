@@ -39,7 +39,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColoredText.cs" />
+    <Compile Include="ColoredText.Manual.cs" />
+    <Compile Include="Coloring.cs" />
+    <Compile Include="ColoringList.Manual.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +53,12 @@
     <TransformFile Include="Transforms\Metadata.xml" />
     <TransformFile Include="Transforms\EnumFields.xml" />
     <TransformFile Include="Transforms\EnumMethods.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Repository.Common\Repository.Common.csproj">
+      <Project>{50fb1cda-38b0-4e70-a175-7d733e2b5c9f}</Project>
+      <Name>Repository.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

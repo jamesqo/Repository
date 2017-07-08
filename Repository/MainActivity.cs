@@ -1,12 +1,12 @@
-﻿using Android.App;
-using Android.Widget;
-using Android.OS;
-using System;
-using Android.Content;
-using Repository.Internal;
+﻿using System;
 using System.Diagnostics;
-using Debug = System.Diagnostics.Debug;
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Widget;
+using Repository.Internal;
 using Repository.Internal.Editor;
+using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {

@@ -1,9 +1,24 @@
 ﻿<metadata>
-  <attr
-    path="/api/package[@name='com.bluejay.repository']"
-    name="managedName">Repository.JavaInterop</attr>
+    <!-- Packages -->
+    <attr
+        path="/api/package[@name='com.bluejay.repository']"
+        name="managedName">Repository.JavaInterop</attr>
 
-  <attr
-    path="/api/package[@name='com.bluejay.repository']/class[@name='ColoredText']/method[@name='append']"
-    name="managedReturn">Java.Lang.IAppendable</attr>
+    <!-- Methods -->
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='ColoredText']/method[@name='append']"
+        name="managedReturn">Java.Lang.IAppendable</attr>
+
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='ColoringList']/method[@name='count']"
+        name="managedName">_Count</attr>
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='ColoringList']/method[@name='count']"
+        name="visibility">internal</attr>
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='ColoringList']/method[@name='get']"
+        name="visibility">internal</attr>
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='ColoringList']/method[@name='set']"
+        name="visibility">internal</attr>
 </metadata>

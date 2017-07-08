@@ -1,29 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Views;
-using Android.Widget;
+using Android.Support.V7.Widget;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
-using Repository.JavaInterop;
 using static Repository.Common.Verify;
 using Path = System.IO.Path;
 
 namespace Repository
 {
     [Activity]
-    public class EditFileActivity : Activity
+    public partial class EditFileActivity : Activity
     {
-        private EditText _editor;
+        private RecyclerView _editor;
 
         private string _content;
         private string _path;
@@ -32,7 +25,7 @@ namespace Repository
         {
             void CacheViews()
             {
-                _editor = FindViewById<EditText>(Resource.Id.Editor);
+                _editor = FindViewById<RecyclerView>(Resource.Id.Editor);
             }
 
             void CacheParameters()
@@ -49,18 +42,7 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            SetupFont();
-            DisplayContent(ColorTheme.Default);
-        }
-
-        private void DisplayContent(IColorTheme theme)
-        {
-            _editor.SetBackgroundColor(theme.BackgroundColor);
-            _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
-
-            var text = new ColoredText(_content);
-            _editor.SetText(text, TextView.BufferType.Editable);
-            Task.Factory.StartNew(HighlightContent, state: (text, theme));
+            SetupEditor(EditorTheme.Default);
         }
 
         private IHighlighter GetHighlighter()
@@ -75,8 +57,8 @@ namespace Repository
         {
             Process.SetThreadPriority(ThreadPriority.Background);
 
-            var (text, theme) = ((ColoredText, IColorTheme))state;
-            using (var colorer = TextColorer.Create(text, theme))
+            var colorer = (TextColorer)state;
+            using (colorer.Setup())
             {
                 GetHighlighter().Highlight(_content, colorer);
             }
@@ -84,6 +66,13 @@ namespace Repository
 
         private string ReadEditorContent() => EditorContent.Current;
 
-        private void SetupFont() => _editor.Typeface = Typefaces.Inconsolata;
+        private void SetupEditor(EditorTheme theme)
+        {
+            var colorer = TextColorer.Create(_content, theme.Colors);
+            Task.Factory.StartNew(HighlightContent, state: colorer);
+
+            _editor.SetAdapter(new Adapter(colorer, theme));
+            _editor.SetLayoutManager(new LinearLayoutManager(this));
+        }
     }
 }
