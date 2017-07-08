@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -10,6 +11,7 @@ using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using static Repository.Common.Verify;
 using Path = System.IO.Path;
+using ThreadPriority = Android.OS.ThreadPriority;
 
 namespace Repository
 {
@@ -57,9 +59,10 @@ namespace Repository
         {
             Process.SetThreadPriority(ThreadPriority.Background);
 
-            var colorer = (TextColorer)state;
+            var (colorer, barrier) = ((TextColorer, Barrier))state;
             using (colorer.Setup())
             {
+                barrier.SignalAndWait();
                 GetHighlighter().Highlight(_content, colorer);
             }
         }
@@ -69,7 +72,9 @@ namespace Repository
         private void SetupEditor(EditorTheme theme)
         {
             var colorer = TextColorer.Create(_content, theme.Colors);
-            Task.Factory.StartNew(HighlightContent, state: colorer);
+            var barrier = new Barrier(2);
+            Task.Factory.StartNew(HighlightContent, state: (colorer, barrier));
+            barrier.SignalAndWait();
 
             _editor.SetAdapter(new Adapter(colorer, theme));
             _editor.SetLayoutManager(new LinearLayoutManager(this));
