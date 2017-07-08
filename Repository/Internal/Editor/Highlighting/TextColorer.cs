@@ -51,6 +51,8 @@ namespace Repository.Internal.Editor.Highlighting
 
         public IDisposable Setup()
         {
+            Debug.Assert(_colorings == null);
+
             _colorings = new ByteBufferWrapper(BatchCount * 8);
             return Disposable.Create(Teardown);
         }
@@ -92,6 +94,8 @@ namespace Repository.Internal.Editor.Highlighting
 
         private void Teardown()
         {
+            Debug.Assert(_colorings != null);
+
             Flush();
             _colorings.Dispose();
             _colorings = null;
