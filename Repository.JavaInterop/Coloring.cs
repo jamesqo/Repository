@@ -4,15 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Android.Graphics;
+using Repository.Common;
 
 namespace Repository.JavaInterop
 {
-    // TODO: Debug view
+    [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     public struct Coloring
     {
         private Coloring(Color color, int count)
         {
-            Debug.Assert(count > 0);
+            Verify.InRange(count > 0, nameof(count));
 
             Color = color;
             Count = count;
@@ -30,6 +31,8 @@ namespace Repository.JavaInterop
         public Color Color { get; }
 
         public int Count { get; }
+
+        private string DebuggerDisplay => $"{nameof(Color)}: {Color}, {nameof(Count)}: {Count}";
 
         public long ToLong() => ((long)Color.ToArgb() << 32) | (uint)Count;
 
