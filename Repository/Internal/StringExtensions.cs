@@ -16,7 +16,7 @@ namespace Repository.Internal
             return firstLineEnd == -1 ? text : text.Substring(0, firstLineEnd);
         }
 
-        public static int IndexOfNth(this string text, char value, int n, int startIndex)
+        public static int IndexOfNth(this string text, char value, int n, int startIndex = 0)
         {
             Verify.NotNull(text, nameof(text));
             Verify.InRange(n > 0, nameof(n));
