@@ -60,6 +60,12 @@ namespace Repository
             Process.SetThreadPriority(ThreadPriority.Background);
 
             var (colorer, barrier) = ((TextColorer, Barrier))state;
+
+            // Signal the UI thread once we've highlighted all the segments it will initially request.
+            // If this is not done, watchers will be attached from the UI thread during EditText.SetText().
+            // When this bg thread calls SetSpan() to highlight the EditText's ColoredText, these watchers
+            // will be invoked and attempt to modify the UI from this thread.
+            // The fix is to ensure we finish highlighting a segment before any watchers are attached.
             int index = colorer.GetSegmentEnd(Adapter.InitialSegmentsRequested - 1);
             colorer.WhenIndexPassed(index, barrier.SignalAndWait);
 
