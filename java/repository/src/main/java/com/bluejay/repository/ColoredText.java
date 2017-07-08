@@ -30,32 +30,30 @@ public class ColoredText implements Editable {
     public int colorWith(ColoringList colorings) {
         int processed = colorings.count();
 
-        synchronized (this) {
-            for (int i = 0; i < colorings.count(); i++) {
-                long coloring = colorings.get(i);
-                int color = getColor(coloring);
-                int count = getCount(coloring);
+        for (int i = 0; i < colorings.count(); i++) {
+            long coloring = colorings.get(i);
+            int color = getColor(coloring);
+            int count = getCount(coloring);
 
-                if (this.index + count <= this.length()) {
-                    this.advance(color, count);
-                    continue;
-                }
-
-                // This coloring extends past the end of the text.
-                // Split it into 2 regions, `before` and `after`.
-                // Update the coloring to only include `after` for the next ColoredText.
-                int before = this.length() - this.index;
-                int after = count - before;
-
-                if (before > 0) {
-                    colorings.set(i, makeColoring(color, after));
-                    this.advance(color, before);
-                }
-
-                // Don't count the current coloring. We want the next ColoredText to see it.
-                processed = i;
-                break;
+            if (this.index + count <= this.length()) {
+                this.advance(color, count);
+                continue;
             }
+
+            // This coloring extends past the end of the text.
+            // Split it into 2 regions, `before` and `after`.
+            // Update the coloring to only include `after` for the next ColoredText.
+            int before = this.length() - this.index;
+            int after = count - before;
+
+            if (before > 0) {
+                colorings.set(i, makeColoring(color, after));
+                this.advance(color, before);
+            }
+
+            // Don't count the current coloring. We want the next ColoredText to see it.
+            processed = i;
+            break;
         }
 
         return processed;
@@ -170,9 +168,7 @@ public class ColoredText implements Editable {
         if (noSpans.contains(aClass)) {
             return EmptyArray.get(aClass);
         }
-        synchronized (this) {
-            return this.builder.getSpans(i, i1, aClass);
-        }
+        return this.builder.getSpans(i, i1, aClass);
     }
 
     @Override
