@@ -20,7 +20,7 @@ public class ColoredText implements Editable {
     ));
 
     private final SpannableStringBuilder builder;
-    private final IdentityHashMap<Object, UiThreadWatcher> uiThreadWatchers;
+    private final IdentityHashMap<Object, UiThreadWatcher> wrappers;
 
     private int index;
 
@@ -28,7 +28,7 @@ public class ColoredText implements Editable {
         assert rawText != null;
 
         this.builder = new SpannableStringBuilder(rawText);
-        this.uiThreadWatchers = new IdentityHashMap<>();
+        this.wrappers = new IdentityHashMap<>();
     }
 
     public int colorWith(ColoringList colorings) {
@@ -220,22 +220,22 @@ public class ColoredText implements Editable {
     }
 
     private void clearWrappers() {
-        this.uiThreadWatchers.clear();
+        this.wrappers.clear();
     }
 
     private UiThreadWatcher createWrapper(Object span) {
         UiThreadWatcher wrapper = UiThreadWatcher.create(span);
-        this.uiThreadWatchers.put(span, wrapper);
+        this.wrappers.put(span, wrapper);
         return wrapper;
     }
 
     private Object findWrapper(Object span) {
-        return UiThreadWatcher.canCreate(span) ? this.uiThreadWatchers.get(span) : span;
+        return UiThreadWatcher.canCreate(span) ? this.wrappers.get(span) : span;
     }
 
     private void flushWrappers() {
-        for (UiThreadWatcher watcher : this.uiThreadWatchers.values()) {
-            watcher.flush();
+        for (UiThreadWatcher wrapper : this.wrappers.values()) {
+            wrapper.flush();
         }
     }
 
