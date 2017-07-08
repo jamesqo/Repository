@@ -224,13 +224,13 @@ public class ColoredText implements Editable {
     }
 
     private UiThreadWatcher createWrapper(Object span) {
-        UiThreadWatcher wrapper = UiThreadWatcher.create(span);
+        UiThreadWatcher wrapper = UiThreadWatcher.wrap(span);
         this.wrappers.put(span, wrapper);
         return wrapper;
     }
 
     private Object findWrapper(Object span) {
-        return UiThreadWatcher.canCreate(span) ? this.wrappers.get(span) : span;
+        return UiThreadWatcher.canWrap(span) ? this.wrappers.get(span) : span;
     }
 
     private void flushWrappers() {

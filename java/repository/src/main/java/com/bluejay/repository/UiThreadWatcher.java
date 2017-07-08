@@ -31,12 +31,12 @@ public class UiThreadWatcher implements SpanWatcher, TextWatcher {
         this.afterTextChangedArgs = new ArrayList<>();
     }
 
-    public static boolean canCreate(Object span) {
+    public static boolean canWrap(Object span) {
         return span instanceof SpanWatcher || span instanceof TextWatcher;
     }
 
-    public static UiThreadWatcher create(Object span) {
-        return canCreate(span) ? new UiThreadWatcher(span) : null;
+    public static UiThreadWatcher wrap(Object span) {
+        return canWrap(span) ? new UiThreadWatcher(span) : null;
     }
 
     public void flush() {
