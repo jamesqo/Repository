@@ -62,7 +62,7 @@ public class ColoredText implements Editable {
             }
         }
 
-        this.flushUiThreadWatchers();
+        this.flushWrappers();
         return processed;
     }
 
@@ -143,7 +143,7 @@ public class ColoredText implements Editable {
     @Override
     public void clearSpans() {
         this.builder.clearSpans();
-        this.clearUiThreadWatchers();
+        this.clearWrappers();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class ColoredText implements Editable {
         return this.builder.subSequence(i, i1);
     }
 
-    private void clearUiThreadWatchers() {
+    private void clearWrappers() {
         this.uiThreadWatchers.clear();
     }
 
@@ -233,7 +233,7 @@ public class ColoredText implements Editable {
         return UiThreadWatcher.canCreate(span) ? this.uiThreadWatchers.get(span) : span;
     }
 
-    private void flushUiThreadWatchers() {
+    private void flushWrappers() {
         for (UiThreadWatcher watcher : this.uiThreadWatchers.values()) {
             watcher.flush();
         }
