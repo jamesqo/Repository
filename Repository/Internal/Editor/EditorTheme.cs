@@ -5,12 +5,16 @@ using System.Text;
 using Android.Graphics;
 using Repository.Common;
 using Repository.Internal.Editor.Highlighting;
+using static System.Threading.LazyInitializer;
 
 namespace Repository.Internal.Editor
 {
     internal class EditorTheme
     {
-        public static EditorTheme Default => new EditorTheme(ColorTheme.Default, Typefaces.Inconsolata);
+        private static EditorTheme s_default;
+
+        public static EditorTheme Default =>
+            EnsureInitialized(ref s_default, () => new EditorTheme(ColorTheme.Default, Typefaces.Inconsolata));
 
         public EditorTheme(IColorTheme colors, Typeface typeface)
         {
