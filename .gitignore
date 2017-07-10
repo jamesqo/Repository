@@ -296,3 +296,4 @@ __pycache__/
 .antlr/
 *.bak
 *.aar
+Creds.cs
