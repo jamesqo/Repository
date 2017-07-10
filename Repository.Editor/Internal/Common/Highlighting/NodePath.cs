@@ -80,7 +80,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
             var name = nodeType.Name;
             foreach (var suffix in TrimFromDisplayNames)
             {
-                if (name.EndsWith(suffix, StringComparison.Ordinal))
+                if (name.EndsWithOrdinal(suffix))
                 {
                     name = name.Substring(0, name.Length - suffix.Length);
                 }

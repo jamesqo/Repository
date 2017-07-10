@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Webkit;
-using Android.Widget;
 using Octokit;
 using Repository.Internal;
 using Repository.Internal.Android;
@@ -21,31 +13,8 @@ using Debug = System.Diagnostics.Debug;
 namespace Repository
 {
     [Activity]
-    public class SignInActivity : Activity
+    public partial class SignInActivity : Activity
     {
-        private class LoginSuccessListener : WebViewClient
-        {
-            private readonly SignInActivity _activity;
-            private readonly string _callbackDomain;
-
-            internal LoginSuccessListener(SignInActivity activity, string callbackDomain)
-            {
-                _activity = NotNull(activity, nameof(activity));
-                _callbackDomain = NotNullOrEmpty(callbackDomain, nameof(callbackDomain));
-            }
-
-            public override void OnPageFinished(WebView view, string url)
-            {
-                if (url.Contains(_callbackDomain))
-                {
-                    var queryParameters = UrlUtilities.ParseQueryParameters(url);
-                    string code = queryParameters["code"];
-
-                    _activity.HandleSessionCode(code);
-                }
-            }
-        }
-
         private WebView _signInWebView;
 
         private string _url;
@@ -99,7 +68,7 @@ namespace Repository
             // GitHub needs JS enabled to un-grey the authorization button
             _signInWebView.Settings.JavaScriptEnabled = true;
             _signInWebView.LoadUrl(_url);
-            _signInWebView.SetWebViewClient(new LoginSuccessListener(this, _callbackDomain));
+            _signInWebView.SetWebViewClient(new SuccessHandler(this, _callbackDomain));
         }
 
         private void StartChooseRepo(string token)

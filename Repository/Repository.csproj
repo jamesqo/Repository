@@ -154,6 +154,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignInActivity.cs" />
+    <Compile Include="SignInActivity.SuccessHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\fonts\Inconsolata.ttf" />
