@@ -18,7 +18,7 @@ namespace Repository
         private WebView _signInWebView;
 
         private string _url;
-        private string _callbackDomain;
+        private string _callbackUrl;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -34,7 +34,7 @@ namespace Repository
             void CacheParameters()
             {
                 _url = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_Url));
-                _callbackDomain = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_CallbackDomain));
+                _callbackUrl = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_CallbackUrl));
             }
 
             base.OnCreate(savedInstanceState);
@@ -68,7 +68,7 @@ namespace Repository
             // GitHub needs JS enabled to un-grey the authorization button
             _signInWebView.Settings.JavaScriptEnabled = true;
             _signInWebView.LoadUrl(_url);
-            _signInWebView.SetWebViewClient(new SuccessHandler(this, _callbackDomain));
+            _signInWebView.SetWebViewClient(new SuccessHandler(this, _callbackUrl));
         }
 
         private void StartChooseRepo(string token)

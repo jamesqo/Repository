@@ -45,7 +45,7 @@ namespace Repository
                 return;
             }
 
-            StartSignIn(url: GetGitHubLoginUrl(), callbackDomain: "google.com");
+            StartSignIn(url: GetGitHubLoginUrl(), callbackUrl: "https://www.google.com");
         }
 
         private static string GetGitHubLoginUrl()
@@ -63,11 +63,11 @@ namespace Repository
             return prefs.GetString(key, defValue: null);
         }
 
-        private void StartSignIn(string url, string callbackDomain)
+        private void StartSignIn(string url, string callbackUrl)
         {
             var intent = new Intent(this, typeof(SignInActivity));
             intent.PutExtra(Strings.Extra_SignIn_Url, url);
-            intent.PutExtra(Strings.Extra_SignIn_CallbackDomain, callbackDomain);
+            intent.PutExtra(Strings.Extra_SignIn_CallbackUrl, callbackUrl);
             StartActivity(intent);
         }
 

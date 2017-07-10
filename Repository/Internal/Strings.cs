@@ -20,9 +20,9 @@ namespace Repository.Internal
 
         public const string Extra_EditFile_Path = nameof(Extra_EditFile_Path);
 
-        public const string Extra_SignIn_Url = nameof(Extra_SignIn_Url);
+        public const string Extra_SignIn_CallbackUrl = nameof(Extra_SignIn_CallbackUrl);
 
-        public const string Extra_SignIn_CallbackDomain = nameof(Extra_SignIn_CallbackDomain);
+        public const string Extra_SignIn_Url = nameof(Extra_SignIn_Url);
 
         public const string Label_ChooseProvider = "Choose a Provider";
 
