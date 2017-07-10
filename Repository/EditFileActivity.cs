@@ -10,6 +10,7 @@ using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using static Repository.Common.Verify;
+using Debug = System.Diagnostics.Debug;
 using Path = System.IO.Path;
 using ThreadPriority = Android.OS.ThreadPriority;
 
@@ -75,7 +76,15 @@ namespace Repository
             }
         }
 
-        private string ReadEditorContent() => EditorContent.Current;
+        private static string ReadEditorContent()
+        {
+            var content = EditorContent.Current;
+            Debug.Assert(content != null); // We only read the content once.
+            // No reason to keep the content alive after we're done using it.
+            // The string can be arbitrarily large, so let the GC collect it ASAP.
+            EditorContent.Current = null;
+            return content;
+        }
 
         private void SetupEditor(EditorTheme theme)
         {

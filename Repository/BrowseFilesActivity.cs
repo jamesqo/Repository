@@ -106,7 +106,7 @@ namespace Repository
             StartActivity(intent);
         }
 
-        private void WriteEditorContent(string content)
+        private static void WriteEditorContent(string content)
         {
             // The file content can be arbitrarily large, which makes it no good for Intent.PutExtra
             // and SharedPreferences. Just store it in a static field.
