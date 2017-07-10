@@ -12,7 +12,7 @@ Before building, you'll need to do some manual configuration. After you follow t
 
 ### Supply your GitHub client ID/secret
 
-1. Go to the `Internal/` subdirectory of the main project and create a file called `Creds.cs`.
+1. Go to the `Internal/` subdirectory of the main project and create a file called `Creds.cs`. **Do this from the command line, not Visual Studio.**
 2. Copy and paste the following content. Replace the strings with your client ID and secret [from GitHub](https://github.com/settings/applications/new).
 
 ```cs
