@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.V7.Widget;
 using Octokit;
 using Repository.Internal;
@@ -87,7 +85,7 @@ namespace Repository
             }
         }
 
-        private async Task<Adapter> GetFileViewAdapter()
+        private async Task<Adapter> GetAdapter()
         {
             var adapter = await Adapter.Create(_repoId);
             adapter.ItemClick += Adapter_ItemClick;
@@ -96,7 +94,7 @@ namespace Repository
 
         private async Task SetupFileView()
         {
-            _fileView.SetAdapter(await GetFileViewAdapter());
+            _fileView.SetAdapter(await GetAdapter());
             _fileView.SetLayoutManager(new LinearLayoutManager(this));
         }
 

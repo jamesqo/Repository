@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.V7.Widget;
 using Repository.Internal;
 
@@ -37,7 +34,7 @@ namespace Repository
             StartBrowseFiles(repoId: repo.Id);
         }
 
-        private async Task<Adapter> GetRepoViewAdapter()
+        private async Task<Adapter> GetAdapter()
         {
             var repos = await GitHub.Client.Repository.GetAllForCurrent();
             var adapter = new Adapter(repos);
@@ -47,7 +44,7 @@ namespace Repository
 
         private async Task SetupRepoView()
         {
-            _repoView.SetAdapter(await GetRepoViewAdapter());
+            _repoView.SetAdapter(await GetAdapter());
             _repoView.SetLayoutManager(new LinearLayoutManager(this));
         }
 

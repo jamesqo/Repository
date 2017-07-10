@@ -7,7 +7,6 @@ using Android.Support.V7.Widget;
 using Android.Text;
 using Android.Views;
 using Android.Widget;
-using Repository.Common;
 using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using static Repository.Common.Verify;
