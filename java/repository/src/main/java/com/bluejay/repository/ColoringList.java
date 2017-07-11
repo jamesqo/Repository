@@ -38,7 +38,7 @@ public class ColoringList {
     public ColoringList slice(int index) {
         assert index < this.count();
 
-        return new ColoringList(this.buffer, this.getByteIndex(index), this.count() - index);
+        return fromBufferSpan(this.buffer, this.getByteIndex(index), this.count() - index);
     }
 
     private int getByteIndex(int index) {
