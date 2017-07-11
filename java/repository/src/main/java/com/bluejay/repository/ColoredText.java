@@ -165,6 +165,9 @@ public class ColoredText implements Editable {
 
     @Override
     public <T> T[] getSpans(int start, int end, Class<T> type) {
+        if (noSpans.contains(type)) {
+            return EmptyArray.get(type);
+        }
         return this.builder.getSpans(start, end, type);
     }
 
@@ -185,6 +188,9 @@ public class ColoredText implements Editable {
 
     @Override
     public int nextSpanTransition(int start, int limit, Class type) {
+        if (noSpans.contains(type)) {
+            return limit;
+        }
         return this.builder.nextSpanTransition(start, limit, type);
     }
 
