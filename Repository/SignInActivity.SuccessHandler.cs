@@ -2,11 +2,10 @@
 using Repository.Common;
 using Repository.Internal;
 using static Repository.Common.Verify;
-using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    public partial class SignInActivity : Activity
+    public partial class SignInActivity
     {
         private class SuccessHandler : WebViewClient
         {

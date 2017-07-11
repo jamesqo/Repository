@@ -94,7 +94,7 @@ namespace Repository
             barrier.SignalAndWait();
 
             _editor.SetAdapter(new Adapter(colorer, theme));
-            _editor.SetLayoutManager(new LinearLayoutManager(this));
+            _editor.SetLayoutManager(new LayoutManager(this));
         }
     }
 }
