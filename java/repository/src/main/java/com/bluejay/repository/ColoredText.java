@@ -81,50 +81,50 @@ public class ColoredText implements Editable {
     }
 
     @Override
-    public Editable replace(int i, int i1, CharSequence charSequence, int i2, int i3) {
-        this.builder.replace(i, i1, charSequence, i2, i3);
+    public Editable replace(int st, int en, CharSequence source, int start, int end) {
+        this.builder.replace(st, en, source, start, end);
         return this;
     }
 
     @Override
-    public Editable replace(int i, int i1, CharSequence charSequence) {
-        this.builder.replace(i, i1, charSequence);
+    public Editable replace(int st, int en, CharSequence text) {
+        this.builder.replace(st, en, text);
         return this;
     }
 
     @Override
-    public Editable insert(int i, CharSequence charSequence, int i1, int i2) {
-        this.builder.insert(i, charSequence, i1, i2);
+    public Editable insert(int where, CharSequence text, int start, int end) {
+        this.builder.insert(where, text, start, end);
         return this;
     }
 
     @Override
-    public Editable insert(int i, CharSequence charSequence) {
-        this.builder.insert(i, charSequence);
+    public Editable insert(int where, CharSequence text) {
+        this.builder.insert(where, text);
         return this;
     }
 
     @Override
-    public Editable delete(int i, int i1) {
-        this.builder.delete(i, i1);
+    public Editable delete(int st, int en) {
+        this.builder.delete(st, en);
         return this;
     }
 
     @Override
-    public Editable append(CharSequence charSequence) {
-        this.builder.append(charSequence);
+    public Editable append(CharSequence text) {
+        this.builder.append(text);
         return this;
     }
 
     @Override
-    public Editable append(CharSequence charSequence, int i, int i1) {
-        this.builder.append(charSequence, i, i1);
+    public Editable append(CharSequence text, int start, int end) {
+        this.builder.append(text, start, end);
         return this;
     }
 
     @Override
-    public Editable append(char c) {
-        this.builder.append(c);
+    public Editable append(char text) {
+        this.builder.append(text);
         return this;
     }
 
@@ -139,8 +139,8 @@ public class ColoredText implements Editable {
     }
 
     @Override
-    public void setFilters(InputFilter[] inputFilters) {
-        this.builder.setFilters(inputFilters);
+    public void setFilters(InputFilter[] filters) {
+        this.builder.setFilters(filters);
     }
 
     @Override
@@ -149,49 +149,43 @@ public class ColoredText implements Editable {
     }
 
     @Override
-    public void getChars(int i, int i1, char[] chars, int i2) {
-        this.builder.getChars(i, i1, chars, i2);
+    public void getChars(int start, int end, char[] dest, int destoff) {
+        this.builder.getChars(start, end, dest, destoff);
     }
 
     @Override
-    public void setSpan(Object o, int i, int i1, int i2) {
-        this.builder.setSpan(o, i, i1, i2);
+    public void setSpan(Object what, int start, int end, int flags) {
+        this.builder.setSpan(what, start, end, flags);
     }
 
     @Override
-    public void removeSpan(Object o) {
-        this.builder.removeSpan(o);
+    public void removeSpan(Object what) {
+        this.builder.removeSpan(what);
     }
 
     @Override
-    public <T> T[] getSpans(int i, int i1, Class<T> aClass) {
-        if (noSpans.contains(aClass)) {
-            return EmptyArray.get(aClass);
-        }
-        return this.builder.getSpans(i, i1, aClass);
+    public <T> T[] getSpans(int start, int end, Class<T> type) {
+        return this.builder.getSpans(start, end, type);
     }
 
     @Override
-    public int getSpanStart(Object o) {
-        return this.builder.getSpanStart(o);
+    public int getSpanStart(Object tag) {
+        return this.builder.getSpanStart(tag);
     }
 
     @Override
-    public int getSpanEnd(Object o) {
-        return this.builder.getSpanEnd(o);
+    public int getSpanEnd(Object tag) {
+        return this.builder.getSpanEnd(tag);
     }
 
     @Override
-    public int getSpanFlags(Object o) {
-        return this.builder.getSpanFlags(o);
+    public int getSpanFlags(Object tag) {
+        return this.builder.getSpanFlags(tag);
     }
 
     @Override
-    public int nextSpanTransition(int i, int i1, Class aClass) {
-        if (noSpans.contains(aClass)) {
-            return i1;
-        }
-        return this.builder.nextSpanTransition(i, i1, aClass);
+    public int nextSpanTransition(int start, int limit, Class type) {
+        return this.builder.nextSpanTransition(start, limit, type);
     }
 
     @Override
@@ -200,12 +194,12 @@ public class ColoredText implements Editable {
     }
 
     @Override
-    public char charAt(int i) {
-        return this.builder.charAt(i);
+    public char charAt(int index) {
+        return this.builder.charAt(index);
     }
 
     @Override
-    public CharSequence subSequence(int i, int i1) {
-        return this.builder.subSequence(i, i1);
+    public CharSequence subSequence(int start, int end) {
+        return this.builder.subSequence(start, end);
     }
 }
