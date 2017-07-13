@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.Text;
@@ -26,13 +27,13 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
                 _spans = GetClassifiedSpans(sourceText);
             }
 
-            internal void Run()
+            internal async Task Run()
             {
                 foreach (var span in _spans)
                 {
                     var textSpan = span.TextSpan;
                     HandleSkippedText(_index, textSpan.Start);
-                    Advance(textSpan.Length, GetSyntaxKind(span.ClassificationType));
+                    await Advance(textSpan.Length, GetSyntaxKind(span.ClassificationType));
                 }
             }
 
@@ -45,10 +46,10 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
                 }
             }
 
-            private void Advance(int count, SyntaxKind kind)
+            private Task Advance(int count, SyntaxKind kind)
             {
-                _colorer.Color(kind, count);
                 _index += count;
+                return _colorer.Color(kind, count);
             }
 
             private static Document CreateDocument(string sourceText)
@@ -133,6 +134,6 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
             }
         }
 
-        public void Highlight(string text, ITextColorer colorer) => new Worker(text, colorer).Run();
+        public Task Highlight(string text, ITextColorer colorer) => new Worker(text, colorer).Run();
     }
 }

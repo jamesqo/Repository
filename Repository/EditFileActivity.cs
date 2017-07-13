@@ -72,7 +72,7 @@ namespace Repository
 
             using (colorer.Setup())
             {
-                GetHighlighter().Highlight(_content, colorer);
+                await GetHighlighter().Highlight(_content, colorer);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Android.Graphics;
 using Repository.Common;
 using Repository.Editor.Highlighting;
@@ -41,7 +42,7 @@ namespace Repository.Internal.Editor.Highlighting
 
         public int SegmentCount => _segmentCount;
 
-        public void Color(SyntaxKind kind, int count)
+        public Task Color(SyntaxKind kind, int count)
         {
             Debug.Assert(count > 0);
 
@@ -49,10 +50,9 @@ namespace Repository.Internal.Editor.Highlighting
             _colorings.Add(Coloring.Create(color, count).ToLong());
             _index += count;
 
-            if (_colorings.IsFull)
-            {
-                Flush();
-            }
+            return _colorings.IsFull
+                ? Flush()
+                : Task.CompletedTask;
         }
 
         public ColoredText GetSegment(int index) => _segments[index];
@@ -88,7 +88,7 @@ namespace Repository.Internal.Editor.Highlighting
             _indexPassedCallback = callback;
         }
 
-        private void Flush()
+        private async Task Flush()
         {
             int byteCount = _colorings.ByteCount;
             Debug.Assert(byteCount > 0);
@@ -98,10 +98,7 @@ namespace Repository.Internal.Editor.Highlighting
             _segments.ColorWith(colorings, separatorLength: 1); // Segments are separated by '\n'.
             _colorings.Clear();
 
-            if (_indexToPass != -1 && _index >= _indexToPass)
-            {
-                RaiseIndexPassed();
-            }
+            await Task.Yield();
         }
 
         private static IEnumerable<string> MakeSegments(string content)

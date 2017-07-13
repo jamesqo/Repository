@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace Repository.Editor.Highlighting
 {
     public interface ITextColorer
     {
-        void Color(SyntaxKind kind, int count);
+        Task Color(SyntaxKind kind, int count);
     }
 }

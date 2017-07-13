@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Repository.Editor.Highlighting;
@@ -11,7 +12,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 {
     internal partial class JavaHighlighter : IHighlighter
     {
-        private partial class Visitor : JavaBaseVisitor<object>
+        private partial class Visitor : JavaBaseVisitor<Task>
         {
             private readonly ITextColorer _colorer;
             private readonly CommonTokenStream _stream;
@@ -30,7 +31,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 _replacements = ReadOnlyList<SyntaxReplacement>.Empty;
             }
 
-            internal void Run() => Visit(_tree);
+            internal Task Run() => Visit(_tree);
 
             private void Advance(IToken token, SyntaxKind kind)
             {

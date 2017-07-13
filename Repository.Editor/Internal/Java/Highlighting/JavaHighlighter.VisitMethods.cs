@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
@@ -75,70 +76,77 @@ namespace Repository.Editor.Internal.Java.Highlighting
             private static SyntaxReplacement WildcardTypeArgumentReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
 
-            public override object VisitAnnotationName([NotNull] AnnotationNameContext context)
+            protected internal override Task DefaultResult => Task.CompletedTask;
+
+            public override Task VisitAnnotationName([NotNull] AnnotationNameContext context)
                 => VisitChildren(context, AnnotationNameReplacement);
 
             // TODO: Do annotation type declarations, which use '@interface', need special treatment?
-            public override object VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
+            public override Task VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
                 => VisitChildren(context, AnnotationTypeDeclarationReplacement);
 
-            public override object VisitClassDeclaration([NotNull] ClassDeclarationContext context)
+            public override Task VisitClassDeclaration([NotNull] ClassDeclarationContext context)
                 => VisitChildren(context, ClassDeclarationReplacement);
 
-            public override object VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context)
+            public override Task VisitClassOrInterfaceType([NotNull] ClassOrInterfaceTypeContext context)
                 => VisitChildren(context, ClassOrInterfaceTypeReplacement);
 
-            public override object VisitConstructorDeclaration([NotNull] ConstructorDeclarationContext context)
+            public override Task VisitConstructorDeclaration([NotNull] ConstructorDeclarationContext context)
                 => VisitChildren(context, ConstructorDeclarationReplacement);
 
-            public override object VisitCreatedName([NotNull] CreatedNameContext context)
+            public override Task VisitCreatedName([NotNull] CreatedNameContext context)
                 => VisitChildren(context, CreatedNameReplacement);
 
-            public override object VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
+            public override Task VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
                 => VisitChildren(context, EnumDeclarationReplacement);
 
-            public override object VisitFormalParameter([NotNull] FormalParameterContext context)
+            public override Task VisitFormalParameter([NotNull] FormalParameterContext context)
                 => VisitChildren(context, FormalParameterReplacement);
 
-            public override object VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
+            public override Task VisitInterfaceDeclaration([NotNull] InterfaceDeclarationContext context)
                 => VisitChildren(context, InterfaceDeclarationReplacement);
 
-            public override object VisitLastFormalParameter([NotNull] LastFormalParameterContext context)
+            public override Task VisitLastFormalParameter([NotNull] LastFormalParameterContext context)
                 => VisitChildren(context, LastFormalParameterReplacement);
 
-            public override object VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
+            public override Task VisitMethodDeclaration([NotNull] MethodDeclarationContext context)
                 => VisitChildren(context, MethodDeclarationReplacement);
 
-            public override object VisitMethodInvocation([NotNull] MethodInvocationContext context)
+            public override Task VisitMethodInvocation([NotNull] MethodInvocationContext context)
                 => VisitChildren(context, MethodInvocationReplacements);
 
-            public override object VisitNonWildcardTypeArguments([NotNull] NonWildcardTypeArgumentsContext context)
+            public override Task VisitNonWildcardTypeArguments([NotNull] NonWildcardTypeArgumentsContext context)
                 => VisitChildren(context, NonWildcardTypeArgumentsReplacement);
 
-            public override object VisitNonWildcardTypeArgumentsOrDiamond([NotNull] NonWildcardTypeArgumentsOrDiamondContext context)
+            public override Task VisitNonWildcardTypeArgumentsOrDiamond([NotNull] NonWildcardTypeArgumentsOrDiamondContext context)
                 => VisitChildren(context, NonWildcardTypeArgumentsOrDiamondReplacement);
 
-            public override object VisitTerminal(ITerminalNode node)
+            public override Task VisitTerminal(ITerminalNode node)
             {
                 var replacementKind = FindTerminalReplacement(node).Kind;
-                Advance(node, replacementKind);
-                return null;
+                return Advance(node, replacementKind);
             }
 
-            public override object VisitTypeArguments([NotNull] TypeArgumentsContext context)
+            public override Task VisitTypeArguments([NotNull] TypeArgumentsContext context)
                 => VisitChildren(context, TypeArgumentsReplacement);
 
-            public override object VisitTypeArgumentsOrDiamond([NotNull] TypeArgumentsOrDiamondContext context)
+            public override Task VisitTypeArgumentsOrDiamond([NotNull] TypeArgumentsOrDiamondContext context)
                 => VisitChildren(context, TypeArgumentsOrDiamondReplacement);
 
-            public override object VisitTypeParameter([NotNull] TypeParameterContext context)
+            public override Task VisitTypeParameter([NotNull] TypeParameterContext context)
                 => VisitChildren(context, TypeParameterReplacement);
 
-            public override object VisitTypeParameters([NotNull] TypeParametersContext context)
+            public override Task VisitTypeParameters([NotNull] TypeParametersContext context)
                 => VisitChildren(context, TypeParametersReplacement);
 
-            public override object VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
+            public override Task VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
                 => VisitChildren(context, WildcardTypeArgumentReplacement);
+
+            protected internal override async Task AggregateResult(Task aggregate, Task nextResult)
+            {
+                await aggregate;
+                await nextResult;
+            }
 
             private SyntaxReplacement FindTerminalReplacement(ITerminalNode node)
             {
@@ -173,33 +181,31 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 return list;
             }
 
-            private object VisitChildren(ParserRuleContext context, SyntaxReplacement additionalReplacement)
+            private Task VisitChildren(ParserRuleContext context, SyntaxReplacement additionalReplacement)
             {
                 var newReplacements = GetApplicableReplacements(context);
                 newReplacements.Add(additionalReplacement);
                 return VisitChildrenWithReplacements(context, newReplacements.AsReadOnlyList());
             }
 
-            private object VisitChildren(ParserRuleContext context, ImmutableArray<SyntaxReplacement> additionalReplacements)
+            private Task VisitChildren(ParserRuleContext context, ImmutableArray<SyntaxReplacement> additionalReplacements)
             {
                 var newReplacements = GetApplicableReplacements(context);
                 newReplacements.AddRange(additionalReplacements);
                 return VisitChildrenWithReplacements(context, newReplacements.AsReadOnlyList());
             }
 
-            private object VisitChildrenWithReplacements(ParserRuleContext context, ReadOnlyList<SyntaxReplacement> replacements)
+            private async Task VisitChildrenWithReplacements(ParserRuleContext context, ReadOnlyList<SyntaxReplacement> replacements)
             {
                 int childCount = context.ChildCount;
                 for (int i = 0; i < childCount; i++)
                 {
                     var child = context.GetChild(i);
-                    VisitWithReplacements(child, context, replacements);
+                    await VisitWithReplacements(child, context, replacements);
                 }
-
-                return null;
             }
 
-            private void VisitWithReplacements(IParseTree child, ParserRuleContext parent, ReadOnlyList<SyntaxReplacement> replacements)
+            private async Task VisitWithReplacements(IParseTree child, ParserRuleContext parent, ReadOnlyList<SyntaxReplacement> replacements)
             {
                 Debug.Assert(child.Parent == parent);
 
@@ -208,7 +214,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
                 _lastAncestor = parent;
                 _replacements = replacements;
-                Visit(child);
+                await Visit(child);
 
                 _lastAncestor = originalAncestor;
                 _replacements = originalReplacements;
