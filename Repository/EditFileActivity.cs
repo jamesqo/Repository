@@ -2,8 +2,11 @@
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.Widget;
+using Android.Text;
+using Android.Widget;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
@@ -19,7 +22,7 @@ namespace Repository
     [Activity]
     public partial class EditFileActivity : Activity
     {
-        private RecyclerView _editor;
+        private EditText _editor;
 
         private string _content;
         private string _path;
@@ -28,7 +31,7 @@ namespace Repository
         {
             void CacheViews()
             {
-                _editor = FindViewById<RecyclerView>(Resource.Id.Editor);
+                _editor = FindViewById<EditText>(Resource.Id.Editor);
             }
 
             void CacheParameters()
@@ -93,8 +96,10 @@ namespace Repository
             Task.Factory.StartNew(HighlightContent, state: (colorer, barrier));
             barrier.SignalAndWait();
 
-            _editor.SetAdapter(new Adapter(colorer, theme));
-            _editor.SetLayoutManager(new LayoutManager(this));
+            _editor.InputType |= InputTypes.TextFlagNoSuggestions;
+            _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
+            _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
+            _editor.SetText(colorer.InitialWindow, TextView.BufferType.Editable);
         }
     }
 }
