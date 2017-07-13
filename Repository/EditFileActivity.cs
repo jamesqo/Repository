@@ -56,20 +56,8 @@ namespace Repository
                 ?? Highlighter.Plaintext;
         }
 
-        private void HighlightContent(object state)
+        private async Task HighlightContent(TextColorer colorer)
         {
-            Process.SetThreadPriority(ThreadPriority.Background);
-
-            var (colorer, barrier) = ((TextColorer, Barrier))state;
-
-            // Signal the UI thread once we've highlighted all the segments it will initially request.
-            // If this is not done, watchers will be attached from the UI thread during EditText.SetText().
-            // When this bg thread calls SetSpan() to highlight the EditText's ColoredText, these watchers
-            // will be invoked and attempt to modify the UI from this thread.
-            // The fix is to ensure we finish highlighting a segment before any watchers are attached.
-            int index = colorer.GetSegmentEnd(Adapter.InitialSegmentsRequested - 1);
-            colorer.WhenIndexPassed(index, barrier.SignalAndWait);
-
             using (colorer.Setup())
             {
                 await GetHighlighter().Highlight(_content, colorer);
@@ -86,15 +74,10 @@ namespace Repository
             return content;
         }
 
-        private void SetupEditor(EditorTheme theme)
+        private async Task SetupEditor(EditorTheme theme)
         {
             var colorer = TextColorer.Create(_content, theme.Colors);
-            var barrier = new Barrier(2);
-            Task.Factory.StartNew(HighlightContent, state: (colorer, barrier));
-            barrier.SignalAndWait();
-
-            _editor.SetAdapter(new Adapter(colorer, theme));
-            _editor.SetLayoutManager(new LayoutManager(this));
+            await HighlightContent(colorer);
         }
     }
 }

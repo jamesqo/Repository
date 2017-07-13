@@ -76,7 +76,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
             private static SyntaxReplacement WildcardTypeArgumentReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
 
-            protected internal override Task DefaultResult => Task.CompletedTask;
+            protected override Task DefaultResult => Task.CompletedTask;
 
             public override Task VisitAnnotationName([NotNull] AnnotationNameContext context)
                 => VisitChildren(context, AnnotationNameReplacement);
@@ -142,7 +142,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
                 => VisitChildren(context, WildcardTypeArgumentReplacement);
 
-            protected internal override async Task AggregateResult(Task aggregate, Task nextResult)
+            protected override async Task AggregateResult(Task aggregate, Task nextResult)
             {
                 await aggregate;
                 await nextResult;
