@@ -4,6 +4,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.V7.Widget;
+using Android.Widget;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
@@ -12,23 +13,22 @@ using Repository.Internal.Editor.Highlighting;
 using static Repository.Common.Verify;
 using Debug = System.Diagnostics.Debug;
 using Path = System.IO.Path;
-using ThreadPriority = Android.OS.ThreadPriority;
 
 namespace Repository
 {
     [Activity]
     public partial class EditFileActivity : Activity
     {
-        private RecyclerView _editor;
+        private EditText _editor;
 
         private string _content;
         private string _path;
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             void CacheViews()
             {
-                _editor = FindViewById<RecyclerView>(Resource.Id.Editor);
+                _editor = FindViewById<EditText>(Resource.Id.Editor);
             }
 
             void CacheParameters()
@@ -45,7 +45,7 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            SetupEditor(EditorTheme.Default);
+            await SetupEditor(EditorTheme.Default);
         }
 
         private IHighlighter GetHighlighter()
