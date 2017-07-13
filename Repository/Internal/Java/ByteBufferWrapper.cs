@@ -16,6 +16,8 @@ namespace Repository.Internal.Java
 
         public ByteBufferWrapper(int capacity)
         {
+            Debug.Assert(capacity > 0);
+
             _buffer = new NativeBuffer(capacity);
             _javaBuffer = Jni.NewDirectByteBuffer(_buffer.Address, capacity);
         }

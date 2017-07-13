@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Android.Runtime;
 using Java.Nio;
 using JavaObject = Java.Lang.Object;

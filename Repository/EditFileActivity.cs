@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.Widget;
+using Android.Text;
 using Android.Widget;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
@@ -56,14 +58,6 @@ namespace Repository
                 ?? Highlighter.Plaintext;
         }
 
-        private async Task HighlightContent(TextColorer colorer)
-        {
-            using (colorer.Setup())
-            {
-                await GetHighlighter().Highlight(_content, colorer);
-            }
-        }
-
         private static string ReadEditorContent()
         {
             var content = EditorContent.Current;
@@ -77,7 +71,12 @@ namespace Repository
         private async Task SetupEditor(EditorTheme theme)
         {
             var colorer = TextColorer.Create(_content, theme.Colors);
-            await HighlightContent(colorer);
+            await GetHighlighter().Highlight(_content, colorer);
+
+            _editor.InputType |= InputTypes.TextFlagNoSuggestions;
+            _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
+            _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
+            _editor.SetText(colorer.Text, TextView.BufferType.Editable);
         }
     }
 }

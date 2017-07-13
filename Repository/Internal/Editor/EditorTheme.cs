@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.Graphics;
+﻿using Android.Graphics;
 using Repository.Common;
 using Repository.Internal.Editor.Highlighting;
 using static System.Threading.LazyInitializer;
