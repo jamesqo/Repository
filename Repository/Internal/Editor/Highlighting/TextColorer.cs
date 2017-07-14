@@ -62,6 +62,8 @@ namespace Repository.Internal.Editor.Highlighting
         {
             Debug.Assert(_colorings != null);
 
+            // We're about to return control to the caller of Highlight(), so there's
+            // no point in yielding. Call the synchronous version of Flush().
             Flush();
             _colorings.Dispose();
             _colorings = null;
