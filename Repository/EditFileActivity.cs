@@ -72,6 +72,7 @@ namespace Repository
         private async Task SetupEditor(EditorTheme theme)
         {
             // TODO: Ensure this isn't kept alive in a field by the async state machine
+            // TODO: Pass a byte[] for the content instead of a string?
             var content = ReadEditorContent();
             var colorer = TextColorer.Create(content, theme.Colors);
 
@@ -83,6 +84,7 @@ namespace Repository
             var highlighter = GetHighlighter(filePath: _path, content: content);
             using (colorer.Setup())
             {
+                // TODO: Add note not to use content past this line?
                 await highlighter.Highlight(content, colorer);
             }
         }

@@ -66,6 +66,7 @@ namespace Repository.Internal.Editor.Highlighting
         private async Task FlushAsync()
         {
             Flush();
+            // TODO: Ensure await Task.Yield() gives worse results.
             await UIThreadUtilities.Yield();
         }
 
