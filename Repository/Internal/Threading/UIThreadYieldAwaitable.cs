@@ -3,13 +3,13 @@ using System.Runtime.CompilerServices;
 
 namespace Repository.Internal.Threading
 {
-    internal struct YieldAwaitable : INotifyCompletion
+    internal struct UIThreadYieldAwaitable : INotifyCompletion
     {
-        public YieldAwaitable GetAwaiter() => this;
+        public UIThreadYieldAwaitable GetAwaiter() => this;
 
         public bool IsCompleted => false;
 
-        public void OnCompleted(Action continuation) => AsyncUtilities.Post(continuation);
+        public void OnCompleted(Action continuation) => UIThreadUtilities.Post(continuation);
 
         public void GetResult()
         {

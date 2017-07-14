@@ -142,8 +142,8 @@
     <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
-    <Compile Include="Internal\Threading\AsyncUtilities.cs" />
-    <Compile Include="Internal\Threading\YieldAwaitable.cs" />
+    <Compile Include="Internal\Threading\UIThreadUtilities.cs" />
+    <Compile Include="Internal\Threading\UIThreadYieldAwaitable.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="Internal\Java\ByteBufferWrapper.cs" />
     <Compile Include="MainActivity.cs" />
