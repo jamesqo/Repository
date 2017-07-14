@@ -33,6 +33,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
         public static NodePath GetRelativePath(IParseTree ancestor, IParseTree descendant)
         {
             Debug.Assert(ancestor != descendant);
+            Debug.Assert(ancestor.HasDescendant(descendant));
 
             var builder = ImmutableArray.CreateBuilder<Type>();
             var current = descendant;

@@ -76,6 +76,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
             private static SyntaxReplacement WildcardTypeArgumentReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
 
+            // TODO: Get rid of this. Only used in VisitErrorNode.
             protected override Task DefaultResult => Task.CompletedTask;
 
             public override Task VisitAnnotationName([NotNull] AnnotationNameContext context)
@@ -142,10 +143,14 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
                 => VisitChildren(context, WildcardTypeArgumentReplacement);
 
-            protected override async Task AggregateResult(Task aggregate, Task nextResult)
+            public override async Task VisitChildren(IRuleNode node)
             {
-                await aggregate;
-                await nextResult;
+                int childCount = node.ChildCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    var child = node.GetChild(i);
+                    await child.Accept(this);
+                }
             }
 
             private SyntaxReplacement FindTerminalReplacement(ITerminalNode node)

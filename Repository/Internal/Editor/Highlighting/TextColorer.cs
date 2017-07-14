@@ -6,6 +6,7 @@ using Android.Graphics;
 using Repository.Common;
 using Repository.Editor.Highlighting;
 using Repository.Internal.Java;
+using Repository.Internal.Threading;
 using Repository.JavaInterop;
 
 namespace Repository.Internal.Editor.Highlighting
@@ -71,7 +72,7 @@ namespace Repository.Internal.Editor.Highlighting
             _text.ColorWith(colorings); // Segments are separated by '\n'.
             _colorings.Clear();
 
-            await Task.Yield();
+            await ThreadingUtilities.Yield();
         }
     }
 }
