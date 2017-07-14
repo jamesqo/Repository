@@ -55,6 +55,8 @@ namespace Repository
         {
             var fileExtension = Path.GetExtension(filePath).TrimStart('.');
             return Highlighter.FromFileExtension(fileExtension)
+                // TODO: What if the first line is huge (think of a minified jQuery file)?
+                // Then this could be a big, unnecessary allocation.
                 ?? Highlighter.FromFirstLine(content.FirstLine())
                 ?? Highlighter.Plaintext;
         }
@@ -71,7 +73,6 @@ namespace Repository
 
         private async Task SetupEditor(EditorTheme theme)
         {
-            // TODO: Ensure this isn't kept alive in a field by the async state machine
             // TODO: Pass a byte[] for the content instead of a string?
             var content = ReadEditorContent();
             var colorer = TextColorer.Create(content, theme.Colors);
@@ -84,7 +85,11 @@ namespace Repository
             var highlighter = GetHighlighter(filePath: _path, content: content);
             using (colorer.Setup())
             {
-                // TODO: Add note not to use content past this line?
+                // Do not reference `content` past this line.
+                // Doing so will cause it to be stored in a field in the async state
+                // machine for this method. Storing a reference to it will prevent the GC
+                // from collecting the string, which is undesirable for large files where
+                // it can be huge.
                 await highlighter.Highlight(content, colorer);
             }
         }

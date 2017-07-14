@@ -14,6 +14,7 @@ namespace Repository.Internal
 {
     internal static class Strings
     {
+        // TODO: Move strings that will be displayed to user to Strings.xml.
         public const string AppName = "Repository";
 
         public const string Extra_BrowseFiles_RepoId = nameof(Extra_BrowseFiles_RepoId);

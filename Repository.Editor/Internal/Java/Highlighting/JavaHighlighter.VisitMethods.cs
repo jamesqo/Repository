@@ -76,8 +76,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
             private static SyntaxReplacement WildcardTypeArgumentReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
 
-            // TODO: Get rid of this. Only used in VisitErrorNode.
-            protected override Task DefaultResult => Task.CompletedTask;
+            // TODO: Throw NSE in future Visitor base class?
 
             public override Task VisitAnnotationName([NotNull] AnnotationNameContext context)
                 => VisitChildren(context, AnnotationNameReplacement);
@@ -100,6 +99,11 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
             public override Task VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
                 => VisitChildren(context, EnumDeclarationReplacement);
+
+            public override Task VisitErrorNode(IErrorNode node)
+            {
+                throw new NotImplementedException();
+            }
 
             public override Task VisitFormalParameter([NotNull] FormalParameterContext context)
                 => VisitChildren(context, FormalParameterReplacement);
@@ -222,6 +226,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
                 _lastAncestor = parent;
                 _replacements = replacements;
+                // TODO: Consider child.Accept(this). In fact, consider throwing NSE for Visit(IParseTree).
                 await Visit(child);
 
                 _lastAncestor = originalAncestor;

@@ -35,6 +35,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
             private async Task Advance(IToken token, SyntaxKind kind)
             {
+                // TODO: Consider if more efficient approach to combine 2 tasks
                 await Approach(token);
                 await Surpass(token, kind);
             }
@@ -46,6 +47,8 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 return Advance(token, kind);
             }
 
+            // TODO: Optimize this for the common case, where 1) the loop doesn't even run
+            // or 2) all tasks are completed?
             private async Task Approach(IToken token)
             {
                 int start = _tokenIndex;
