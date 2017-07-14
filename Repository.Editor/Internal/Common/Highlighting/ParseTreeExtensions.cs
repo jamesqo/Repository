@@ -14,16 +14,15 @@ namespace Repository.Editor.Internal.Common.Highlighting
             Debug.Assert(ancestor != null);
             Debug.Assert(descendant != null);
 
-            var current = descendant;
-            do
+            var current = descendant.Parent;
+            while (current != null)
             {
-                current = current.Parent;
                 if (ancestor == current)
                 {
                     return true;
                 }
+                current = current.Parent;
             }
-            while (current != null);
 
             return false;
         }

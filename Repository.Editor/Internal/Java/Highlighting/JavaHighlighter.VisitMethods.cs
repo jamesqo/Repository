@@ -143,6 +143,9 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
                 => VisitChildren(context, WildcardTypeArgumentReplacement);
 
+            // Even if AggregateResult() is overridden, the default implementation of VisitChildren()
+            // can only start Task objects, not await them. It's necessary to override the method
+            // ourselves to await each child task.
             public override async Task VisitChildren(IRuleNode node)
             {
                 int childCount = node.ChildCount;

@@ -38,7 +38,7 @@ namespace Repository.Internal.Editor.Highlighting
 
         public ColoredText Text => _text;
 
-        public Task Color(SyntaxKind kind, int count)
+        public async Task Color(SyntaxKind kind, int count)
         {
             Debug.Assert(count > 0);
 
@@ -46,23 +46,27 @@ namespace Repository.Internal.Editor.Highlighting
             _colorings.Add(Coloring.Create(color, count).ToLong());
             _index += count;
 
-            return _colorings.IsFull
-                ? Flush()
-                : _index == _textLength
-                ? Dispose()
-                : Task.CompletedTask;
+            if (_colorings.IsFull)
+            {
+                Flush();
+                await AsyncUtilities.Yield();
+            }
+            else if (_index == _textLength)
+            {
+                Dispose();
+            }
         }
 
-        private async Task Dispose()
+        private void Dispose()
         {
             Debug.Assert(_colorings != null);
 
-            await Flush();
+            Flush();
             _colorings.Dispose();
             _colorings = null;
         }
 
-        private async Task Flush()
+        private void Flush()
         {
             int byteCount = _colorings.ByteCount;
             Debug.Assert(byteCount > 0 && byteCount % 8 == 0);
@@ -71,8 +75,6 @@ namespace Repository.Internal.Editor.Highlighting
                 _colorings.Unwrap(), 0, byteCount / 8);
             _text.ColorWith(colorings); // Segments are separated by '\n'.
             _colorings.Clear();
-
-            await ThreadingUtilities.Yield();
         }
     }
 }

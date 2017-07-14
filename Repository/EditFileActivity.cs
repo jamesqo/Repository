@@ -68,7 +68,7 @@ namespace Repository
             return content;
         }
 
-        private async Task SetupEditor(EditorTheme theme)
+        private Task SetupEditor(EditorTheme theme)
         {
             var colorer = TextColorer.Create(_content, theme.Colors);
 
@@ -77,7 +77,7 @@ namespace Repository
             _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
             _editor.SetText(colorer.Text, TextView.BufferType.Editable);
 
-            await GetHighlighter().Highlight(_content, colorer);
+            return GetHighlighter().Highlight(_content, colorer);
         }
     }
 }
