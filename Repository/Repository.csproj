@@ -123,6 +123,7 @@
     <Compile Include="ChooseRepoActivity.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
+    <Compile Include="Internal\Disposable.cs" />
     <Compile Include="Internal\Editor\EditorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\ColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\IColorTheme.cs" />

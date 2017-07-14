@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Android.Graphics;
 using Repository.Common;
 using Repository.Editor.Highlighting;
 using Repository.Internal.Java;
@@ -17,10 +16,8 @@ namespace Repository.Internal.Editor.Highlighting
 
         private readonly ColoredText _text;
         private readonly IColorTheme _theme;
-        private readonly int _textLength;
 
         private ByteBufferWrapper _colorings;
-        private int _index;
 
         private TextColorer(string text, IColorTheme theme)
         {
@@ -29,9 +26,6 @@ namespace Repository.Internal.Editor.Highlighting
 
             _text = new ColoredText(text);
             _theme = theme;
-            // Don't hold a reference to the text, let the GC collect it ASAP.
-            _textLength = text.Length;
-            _colorings = new ByteBufferWrapper(BatchCount * 8);
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
@@ -44,29 +38,18 @@ namespace Repository.Internal.Editor.Highlighting
 
             var color = _theme.GetForegroundColor(kind);
             _colorings.Add(Coloring.Create(color, count).ToLong());
-            _index += count;
 
-            if (_index == _textLength)
-            {
-                Dispose();
-            }
-            else if (_colorings.IsFull)
-            {
-                return FlushAsync();
-            }
-
-            return Task.CompletedTask;
+            return _colorings.IsFull
+                ? FlushAsync()
+                : Task.CompletedTask;
         }
 
-        private void Dispose()
+        public IDisposable Setup()
         {
-            Debug.Assert(_colorings != null);
+            Debug.Assert(_colorings == null);
 
-            // We're about to return control to the caller of Highlight(), so there's
-            // no point in yielding. Call the synchronous version of Flush().
-            Flush();
-            _colorings.Dispose();
-            _colorings = null;
+            _colorings = new ByteBufferWrapper(BatchCount * 8);
+            return Disposable.Create(Teardown);
         }
 
         private void Flush()
@@ -84,6 +67,17 @@ namespace Repository.Internal.Editor.Highlighting
         {
             Flush();
             await UIThreadUtilities.Yield();
+        }
+
+        private void Teardown()
+        {
+            Debug.Assert(_colorings != null);
+
+            // Control will soon be returned to the caller, so there's no point in yielding.
+            // Call the synchronous version of Flush().
+            Flush();
+            _colorings.Dispose();
+            _colorings = null;
         }
     }
 }
