@@ -23,7 +23,6 @@ namespace Repository
     {
         private EditText _editor;
 
-        private string _content;
         private string _path;
 
         protected override async void OnCreate(Bundle savedInstanceState)
@@ -35,7 +34,9 @@ namespace Repository
 
             void CacheParameters()
             {
-                _content = NotNull(ReadEditorContent());
+                // The content is not cached since it may be an arbitrarily large string.
+                // If we stored it in a field, we would want to clear that field ASAP anyway
+                // to allow the GC to collect the string.
                 _path = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_EditFile_Path));
             }
 
@@ -50,11 +51,11 @@ namespace Repository
             await SetupEditor(EditorTheme.Default);
         }
 
-        private IHighlighter GetHighlighter()
+        private static IHighlighter GetHighlighter(string filePath, string content)
         {
-            var fileExtension = Path.GetExtension(_path).TrimStart('.');
+            var fileExtension = Path.GetExtension(filePath).TrimStart('.');
             return Highlighter.FromFileExtension(fileExtension)
-                ?? Highlighter.FromFirstLine(_content.FirstLine())
+                ?? Highlighter.FromFirstLine(content.FirstLine())
                 ?? Highlighter.Plaintext;
         }
 
@@ -68,16 +69,22 @@ namespace Repository
             return content;
         }
 
-        private Task SetupEditor(EditorTheme theme)
+        private async Task SetupEditor(EditorTheme theme)
         {
-            var colorer = TextColorer.Create(_content, theme.Colors);
+            // TODO: Ensure this isn't kept alive in a field by the async state machine
+            var content = ReadEditorContent();
+            var colorer = TextColorer.Create(content, theme.Colors);
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
             _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
             _editor.SetText(colorer.Text, TextView.BufferType.Editable);
 
-            return GetHighlighter().Highlight(_content, colorer);
+            var highlighter = GetHighlighter(filePath: _path, content: content);
+            using (colorer.Setup())
+            {
+                await highlighter.Highlight(content, colorer);
+            }
         }
     }
 }
