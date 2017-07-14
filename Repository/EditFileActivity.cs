@@ -71,12 +71,13 @@ namespace Repository
         private async Task SetupEditor(EditorTheme theme)
         {
             var colorer = TextColorer.Create(_content, theme.Colors);
-            await GetHighlighter().Highlight(_content, colorer);
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
             _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
             _editor.SetText(colorer.Text, TextView.BufferType.Editable);
+
+            await GetHighlighter().Highlight(_content, colorer);
         }
     }
 }
