@@ -71,27 +71,37 @@ namespace Repository
             return content;
         }
 
-        private async Task SetupEditor(EditorTheme theme)
+        private Task SetupEditor(EditorTheme theme)
         {
-            // TODO: Pass a byte[] for the content instead of a string?
             var content = ReadEditorContent();
             var colorer = TextColorer.Create(content, theme.Colors);
+            var highlighter = GetHighlighter(filePath: _path, content: content);
+
+            async Task HighlightContent()
+            {
+                // This controls how often we flush work done by the colorer and yield
+                // to pending work on the UI thread. A lower value means increased responsiveness
+                // because we let other work, such as input/rendering code, run more often.
+                const int FlushFrequency = 32;
+
+                using (colorer.Setup(FlushFrequency))
+                {
+                    // Do not reference `content` past this line.
+                    // Doing so will cause it to be stored in a field in the async state
+                    // machine for this method. Storing a reference to it will prevent the GC
+                    // from collecting the string while the highlighter is running, which is
+                    // undesirable for large files.
+                    // TODO: Verify with a profiler that the string is actually being collected.
+                    await highlighter.Highlight(content, colorer);
+                }
+            }
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
             _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
             _editor.SetText(colorer.Text, TextView.BufferType.Editable);
 
-            var highlighter = GetHighlighter(filePath: _path, content: content);
-            using (colorer.Setup())
-            {
-                // Do not reference `content` past this line.
-                // Doing so will cause it to be stored in a field in the async state
-                // machine for this method. Storing a reference to it will prevent the GC
-                // from collecting the string, which is undesirable for large files where
-                // it can be huge.
-                await highlighter.Highlight(content, colorer);
-            }
+            return HighlightContent();
         }
     }
 }

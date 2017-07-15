@@ -11,9 +11,7 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer
     {
-        // TODO: Take as parameter?
         // TODO: Explain more clearly what this is/why it's so important.
-        private const int BatchCount = 32;
 
         private readonly ColoredText _text;
         private readonly IColorTheme _theme;
@@ -45,17 +43,29 @@ namespace Repository.Internal.Editor.Highlighting
                 : Task.CompletedTask;
         }
 
-        public IDisposable Setup()
+        /// <summary>
+        /// Sets up this colorer for highlighting.
+        /// Must be called before <see cref="Color"/> is called.
+        /// </summary>
+        /// <param name="flushFrequency">
+        /// The number of times <see cref="Color"/> is called in between <see cref="FlushAsync"/> calls.
+        /// Set this number lower to yield to pending work on the UI thread more often.
+        /// </param>
+        /// <returns>
+        /// A disposable that undoes the work of this method.
+        /// </returns>
+        public IDisposable Setup(int flushFrequency)
         {
             Debug.Assert(_colorings == null);
 
-            _colorings = new ByteBufferWrapper(BatchCount * 8);
+            _colorings = new ByteBufferWrapper(flushFrequency * 8);
             return Disposable.Create(Teardown);
         }
 
         private void Flush()
         {
             int byteCount = _colorings.ByteCount;
+            // TODO: Will byteCount > 0 always be true? Flush() then Dispose() right after?
             Debug.Assert(byteCount > 0 && byteCount % 8 == 0);
 
             var colorings = ColoringList.FromBufferSpan(
