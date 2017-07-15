@@ -165,7 +165,7 @@ namespace Repository
 			public const int Editor = 2131034119;
 			
 			// aapt resource value: 0x7f050006
-			public const int EditorScrollView = 2131034118;
+			public const int EditorScroller = 2131034118;
 			
 			// aapt resource value: 0x7f050001
 			public const int FileView = 2131034113;
@@ -241,11 +241,8 @@ namespace Repository
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f080002
-			public const int ApplicationName = 2131230722;
-			
 			// aapt resource value: 0x7f080001
-			public const int Hello = 2131230721;
+			public const int ApplicationName = 2131230721;
 			
 			// aapt resource value: 0x7f080000
 			public const int app_name = 2131230720;
