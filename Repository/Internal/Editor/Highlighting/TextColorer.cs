@@ -62,13 +62,15 @@ namespace Repository.Internal.Editor.Highlighting
         private void Flush()
         {
             int byteCount = _colorings.ByteCount;
-            // TODO: Will byteCount > 0 always be true? Flush() then Dispose() right after?
-            Debug.Assert(byteCount > 0 && byteCount % 8 == 0);
+            Debug.Assert(byteCount % 8 == 0);
 
-            var colorings = ColoringList.FromBufferSpan(
-                _colorings.Unwrap(), 0, byteCount / 8);
-            _text.ColorWith(colorings); // Segments are separated by '\n'.
-            _colorings.Clear();
+            if (byteCount > 0)
+            {
+                var colorings = ColoringList.FromBufferSpan(
+                    _colorings.Unwrap(), 0, byteCount / 8);
+                _text.ColorWith(colorings); // Segments are separated by '\n'.
+                _colorings.Clear();
+            }
         }
 
         private async Task FlushAsync()
