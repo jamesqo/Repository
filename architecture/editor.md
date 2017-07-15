@@ -43,4 +43,6 @@ The `IHighlighter` interface has (had) no notion of saving state. Once it begins
 
 ### Solution: Async highlighting
 
-TODO
+One neat way to solve this is to make the highlighter `async`. The idea is we can 'yield' to the UI thread at small, fixed intervals during highlighting, allowing any pending work such as input/rendering code to be run. This keeps the UI responsive and the user happy. Once the UI has been updated, control returns to the highlighter and it continues highlighting for another fixed interval, before it yields again.
+
+The awesome part is that .NET already has a built-in mechanism to do this: `await Task.Yield()`. Just call this with enough frequency and regularity during a long-running task, and your UI will perform great.
