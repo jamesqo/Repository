@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Repository.Common;
@@ -12,6 +11,7 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer
     {
+        // TODO: Take as parameter?
         private const int BatchCount = 256;
 
         private readonly ColoredText _text;

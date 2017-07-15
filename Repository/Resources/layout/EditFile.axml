@@ -3,9 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/Editor"
+    <ScrollView
+        android:id="@+id/EditorScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent" />
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/Editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent" />
+    </ScrollView>
 </LinearLayout>
