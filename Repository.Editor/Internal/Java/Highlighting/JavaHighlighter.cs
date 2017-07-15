@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Repository.Editor.Highlighting;
@@ -11,7 +12,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 {
     internal partial class JavaHighlighter : IHighlighter
     {
-        private partial class Visitor : JavaBaseVisitor<object>
+        private partial class Visitor : JavaBaseVisitor<Task>
         {
             private readonly ITextColorer _colorer;
             private readonly CommonTokenStream _stream;
@@ -30,29 +31,29 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 _replacements = ReadOnlyList<SyntaxReplacement>.Empty;
             }
 
-            internal void Run() => Visit(_tree);
+            internal Task Run() => Visit(_tree);
 
-            private void Advance(IToken token, SyntaxKind kind)
+            private async Task Advance(IToken token, SyntaxKind kind)
             {
-                Approach(token);
-                Surpass(token, kind);
+                await Approach(token);
+                await Surpass(token, kind);
             }
 
-            private void Advance(ITerminalNode node, SyntaxKind replacementKind)
+            private Task Advance(ITerminalNode node, SyntaxKind replacementKind)
             {
                 var token = node.Symbol;
                 var kind = SuggestKind(token).TryReplace(replacementKind);
-                Advance(token, kind);
+                return Advance(token, kind);
             }
 
-            private void Approach(IToken token)
+            private async Task Approach(IToken token)
             {
                 int start = _tokenIndex;
                 int end = token.TokenIndex;
 
                 for (int i = start; i < end; i++)
                 {
-                    SurpassHidden(_stream.Get(i));
+                    await SurpassHidden(_stream.Get(i));
                 }
             }
 
@@ -201,28 +202,28 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 }
             }
 
-            private void Surpass(IToken token, SyntaxKind kind)
+            private Task Surpass(IToken token, SyntaxKind kind)
             {
                 Debug.Assert(_tokenIndex == token.TokenIndex);
 
                 if (kind == SyntaxKind.Eof)
                 {
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 _tokenIndex++;
 
                 int count = token.Text.Length;
-                _colorer.Color(kind, count);
+                return _colorer.Color(kind, count);
             }
 
-            private void SurpassHidden(IToken token)
+            private Task SurpassHidden(IToken token)
             {
                 var kind = GetHiddenKind(token);
-                Surpass(token, kind);
+                return Surpass(token, kind);
             }
         }
 
-        public void Highlight(string text, ITextColorer colorer) => new Visitor(text, colorer).Run();
+        public Task Highlight(string text, ITextColorer colorer) => new Visitor(text, colorer).Run();
     }
 }

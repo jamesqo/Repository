@@ -161,11 +161,11 @@ namespace Repository
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050006
-			public const int Editor = 2131034118;
-			
 			// aapt resource value: 0x7f050007
-			public const int EditorSegment = 2131034119;
+			public const int Editor = 2131034119;
+			
+			// aapt resource value: 0x7f050006
+			public const int EditorScroller = 2131034118;
 			
 			// aapt resource value: 0x7f050001
 			public const int FileView = 2131034113;
@@ -223,13 +223,10 @@ namespace Repository
 			public const int EditFile = 2130903045;
 			
 			// aapt resource value: 0x7f030006
-			public const int EditFile_EditorSegment = 2130903046;
+			public const int Main = 2130903046;
 			
 			// aapt resource value: 0x7f030007
-			public const int Main = 2130903047;
-			
-			// aapt resource value: 0x7f030008
-			public const int SignIn = 2130903048;
+			public const int SignIn = 2130903047;
 			
 			static Layout()
 			{
@@ -244,11 +241,8 @@ namespace Repository
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f080002
-			public const int ApplicationName = 2131230722;
-			
 			// aapt resource value: 0x7f080001
-			public const int Hello = 2131230721;
+			public const int ApplicationName = 2131230721;
 			
 			// aapt resource value: 0x7f080000
 			public const int app_name = 2131230720;

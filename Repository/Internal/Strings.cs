@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
 namespace Repository.Internal
 {
+    /// <summary>
+    /// Stores strings that are not intended for display to the user.
+    /// </summary>
+    /// <remarks>
+    /// Strings that are intended for display to the user should go in Strings.xml.
+    /// </remarks>
     internal static class Strings
     {
         public const string AppName = "Repository";

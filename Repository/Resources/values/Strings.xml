@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Hello">Hello World, Click Me!</string>
+    <!--
+    This file is used to store strings that will be presented to the user.
+    Strings only seen by code belong in the internal Strings class.
+    -->
     <string name="ApplicationName">Repository</string>
 </resources>

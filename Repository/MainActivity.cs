@@ -5,6 +5,7 @@ using Android.Content;
 using Android.OS;
 using Android.Widget;
 using Repository.Internal;
+using Repository.Internal.Diagnostics;
 using Repository.Internal.Editor;
 using Debug = System.Diagnostics.Debug;
 

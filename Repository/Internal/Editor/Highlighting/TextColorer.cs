@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using Android.Graphics;
+using System.Threading.Tasks;
 using Repository.Common;
 using Repository.Editor.Highlighting;
 using Repository.Internal.Java;
@@ -11,136 +10,85 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer
     {
-        private const int BatchCount = 256;
-        private const int MaxLinesPerSegment = 50;
-
-        private readonly string _rawText;
-        private readonly ColoredTextList _segments;
-        private readonly int _segmentCount;
+        private readonly ColoredText _text;
         private readonly IColorTheme _theme;
 
         private ByteBufferWrapper _colorings;
-        private int _index;
-
-        private int _indexToPass;
-        private Action _indexPassedCallback;
 
         private TextColorer(string text, IColorTheme theme)
         {
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
-            _rawText = text;
-            _segments = ColoredTextList.Create(MakeSegments(text));
-            _segmentCount = MathUtilities.Ceiling(text.LineCount(), MaxLinesPerSegment);
+            _text = new ColoredText(text);
             _theme = theme;
-            _indexToPass = -1;
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
-        public int SegmentCount => _segmentCount;
+        public ColoredText Text => _text;
 
-        public void Color(SyntaxKind kind, int count)
+        public Task Color(SyntaxKind kind, int count)
         {
             Debug.Assert(count > 0);
 
             var color = _theme.GetForegroundColor(kind);
             _colorings.Add(Coloring.Create(color, count).ToLong());
-            _index += count;
 
-            if (_colorings.IsFull)
-            {
-                Flush();
-            }
+            return _colorings.IsFull
+                ? FlushAsync()
+                : Task.CompletedTask;
         }
-
-        public ColoredText GetSegment(int index) => _segments[index];
 
         /// <summary>
-        /// Gets the exclusive end of the segment at <paramref name="index"/>.
+        /// Sets up this colorer for highlighting.
+        /// Must be called before <see cref="Color"/> is called.
         /// </summary>
-        /// <param name="index">The index of the segment.</param>
+        /// <param name="flushFrequency">
+        /// The number of times <see cref="Color"/> is called in between <see cref="FlushAsync"/> calls.
+        /// Set this number lower to yield to pending work on the UI thread more often.
+        /// </param>
         /// <returns>
-        /// The end of the segment, or the length of the text if the segment was not found.
+        /// A disposable that undoes the work of this method.
         /// </returns>
-        public int GetSegmentEnd(int index)
-        {
-            int end = _rawText.IndexOfNth('\n', (index + 1) * MaxLinesPerSegment);
-            return end == -1 ? _rawText.Length : end;
-        }
-
-        public IDisposable Setup()
+        public IDisposable Setup(int flushFrequency)
         {
             Debug.Assert(_colorings == null);
 
-            _colorings = new ByteBufferWrapper(BatchCount * 8);
+            _colorings = new ByteBufferWrapper(flushFrequency * 8);
             return Disposable.Create(Teardown);
-        }
-
-        public void WhenIndexPassed(int index, Action callback)
-        {
-            // Currently, we only need to handle a single index/callback at a time.
-            Debug.Assert(_indexToPass == -1);
-            Debug.Assert(_indexPassedCallback == null);
-
-            _indexToPass = index;
-            _indexPassedCallback = callback;
         }
 
         private void Flush()
         {
             int byteCount = _colorings.ByteCount;
-            Debug.Assert(byteCount > 0);
+            Debug.Assert(byteCount % 8 == 0);
 
-            var colorings = ColoringList.FromBufferSpan(
-                _colorings.Unwrap(), 0, byteCount / 8);
-            _segments.ColorWith(colorings, separatorLength: 1); // Segments are separated by '\n'.
-            _colorings.Clear();
-
-            if (_indexToPass != -1 && _index >= _indexToPass)
+            if (byteCount > 0)
             {
-                RaiseIndexPassed();
+                var colorings = ColoringList.FromBufferSpan(
+                    _colorings.Unwrap(), 0, byteCount / 8);
+                _text.ColorWith(colorings); // Segments are separated by '\n'.
+                _colorings.Clear();
             }
         }
 
-        private static IEnumerable<string> MakeSegments(string content)
+        private async Task FlushAsync()
         {
-            int end = -1;
-            while (true)
-            {
-                int start = end + 1;
-                int newLine = content.IndexOfNth('\n', MaxLinesPerSegment, start);
-                if (newLine == -1)
-                {
-                    // TODO: Should a segment be created for the empty string?
-                    // Currently, the answer is yes.
-                    // Will wrap_content allow the user to see/tap on the EditText?
-                    end = content.Length;
-                    yield return content.Substring(start, end - start);
-                    break;
-                }
-
-                end = newLine;
-                // TODO: Return a StringSegment instead to avoid copying?
-                yield return content.Substring(start, end - start);
-            }
-        }
-
-        private void RaiseIndexPassed()
-        {
-            Debug.Assert(_indexToPass != -1);
-            Debug.Assert(_indexPassedCallback != null);
-
-            _indexToPass = -1;
-            _indexPassedCallback();
-            _indexPassedCallback = null;
+            Flush();
+            // This line is extremely important!
+            // It interrupts our highlighting work at fixed intervals, giving the UI thread a chance
+            // to run pending work such as input/rendering code, which keeps the app responsive.
+            // Without it, user input would be ignored, and the app would freeze until all text was highlighted.
+            await Task.Yield();
         }
 
         private void Teardown()
         {
             Debug.Assert(_colorings != null);
 
+            // Control will soon be returned to the caller, so there's no point in yielding.
+            // Call the synchronous version of Flush().
             Flush();
             _colorings.Dispose();
             _colorings = null;

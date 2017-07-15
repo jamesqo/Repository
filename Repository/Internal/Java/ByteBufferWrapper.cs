@@ -11,11 +11,13 @@ namespace Repository.Internal.Java
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal class ByteBufferWrapper : IDisposable
     {
-        private readonly NativeBuffer _buffer;
-        private readonly ByteBuffer _javaBuffer;
+        private NativeBuffer _buffer;
+        private ByteBuffer _javaBuffer;
 
         public ByteBufferWrapper(int capacity)
         {
+            Debug.Assert(capacity > 0);
+
             _buffer = new NativeBuffer(capacity);
             _javaBuffer = Jni.NewDirectByteBuffer(_buffer.Address, capacity);
         }
@@ -30,7 +32,14 @@ namespace Repository.Internal.Java
 
         public void Clear() => _buffer.Clear();
 
-        public void Dispose() => _buffer.Dispose();
+        public void Dispose()
+        {
+            _buffer?.Dispose();
+            _buffer = null;
+
+            _javaBuffer?.Dispose();
+            _javaBuffer = null;
+        }
 
         public ByteBuffer Unwrap() => _javaBuffer;
     }
