@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Repository.Common;
 using Repository.Editor.Highlighting;
 using Repository.Internal.Java;
-using Repository.Internal.Threading;
 using Repository.JavaInterop;
 
 namespace Repository.Internal.Editor.Highlighting
@@ -77,8 +76,7 @@ namespace Repository.Internal.Editor.Highlighting
         private async Task FlushAsync()
         {
             Flush();
-            // TODO: Ensure await Task.Yield() gives worse results.
-            await UIThreadUtilities.Yield();
+            await Task.Yield();
         }
 
         private void Teardown()
