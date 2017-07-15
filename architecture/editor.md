@@ -27,7 +27,7 @@ Since `ForegroundColorSpan` has to be instantiated in Java, `SetSpan` also has t
 
 ### Solution: Buffering writes to `ColoredText`
 
-Instead of calling the Java method each time a region is colored, we store the relevant info in a buffer. Adding info to the buffer doesn't require calling any Java code. When the buffer is full, we flush the data and invoke a single Java method that calls `SetSpan` in bulk.
+Instead of calling the Java method each time a region is colored, we store the relevant info in a buffer. Adding info to the buffer doesn't require calling any Java code. When the buffer is full, we 'flush' the data, invoking a single Java method that uses info from the buffer to call `SetSpan` in bulk.
 
 ## Problem: Buffer copies
 
@@ -35,12 +35,14 @@ Previously, a `long[]` was used to send info to the Java code about 1) which reg
 
 ### Solution: `ByteBuffer`
 
-Java offers a `ByteBuffer` class that can point to a random block of memory. No copies are made of its contents, even when a `ByteBuffer` object is passed from non-Java code. Repository takes advantage of this by storing each `long` in a `ByteBuffer` instead of a `long[]`. Storing each `long` does not require calling `ByteBuffer.PutLong` (which would be slow since `PutLong` is a Java method). Instead, each `long` is written to the underlying memory of the `ByteBuffer` using pointers, which can be done entirely in C#.
+Java offers a `ByteBuffer` class that can point to a random block of memory. No copies are made of its contents, even when a `ByteBuffer` object is passed from non-Java code. Repository takes advantage of this by storing each `long` in a `ByteBuffer` instead of a `long[]`. Storing each `long` does not require calling `ByteBuffer.PutLong` (which would be slow since `PutLong` is a Java method). Instead, each `long` is written to the underlying memory of the `ByteBuffer` using pointer manipulation, which can be done entirely in C#.
 
 ## Problem: Highlighting blocks UI thread
 
-The `IHighlighter` interface has no notion of saving state. Once it begins, the highlighter must run against the entire text passed to it. For large files, this is problematic since highlighting them can take tens of seconds.
+The `IHighlighter` interface has (had) no notion of saving state. Once it begins, the highlighter must run against the entire string passed to it. For large files, this is problematic: highlighting them can take tens of seconds. During those tens of seconds, the UI is frozen, because the UI thread is completely preoccupied with highlighting the source code.
 
 ### Solution: Async highlighting
 
-TODO
+One neat way to solve this is to make the highlighter `async`. The idea is we can 'yield' to the UI thread at small, fixed intervals during highlighting, allowing any pending work such as input/rendering code to be run. This keeps the UI responsive and the user happy. Once the UI has been updated, control returns to the highlighter and it continues highlighting for another fixed interval, before it yields again.
+
+The awesome part is that .NET already has a built-in mechanism to do this: `await Task.Yield()`. Just call this with enough frequency and regularity during a long-running task, and your UI will perform great.
