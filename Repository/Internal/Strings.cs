@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
 namespace Repository.Internal
 {
+    /// <summary>
+    /// Stores strings that are not intended for display to the user.
+    /// </summary>
+    /// <remarks>
+    /// Strings that are intended for display to the user should go in Strings.xml.
+    /// </remarks>
     internal static class Strings
     {
-        // TODO: Move strings that will be displayed to user to Strings.xml.
         public const string AppName = "Repository";
 
         public const string Extra_BrowseFiles_RepoId = nameof(Extra_BrowseFiles_RepoId);

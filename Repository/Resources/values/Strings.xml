@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- TODO: Consider benefits of using this instead of a Strings class. -->
+    <!--
+    This file is used to store strings that will be presented to the user.
+    Strings only seen by code belong in the internal Strings class.
+    -->
     <string name="ApplicationName">Repository</string>
 </resources>
