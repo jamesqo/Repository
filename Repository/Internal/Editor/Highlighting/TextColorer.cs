@@ -10,8 +10,6 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer
     {
-        // TODO: Explain more clearly what this is/why it's so important.
-
         private readonly ColoredText _text;
         private readonly IColorTheme _theme;
 
@@ -76,6 +74,10 @@ namespace Repository.Internal.Editor.Highlighting
         private async Task FlushAsync()
         {
             Flush();
+            // This line is extremely important!
+            // It interrupts our highlighting work at fixed intervals, giving the UI thread a chance
+            // to run pending work such as input/rendering code, which keeps the app responsive.
+            // Without it, user input would be ignored, and the app would freeze until all text was highlighted.
             await Task.Yield();
         }
 
