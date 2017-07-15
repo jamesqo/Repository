@@ -12,7 +12,8 @@ namespace Repository.Internal.Editor.Highlighting
     internal class TextColorer : ITextColorer
     {
         // TODO: Take as parameter?
-        private const int BatchCount = 256;
+        // TODO: Explain more clearly what this is/why it's so important.
+        private const int BatchCount = 32;
 
         private readonly ColoredText _text;
         private readonly IColorTheme _theme;
