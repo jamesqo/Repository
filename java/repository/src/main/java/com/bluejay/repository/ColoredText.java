@@ -10,14 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ColoredText implements Editable {
-    private static final Set<Class> noSpans = new HashSet<Class>(Arrays.asList(
-            LeadingMarginSpan.class,
-            TabStopSpan.class,
-            LineHeightSpan.class,
-            ReplacementSpan.class,
-            MetricAffectingSpan.class
-    ));
-
     private final SpannableStringBuilder builder;
 
     private int index;
@@ -165,9 +157,6 @@ public class ColoredText implements Editable {
 
     @Override
     public <T> T[] getSpans(int start, int end, Class<T> type) {
-        if (noSpans.contains(type)) {
-            return EmptyArray.get(type);
-        }
         return this.builder.getSpans(start, end, type);
     }
 
@@ -188,9 +177,6 @@ public class ColoredText implements Editable {
 
     @Override
     public int nextSpanTransition(int start, int limit, Class type) {
-        if (noSpans.contains(type)) {
-            return limit;
-        }
         return this.builder.nextSpanTransition(start, limit, type);
     }
 
