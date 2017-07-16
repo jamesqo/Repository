@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
@@ -17,14 +17,16 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
             private readonly string _sourceText;
             private readonly ITextColorer _colorer;
             private readonly IEnumerable<ClassifiedSpan> _spans;
+            private readonly CancellationToken _cancellationToken;
 
             private int _index;
 
-            internal Worker(string sourceText, ITextColorer colorer)
+            internal Worker(string sourceText, ITextColorer colorer, CancellationToken cancellationToken)
             {
                 _sourceText = sourceText;
                 _colorer = colorer;
                 _spans = GetClassifiedSpans(sourceText);
+                _cancellationToken = cancellationToken;
             }
 
             internal async Task Run()
@@ -49,7 +51,7 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
             private Task Advance(int count, SyntaxKind kind)
             {
                 _index += count;
-                return _colorer.Color(kind, count);
+                return _colorer.Color(kind, count, _cancellationToken);
             }
 
             private static Document CreateDocument(string sourceText)
@@ -134,6 +136,9 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
             }
         }
 
-        public Task Highlight(string text, ITextColorer colorer) => new Worker(text, colorer).Run();
+        public Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken)
+        {
+            return new Worker(text, colorer, cancellationToken).Run();
+        }
     }
 }

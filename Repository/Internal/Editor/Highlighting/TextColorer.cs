@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Repository.Common;
 using Repository.Editor.Highlighting;
@@ -28,9 +29,14 @@ namespace Repository.Internal.Editor.Highlighting
 
         public ColoredText Text => _text;
 
-        public Task Color(SyntaxKind kind, int count)
+        public Task Color(SyntaxKind kind, int count, CancellationToken cancellationToken)
         {
             Debug.Assert(count > 0);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled(cancellationToken);
+            }
 
             var color = _theme.GetForegroundColor(kind);
             _colorings.Add(Coloring.Create(color, count).ToLong());

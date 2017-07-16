@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -17,16 +18,18 @@ namespace Repository.Editor.Internal.Java.Highlighting
             private readonly ITextColorer _colorer;
             private readonly CommonTokenStream _stream;
             private readonly CompilationUnitContext _tree;
+            private readonly CancellationToken _cancellationToken;
 
             private int _tokenIndex;
             private ParserRuleContext _lastAncestor;
             private ReadOnlyList<SyntaxReplacement> _replacements;
 
-            internal Visitor(string text, ITextColorer colorer)
+            internal Visitor(string text, ITextColorer colorer, CancellationToken cancellationToken)
             {
                 _colorer = colorer;
                 _stream = AntlrUtilities.TokenStream(text, input => new JavaLexer(input));
                 _tree = new JavaParser(_stream).compilationUnit();
+                _cancellationToken = cancellationToken;
                 _lastAncestor = _tree;
                 _replacements = ReadOnlyList<SyntaxReplacement>.Empty;
             }
@@ -214,7 +217,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 _tokenIndex++;
 
                 int count = token.Text.Length;
-                return _colorer.Color(kind, count);
+                return _colorer.Color(kind, count, _cancellationToken);
             }
 
             private Task SurpassHidden(IToken token)
@@ -224,6 +227,9 @@ namespace Repository.Editor.Internal.Java.Highlighting
             }
         }
 
-        public Task Highlight(string text, ITextColorer colorer) => new Visitor(text, colorer).Run();
+        public Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken)
+        {
+            return new Visitor(text, colorer, cancellationToken).Run();
+        }
     }
 }
