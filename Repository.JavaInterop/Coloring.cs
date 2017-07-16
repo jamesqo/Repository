@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
 
@@ -21,13 +17,6 @@ namespace Repository.JavaInterop
 
         public static Coloring Create(Color color, int count) => new Coloring(color, count);
 
-        public static Coloring FromLong(long value)
-        {
-            var color = new Color((int)(value >> 32));
-            int count = (int)value;
-            return Create(color, count);
-        }
-
         public Color Color { get; }
 
         public int Count { get; }
@@ -35,7 +24,5 @@ namespace Repository.JavaInterop
         private string DebuggerDisplay => $"{nameof(Color)}: {Color}, {nameof(Count)}: {Count}";
 
         public long ToLong() => ((long)Color.ToArgb() << 32) | (uint)Count;
-
-        public Coloring WithCount(int count) => Create(Color, count);
     }
 }
