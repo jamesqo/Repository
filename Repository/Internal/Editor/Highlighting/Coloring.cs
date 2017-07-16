@@ -2,10 +2,10 @@
 using Android.Graphics;
 using Repository.Common;
 
-namespace Repository.JavaInterop
+namespace Repository.Internal.Editor.Highlighting
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
-    public struct Coloring
+    internal struct Coloring
     {
         private Coloring(Color color, int count)
         {
