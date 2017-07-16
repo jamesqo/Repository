@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"> <!-- Prevents the editor from receiving focus on activity startup -->
     <ScrollView
         android:id="@+id/EditFile_Scroller"
         android:layout_width="match_parent"
