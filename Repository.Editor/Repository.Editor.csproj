@@ -19,6 +19,7 @@
     <Antlr4 Include="Internal\Java\Highlighting\Java.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Repository.Editor.Internal.Java.Highlighting</CustomToolNamespace>
+      <Listener>False</Listener>
     </Antlr4>
     <Compile Include="$(IntermediateOutputPath)Java*.cs" />
   </ItemGroup>
