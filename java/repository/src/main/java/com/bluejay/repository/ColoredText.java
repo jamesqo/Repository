@@ -13,6 +13,7 @@ public class ColoredText extends SpannableStringBuilder {
         super(rawText);
     }
 
+    // TODO: Remove dead code here
     public int colorWith(ColoringList colorings) {
         int processed = colorings.count();
 

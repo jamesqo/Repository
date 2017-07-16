@@ -16,7 +16,7 @@ namespace Repository
         {
             void CacheViews()
             {
-                _repoView = FindViewById<RecyclerView>(Resource.Id.RepoView);
+                _repoView = FindViewById<RecyclerView>(Resource.Id.ChooseRepo_RepoView);
             }
 
             base.OnCreate(savedInstanceState);

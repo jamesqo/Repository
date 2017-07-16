@@ -19,7 +19,7 @@ namespace Repository
                 internal ViewHolder(View view, Action<int> onClick)
                     : base(view)
                 {
-                    RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.RepoNameView));
+                    RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.ChooseRepo_RepoNameView));
 
                     view.Click += (sender, e) => onClick(AdapterPosition);
                 }

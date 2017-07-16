@@ -29,7 +29,7 @@ namespace Repository
         {
             void CacheViews()
             {
-                _editor = FindViewById<EditText>(Resource.Id.Editor);
+                _editor = FindViewById<EditText>(Resource.Id.EditFile_Editor);
             }
 
             void CacheParameters()

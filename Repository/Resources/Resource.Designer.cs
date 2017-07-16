@@ -161,32 +161,32 @@ namespace Repository
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050007
-			public const int Editor = 2131034119;
-			
-			// aapt resource value: 0x7f050006
-			public const int EditorScroller = 2131034118;
-			
 			// aapt resource value: 0x7f050001
-			public const int FileView = 2131034113;
+			public const int BrowseFiles_FileView = 2131034113;
 			
 			// aapt resource value: 0x7f050002
-			public const int FilenameView = 2131034114;
-			
-			// aapt resource value: 0x7f050008
-			public const int GetStartedButton = 2131034120;
+			public const int BrowseFiles_FilenameView = 2131034114;
 			
 			// aapt resource value: 0x7f050003
-			public const int GitHubButton = 2131034115;
+			public const int ChooseProvider_GitHubButton = 2131034115;
 			
 			// aapt resource value: 0x7f050005
-			public const int RepoNameView = 2131034117;
+			public const int ChooseRepo_RepoNameView = 2131034117;
 			
 			// aapt resource value: 0x7f050004
-			public const int RepoView = 2131034116;
+			public const int ChooseRepo_RepoView = 2131034116;
+			
+			// aapt resource value: 0x7f050007
+			public const int EditFile_Editor = 2131034119;
+			
+			// aapt resource value: 0x7f050006
+			public const int EditFile_Scroller = 2131034118;
+			
+			// aapt resource value: 0x7f050008
+			public const int Main_GetStartedButton = 2131034120;
 			
 			// aapt resource value: 0x7f050009
-			public const int SignInWebView = 2131034121;
+			public const int SignIn_WebView = 2131034121;
 			
 			// aapt resource value: 0x7f050000
 			public const int item_touch_helper_previous_elevation = 2131034112;

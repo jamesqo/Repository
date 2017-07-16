@@ -22,7 +22,7 @@ namespace Repository
 
             void CacheViews()
             {
-                _getStartedButton = FindViewById<Button>(Resource.Id.GetStartedButton);
+                _getStartedButton = FindViewById<Button>(Resource.Id.Main_GetStartedButton);
             }
 
             base.OnCreate(bundle);

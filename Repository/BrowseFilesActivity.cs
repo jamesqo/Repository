@@ -36,7 +36,7 @@ namespace Repository
         {
             void CacheViews()
             {
-                _fileView = FindViewById<RecyclerView>(Resource.Id.FileView);
+                _fileView = FindViewById<RecyclerView>(Resource.Id.BrowseFiles_FileView);
             }
 
             void CacheParameters()

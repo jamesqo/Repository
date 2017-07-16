@@ -25,7 +25,7 @@ namespace Repository
         {
             void CacheViews()
             {
-                _githubButton = FindViewById<Button>(Resource.Id.GitHubButton);
+                _githubButton = FindViewById<Button>(Resource.Id.ChooseProvider_GitHubButton);
             }
 
             base.OnCreate(savedInstanceState);

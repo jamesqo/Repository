@@ -15,7 +15,7 @@ namespace Repository
     [Activity]
     public partial class SignInActivity : Activity
     {
-        private WebView _signInWebView;
+        private WebView _webView;
 
         private string _url;
         private string _callbackUrl;
@@ -28,7 +28,7 @@ namespace Repository
 
             void CacheViews()
             {
-                _signInWebView = FindViewById<WebView>(Resource.Id.SignInWebView);
+                _webView = FindViewById<WebView>(Resource.Id.SignIn_WebView);
             }
 
             void CacheParameters()
@@ -66,9 +66,9 @@ namespace Repository
         private void SetupWebView()
         {
             // GitHub needs JS enabled to un-grey the authorization button
-            _signInWebView.Settings.JavaScriptEnabled = true;
-            _signInWebView.LoadUrl(_url);
-            _signInWebView.SetWebViewClient(new SuccessHandler(this, _callbackUrl));
+            _webView.Settings.JavaScriptEnabled = true;
+            _webView.LoadUrl(_url);
+            _webView.SetWebViewClient(new SuccessHandler(this, _callbackUrl));
         }
 
         private void StartChooseRepo(string token)

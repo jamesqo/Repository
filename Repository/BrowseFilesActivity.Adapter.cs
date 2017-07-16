@@ -18,12 +18,12 @@ namespace Repository
         {
             private class ViewHolder : RecyclerView.ViewHolder
             {
-                public TextView RepoNameView { get; }
+                public TextView FilenameView { get; }
 
                 internal ViewHolder(View view, Action<int> onClick)
                     : base(view)
                 {
-                    RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.FilenameView));
+                    FilenameView = NotNull(view.FindViewById<TextView>(Resource.Id.BrowseFiles_FilenameView));
 
                     view.Click += (sender, e) => onClick(AdapterPosition);
                 }
@@ -61,7 +61,7 @@ namespace Repository
             {
                 var viewHolder = (ViewHolder)holder;
                 var content = Contents[position];
-                viewHolder.RepoNameView.Text = content.Name;
+                viewHolder.FilenameView.Text = content.Name;
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
