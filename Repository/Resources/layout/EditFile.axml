@@ -3,7 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"> <!-- Prevents the editor from receiving focus on activity startup -->
+    android:focusableInTouchMode="true">
+    <!--
+    Setting focusableInTouchMode to true prevents the editor from receiving focus on activity startup.
+    Credit: https://stackoverflow.com/questions/1555109/stop-edittext-from-gaining-focus-at-activity-startup#comment45484973_1555109
+    -->
+
     <ScrollView
         android:id="@+id/EditFile_Scroller"
         android:layout_width="match_parent"
