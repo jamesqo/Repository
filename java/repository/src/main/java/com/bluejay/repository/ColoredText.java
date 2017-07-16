@@ -1,5 +1,6 @@
 package com.bluejay.repository;
 
+import android.support.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
 
@@ -13,57 +14,28 @@ public class ColoredText extends SpannableStringBuilder {
         super(rawText);
     }
 
-    // TODO: Remove dead code here
-    public int colorWith(ColoringList colorings) {
-        int processed = colorings.count();
-
+    public void colorWith(ColoringList colorings) {
         for (int i = 0; i < colorings.count(); i++) {
             long coloring = colorings.get(i);
-            int color = getColor(coloring);
-            int count = getCount(coloring);
-
-            if (this.index + count <= this.length()) {
-                this.advance(color, count);
-                continue;
-            }
-
-            // This coloring extends past the end of the text.
-            // Split it into 2 regions, `before` and `after`.
-            // Update the coloring to only include `after` for the next ColoredText.
-            int before = this.length() - this.index;
-            int after = count - before;
-
-            if (before > 0) {
-                colorings.set(i, makeColoring(color, after));
-                this.advance(color, before);
-            }
-
-            // Don't count the current coloring. We want the next ColoredText to see it.
-            processed = i;
-            break;
+            this.advance(getColor(coloring), getCount(coloring));
         }
-
-        return processed;
     }
 
-    private void advance(int color, int count) {
+    private void advance(@ColorInt int color, int count) {
         assert count > 0;
+        assert this.index + count <= this.length();
 
         Object span = new ForegroundColorSpan(color);
         this.setSpan(span, this.index, this.index + count, SPAN_INCLUSIVE_EXCLUSIVE);
         this.index += count;
     }
 
+    @ColorInt
     private static int getColor(long coloring) {
         return (int)(coloring >> 32);
     }
 
     private static int getCount(long coloring) {
         return (int)coloring;
-    }
-
-    private static long makeColoring(int color, int count) {
-        assert count > 0; // Negative numbers are sign-extended from int -> long
-        return ((long)color << 32) | count;
     }
 }
