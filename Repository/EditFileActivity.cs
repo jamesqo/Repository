@@ -25,6 +25,15 @@ namespace Repository
 
         private string _path;
 
+        private CancellationTokenSource _highlightCts;
+
+        public override void OnBackPressed()
+        {
+            // We don't need to continue highlighting this file's text if we're currently doing so.
+            _highlightCts?.Cancel();
+            base.OnBackPressed();
+        }
+
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             void CacheViews()
@@ -48,7 +57,15 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            await SetupEditor(EditorTheme.Default);
+            // TODO: Is there a more concise/elegant way to await a task, but return if it is canceled?
+            try
+            {
+                await SetupEditor(EditorTheme.Default);
+            }
+            catch (TaskCanceledException)
+            {
+                return;
+            }
         }
 
         private static IHighlighter GetHighlighter(string filePath, string content)
@@ -84,6 +101,8 @@ namespace Repository
                 // because we let other work, such as input/rendering code, run more often.
                 const int FlushFrequency = 32;
 
+                _highlightCts = new CancellationTokenSource();
+
                 using (colorer.Setup(FlushFrequency))
                 {
                     // Do not reference `content` past this line.
@@ -92,7 +111,7 @@ namespace Repository
                     // from collecting the string while the highlighter is running, which is
                     // undesirable for large files.
                     // TODO: Verify with a profiler that the string is actually being collected.
-                    await highlighter.Highlight(content, colorer);
+                    await highlighter.Highlight(content, colorer, _highlightCts.Token);
                 }
             }
 
