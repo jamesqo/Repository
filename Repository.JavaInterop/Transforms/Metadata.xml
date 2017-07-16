@@ -6,10 +6,6 @@
 
     <!-- Methods -->
     <attr
-        path="/api/package[@name='com.bluejay.repository']/class[@name='ColoredText']/method[@name='append']"
-        name="managedReturn">Java.Lang.IAppendable</attr>
-
-    <attr
         path="/api/package[@name='com.bluejay.repository']/class[@name='ColoringList']/method[@name='count']"
         name="managedName">_Count</attr>
     <attr
