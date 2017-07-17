@@ -21,6 +21,18 @@ public class ColoredText extends SpannableStringBuilder {
         }
     }
 
+    @Override
+    public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
+        // If text is deleted or inserted while the highlighter is running, make sure the regions
+        // of text it highlights stays in sync with the source code.
+        int count = end - start;
+        int tbcount = tbend - tbstart;
+        int diff = tbcount - count;
+        this.index += diff;
+
+        return super.replace(start, end, tb, tbstart, tbend);
+    }
+
     private void advance(@ColorInt int color, int count) {
         assert count > 0;
         assert this.index + count <= this.length();
