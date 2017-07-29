@@ -4,5 +4,6 @@
     This file is used to store strings that will be presented to the user.
     Strings only seen by code belong in the internal Strings class.
     -->
-    <string name="ApplicationName">Repository</string>
+    <string name="Label_ChooseProvider">Choose a Provider</string>
+    <string name="Label_ChooseRepo">Choose a Repository</string>
 </resources>

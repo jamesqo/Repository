@@ -16,7 +16,7 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity(Label = Strings.Label_ChooseProvider)]
+    [Activity]
     public class ChooseProviderActivity : Activity
     {
         private Button _githubButton;
@@ -30,6 +30,7 @@ namespace Repository
 
             base.OnCreate(savedInstanceState);
 
+            Title = Resources.GetString(Resource.String.Label_ChooseProvider);
             SetContentView(Resource.Layout.ChooseProvider);
             CacheViews();
 

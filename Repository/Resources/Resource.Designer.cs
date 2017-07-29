@@ -242,7 +242,10 @@ namespace Repository
 		{
 			
 			// aapt resource value: 0x7f080001
-			public const int ApplicationName = 2131230721;
+			public const int Label_ChooseProvider = 2131230721;
+			
+			// aapt resource value: 0x7f080002
+			public const int Label_ChooseRepo = 2131230722;
 			
 			// aapt resource value: 0x7f080000
 			public const int app_name = 2131230720;

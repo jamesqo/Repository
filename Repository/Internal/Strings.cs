@@ -13,6 +13,7 @@ namespace Repository.Internal
     /// </remarks>
     internal static class Strings
     {
+        // This is not to be used in a string displayed to the user. Use Resource.String.app_name instead.
         public const string AppName = "Repository";
 
         public const string Extra_BrowseFiles_RepoId = nameof(Extra_BrowseFiles_RepoId);
@@ -22,10 +23,6 @@ namespace Repository.Internal
         public const string Extra_SignIn_CallbackUrl = nameof(Extra_SignIn_CallbackUrl);
 
         public const string Extra_SignIn_Url = nameof(Extra_SignIn_Url);
-
-        public const string Label_ChooseProvider = "Choose a Provider";
-
-        public const string Label_ChooseRepo = "Choose a Repository";
 
         public const string SPFile_AccessTokens = nameof(SPFile_AccessTokens);
 

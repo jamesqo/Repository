@@ -7,7 +7,7 @@ using Repository.Internal;
 
 namespace Repository
 {
-    [Activity(Label = Strings.Label_ChooseRepo)]
+    [Activity]
     public partial class ChooseRepoActivity : Activity
     {
         private RecyclerView _repoView;
@@ -21,6 +21,7 @@ namespace Repository
 
             base.OnCreate(savedInstanceState);
 
+            Title = Resources.GetString(Resource.String.Label_ChooseRepo);
             SetContentView(Resource.Layout.ChooseRepo);
             CacheViews();
 

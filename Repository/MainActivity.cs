@@ -11,7 +11,7 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
-    [Activity(Label = Strings.AppName, MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
         private Button _getStartedButton;
@@ -27,6 +27,7 @@ namespace Repository
 
             base.OnCreate(bundle);
 
+            Title = Resources.GetString(Resource.String.app_name);
             SetContentView(Resource.Layout.Main);
             CacheViews();
 
