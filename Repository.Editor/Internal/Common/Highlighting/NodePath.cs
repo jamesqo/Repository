@@ -52,7 +52,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
 
         public int Length => _nodeTypes.Count;
 
-        internal string DebuggerDisplay => string.Join(">", _nodeTypes.Select(GetDisplayName));
+        internal string DebuggerDisplay => "/" + string.Join("/", _nodeTypes.Select(GetDisplayName));
 
         public override bool Equals(object obj) => obj is NodePath other && Equals(other);
 
