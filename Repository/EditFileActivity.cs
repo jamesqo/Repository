@@ -4,7 +4,6 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
-using Android.Support.V7.Widget;
 using Android.Text;
 using Android.Widget;
 using Repository.Editor.Highlighting;

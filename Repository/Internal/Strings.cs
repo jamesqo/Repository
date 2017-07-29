@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Repository.Internal
+﻿namespace Repository.Internal
 {
     /// <summary>
     /// Stores strings that are not intended for display to the user.
