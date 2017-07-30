@@ -1,6 +1,6 @@
 # Repository
 
-An Android app designed for editing code. Written with Xamarin.
+An Android app designed for editing code. It's written in C# using [the Xamarin platform](https://www.xamarin.com/platform).
 
 ## Features
 
