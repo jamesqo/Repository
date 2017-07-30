@@ -79,7 +79,6 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitAnnotationName([NotNull] AnnotationNameContext context)
                 => VisitChildren(context, AnnotationNameReplacement);
 
-            // TODO: Do annotation type declarations, which use '@interface', need special treatment?
             public override Task VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
                 => VisitChildren(context, AnnotationTypeDeclarationReplacement);
 

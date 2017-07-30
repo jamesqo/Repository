@@ -56,7 +56,6 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            // TODO: Is there a more concise/elegant way to await a task, but return if it is canceled?
             try
             {
                 await SetupEditor(EditorTheme.Default);
@@ -71,8 +70,6 @@ namespace Repository
         {
             var fileExtension = Path.GetExtension(filePath).TrimStart('.');
             return Highlighter.FromFileExtension(fileExtension)
-                // TODO: What if the first line is huge (think of a minified jQuery file)?
-                // Then this could be a big, unnecessary allocation.
                 ?? Highlighter.FromFirstLine(content.FirstLine())
                 ?? Highlighter.Plaintext;
         }
@@ -109,7 +106,6 @@ namespace Repository
                     // machine for this method. Storing a reference to it will prevent the GC
                     // from collecting the string while the highlighter is running, which is
                     // undesirable for large files.
-                    // TODO: Verify with a profiler that the string is actually being collected.
                     await highlighter.Highlight(content, colorer, _highlightCts.Token);
                 }
             }

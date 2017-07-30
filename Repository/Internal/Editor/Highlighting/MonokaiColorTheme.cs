@@ -13,7 +13,6 @@ namespace Repository.Internal.Editor.Highlighting
 
         public Color GetForegroundColor(SyntaxKind kind)
         {
-            // TODO: Based off VSCode's Monokai theme
             switch (kind)
             {
                 case SyntaxKind.Annotation: return Color.SkyBlue;

@@ -10,7 +10,6 @@ namespace Repository.Editor.Internal.Common.Highlighting
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct NodePath : IEquatable<NodePath>
     {
-        // TODO: This is ANTLR-specific. Maybe subclass NodePath with AntlrPath?
         private static ImmutableArray<string> TrimFromDisplayNames { get; } =
             ImmutableArray.Create("Context", "NodeImpl");
 

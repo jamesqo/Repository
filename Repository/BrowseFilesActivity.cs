@@ -11,7 +11,6 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    // TODO: Put the current directory path as the label.
     [Activity(Label = "File View")]
     public partial class BrowseFilesActivity : Activity
     {
