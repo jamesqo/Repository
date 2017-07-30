@@ -76,10 +76,6 @@ namespace Repository.Editor.Internal.Java.Highlighting
             private static SyntaxReplacement WildcardTypeArgumentReplacement { get; } =
                 SyntaxReplacement.Terminal(SyntaxKind.TypeIdentifier);
 
-            // TODO: Throw NSE for DefaultResult in future Visitor base class?
-
-            // TODO: Consider NSE for Visit() too and change all call sites to use Accept().
-
             public override Task VisitAnnotationName([NotNull] AnnotationNameContext context)
                 => VisitChildren(context, AnnotationNameReplacement);
 
@@ -228,7 +224,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
                 _lastAncestor = parent;
                 _replacements = replacements;
-                await Visit(child);
+                await child.Accept(this);
 
                 _lastAncestor = originalAncestor;
                 _replacements = originalReplacements;

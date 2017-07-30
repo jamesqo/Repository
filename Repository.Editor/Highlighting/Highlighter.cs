@@ -17,15 +17,12 @@ namespace Repository.Editor.Highlighting
 
         public static IHighlighter Plaintext { get; } = new PlaintextHighlighter();
 
-        // TODO: Consider whether appropriate for this assembly.
-
         public static IHighlighter FromFileExtension(string fileExtension)
         {
             Verify.NotNullOrEmpty(fileExtension, nameof(fileExtension));
 
             switch (fileExtension)
             {
-                // TODO: Not only .cs is used for C# files. Look at Linguist.
                 case "cs":
                     return CSharp;
                 case "java":
@@ -41,7 +38,6 @@ namespace Repository.Editor.Highlighting
         {
             Verify.NotNull(firstLine, nameof(firstLine));
 
-            // TODO: Detect shebangs, <?xml ...?>, maybe PHP, other stuff.
             return null;
         }
     }

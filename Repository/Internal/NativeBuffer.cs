@@ -41,7 +41,6 @@ namespace Repository.Internal
             Verify.State(HasRoom(sizeof(long)));
 
             // It's tempting to use pointer arithmetic here, but we must write the data out in the correct endianness.
-            // TODO: What if other devices are little endian?
             _address[_count] = (byte)(value >> 56);
             _address[_count + 1] = (byte)(value >> 48);
             _address[_count + 2] = (byte)(value >> 40);

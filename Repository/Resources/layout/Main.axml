@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:minWidth="25px"
     android:minHeight="25px">
-    <!-- TODO: Use resource string for android:text? -->
     <Button
-        android:text="Get Started"
+        android:text="@string/Text_Main_StartButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Main_GetStartedButton" />
+        android:id="@+id/Main_StartButton" />
 </LinearLayout>

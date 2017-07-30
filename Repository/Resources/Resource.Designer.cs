@@ -183,7 +183,7 @@ namespace Repository
 			public const int EditFile_Scroller = 2131034118;
 			
 			// aapt resource value: 0x7f050008
-			public const int Main_GetStartedButton = 2131034120;
+			public const int Main_StartButton = 2131034120;
 			
 			// aapt resource value: 0x7f050009
 			public const int SignIn_WebView = 2131034121;
@@ -246,6 +246,9 @@ namespace Repository
 			
 			// aapt resource value: 0x7f080002
 			public const int Label_ChooseRepo = 2131230722;
+			
+			// aapt resource value: 0x7f080003
+			public const int Text_Main_StartButton = 2131230723;
 			
 			// aapt resource value: 0x7f080000
 			public const int app_name = 2131230720;

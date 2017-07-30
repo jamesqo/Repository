@@ -34,7 +34,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 _replacements = ReadOnlyList<SyntaxReplacement>.Empty;
             }
 
-            internal Task Run() => Visit(_tree);
+            internal Task Run() => _tree.Accept(this);
 
             private async Task Advance(IToken token, SyntaxKind kind)
             {
@@ -197,7 +197,6 @@ namespace Repository.Editor.Internal.Java.Highlighting
                     case AT:
                         return SyntaxKind.Annotation;
                     case ELLIPSIS:
-                        // TODO: We should highlight this.
                         return SyntaxKind.Plaintext;
                     // Hidden token types are intentionally not handled here. GetHiddenKind() takes care of those.
                     default:

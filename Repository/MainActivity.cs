@@ -4,7 +4,6 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Widget;
-using Repository.Internal;
 using Repository.Internal.Diagnostics;
 using Repository.Internal.Editor;
 using Debug = System.Diagnostics.Debug;
@@ -14,7 +13,7 @@ namespace Repository
     [Activity(MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        private Button _getStartedButton;
+        private Button _startButton;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -22,7 +21,7 @@ namespace Repository
 
             void CacheViews()
             {
-                _getStartedButton = FindViewById<Button>(Resource.Id.Main_GetStartedButton);
+                _startButton = FindViewById<Button>(Resource.Id.Main_StartButton);
             }
 
             base.OnCreate(bundle);
@@ -31,7 +30,7 @@ namespace Repository
             SetContentView(Resource.Layout.Main);
             CacheViews();
 
-            _getStartedButton.Click += GetStartedButton_Click;
+            _startButton.Click += StartButton_Click;
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -44,8 +43,6 @@ namespace Repository
                 Debugger.Break();
             }
         }
-
-        private void GetStartedButton_Click(object sender, EventArgs e) => StartChooseProvider();
 
         private void SetupApp()
         {
@@ -62,6 +59,8 @@ namespace Repository
         private static void SetupDebug() => Debug.Listeners.Add(new DebugListener());
 
         private void SetupTypefaces() => Typefaces.Initialize(Assets);
+
+        private void StartButton_Click(object sender, EventArgs e) => StartChooseProvider();
 
         private void StartChooseProvider()
         {

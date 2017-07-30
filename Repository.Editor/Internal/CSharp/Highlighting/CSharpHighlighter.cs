@@ -65,8 +65,6 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
             private static IEnumerable<ClassifiedSpan> GetClassifiedSpans(string sourceText)
             {
                 var document = CreateDocument(sourceText);
-                // TODO: Add async support to IHighlighter? IsAsync, or just force everything to return a Task?
-                // Probably won't be an issue after this class is rewritten to do manual classification.
                 return Classifier.GetClassifiedSpansAsync(document, new TextSpan(0, sourceText.Length)).Result;
             }
 
@@ -75,17 +73,13 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
                 switch (classificationType)
                 {
                     case ClassName:
-                        // TODO: The C# APIs don't offer distinction between type declarations and type idents like ANTLR does.
-                        // What should be our behavior here?
                         return SyntaxKind.TypeDeclaration;
                     case Comment:
                         return SyntaxKind.Comment;
                     case DelegateName:
                     case EnumName:
                         return SyntaxKind.TypeDeclaration;
-                    // TODO: Consider this more carefully. What if all #if ...s get excluded?
                     case ExcludedCode:
-                        // TODO: Implement in ColorTheme
                         return SyntaxKind.ExcludedCode;
                     case Identifier:
                         return SyntaxKind.Identifier;
@@ -94,7 +88,6 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
                     case Keyword:
                         return SyntaxKind.Keyword;
                     case ModuleName:
-                        // TODO: What is this?
                         throw new NotSupportedException();
                     case NumericLiteral:
                         return SyntaxKind.NumericLiteral;
@@ -110,10 +103,8 @@ namespace Repository.Editor.Internal.CSharp.Highlighting
                     case StructName:
                         return SyntaxKind.TypeDeclaration;
                     case Text:
-                        // TODO: When is this actually hit? Is Plaintext appropriate?
                         return SyntaxKind.Plaintext;
                     case TypeParameterName:
-                        // TODO: Is this the best choice? Should we add SyntaxKind.TypeParameterDeclaration?
                         return SyntaxKind.TypeIdentifier;
                     case VerbatimStringLiteral:
                         return SyntaxKind.StringLiteral;
