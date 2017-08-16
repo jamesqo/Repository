@@ -121,13 +121,12 @@ namespace Repository
         {
             var content = ReadEditorContent();
             _colorer = TextColorer.Create(content, theme.Colors);
-            // TODO: Make last parameter named.
             // TODO: Ensure DoHighlightUpdate doesn't get called until the previous one finishes?
-            var triggerer = new HighlightUpdateTrigger(
+            var updateSource = new HighlightUpdateSource(
                 DoHighlightUpdate,
                 ThreadingUtilities.UIThreadHandler,
                 10);
-            _colorer.Text.SetSpan(triggerer);
+            _colorer.Text.SetSpan(updateSource);
             _highlighter = GetHighlighter(filePath: _path, content: content);
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;

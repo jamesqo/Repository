@@ -4,24 +4,24 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-public class HighlightUpdateTrigger implements TextWatcher {
+public class HighlightUpdateSource implements TextWatcher {
     private  final Runnable doHighlightUpdate;
     private final Handler handler;
-    private final int maxEditsBeforeTrigger;
+    private final int maxEditsBeforeUpdate;
 
-    private int editsSinceLastTrigger;
+    private int editsSinceLastUpdate;
 
-    public HighlightUpdateTrigger(Runnable doHighlightUpdate, Handler handler, int maxEditsBeforeTrigger) {
+    public HighlightUpdateSource(Runnable doHighlightUpdate, Handler handler, int maxEditsBeforeUpdate) {
         this.doHighlightUpdate = doHighlightUpdate;
         this.handler = handler;
-        this.maxEditsBeforeTrigger = maxEditsBeforeTrigger;
+        this.maxEditsBeforeUpdate = maxEditsBeforeUpdate;
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        // TODO: Trigger after newline or after n milliseconds.
-        if (++this.editsSinceLastTrigger == this.maxEditsBeforeTrigger) {
-            this.editsSinceLastTrigger = 0;
+        // TODO: Update after newline or after n milliseconds.
+        if (++this.editsSinceLastUpdate == this.maxEditsBeforeUpdate) {
+            this.editsSinceLastUpdate = 0;
             this.handler.post(this.doHighlightUpdate);
         }
     }
