@@ -133,7 +133,7 @@ namespace Repository
 
         private async void UpdateHighlighting()
         {
-            _colorer.Text.ClearSpans();
+            _colorer.Text.ClearColorSpans();
             string newContent = _colorer.Text.ToString();
             // TODO: Problem if multiple HighlightContents in progress due to the coloring buffer being overwritten?
             await HighlightContent(newContent);
