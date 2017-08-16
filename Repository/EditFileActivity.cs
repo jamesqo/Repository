@@ -135,6 +135,7 @@ namespace Repository
         {
             _colorer.Text.ClearSpans();
             string newContent = _colorer.Text.ToString();
+            // TODO: Problem if multiple HighlightContents in progress due to the coloring buffer being overwritten?
             await HighlightContent(newContent);
         }
     }

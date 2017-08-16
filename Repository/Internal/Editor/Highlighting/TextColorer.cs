@@ -74,7 +74,7 @@ namespace Repository.Internal.Editor.Highlighting
             {
                 var colorings = ColoringList.FromBufferSpan(
                     _colorings.Unwrap(), 0, byteCount / 8);
-                _text.ColorWith(colorings); // Segments are separated by '\n'.
+                _text.ColorWith(colorings);
                 _colorings.Clear();
             }
         }
@@ -82,6 +82,7 @@ namespace Repository.Internal.Editor.Highlighting
         private async Task FlushAsync()
         {
             Flush();
+
             // This line is extremely important!
             // It interrupts our highlighting work at fixed intervals, giving the UI thread a chance
             // to run pending work such as input/rendering code, which keeps the app responsive.

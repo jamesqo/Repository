@@ -97,10 +97,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
                 => VisitChildren(context, EnumDeclarationReplacement);
 
-            public override Task VisitErrorNode(IErrorNode node)
-            {
-                throw new NotImplementedException();
-            }
+            public override Task VisitErrorNode(IErrorNode node) => Task.CompletedTask;
 
             public override Task VisitFormalParameter([NotNull] FormalParameterContext context)
                 => VisitChildren(context, FormalParameterReplacement);

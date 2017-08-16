@@ -17,6 +17,7 @@ public class ColoredText extends SpannableStringBuilder {
     @Override
     public void clearSpans() {
         this.index = 0; // TODO: This is a temp hack. Remove when index field no longer exists.
+                        // Note that this can cause problems if run while another update is still running.
         super.clearSpans();
     }
 
