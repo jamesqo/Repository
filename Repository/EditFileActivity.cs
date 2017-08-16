@@ -127,8 +127,7 @@ namespace Repository
                 DoHighlightUpdate,
                 ThreadingUtilities.UIThreadHandler,
                 10);
-            // TODO: Cleanup with extension method?
-            _colorer.Text.SetSpan(triggerer, 0, content.Length, SpanTypes.InclusiveExclusive);
+            _colorer.Text.SetSpan(triggerer);
             _highlighter = GetHighlighter(filePath: _path, content: content);
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;
