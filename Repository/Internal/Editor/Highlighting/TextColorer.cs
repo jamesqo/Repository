@@ -11,7 +11,7 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer
     {
-        private readonly ColoredText _text;
+        private readonly EditorText _text;
         private readonly IColorTheme _theme;
 
         private ByteBufferWrapper _colorings;
@@ -21,13 +21,13 @@ namespace Repository.Internal.Editor.Highlighting
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
-            _text = new ColoredText(text);
+            _text = new EditorText(text);
             _theme = theme;
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
-        public ColoredText Text => _text;
+        public EditorText Text => _text;
 
         public Task Color(SyntaxKind kind, int count, CancellationToken cancellationToken)
         {

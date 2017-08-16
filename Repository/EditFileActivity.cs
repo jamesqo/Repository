@@ -72,8 +72,9 @@ namespace Repository
 
         private async void DoHighlightUpdate()
         {
-            _colorer.Text.ClearColorSpans();
-            string newContent = _colorer.Text.ToString();
+            var editorText = _colorer.Text;
+            editorText.ClearColorSpans();
+            string newContent = editorText.ToString();
             // TODO: Problem if multiple HighlightContents in progress due to the coloring buffer being overwritten?
             await HighlightContent(newContent);
         }
