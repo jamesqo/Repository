@@ -99,8 +99,6 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
             public override Task VisitErrorNode(IErrorNode node)
             {
-                Debug.Assert(node.ChildCount == 0);
-
                 var token = node.Symbol;
                 return Advance(token, GetKind(token));
             }
