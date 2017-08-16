@@ -39,6 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionRunnable.cs" />
+    <Compile Include="HighlightUpdateTrigger.Manual.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

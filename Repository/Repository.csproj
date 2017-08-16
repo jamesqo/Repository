@@ -139,7 +139,6 @@
     <Compile Include="Internal\Editor\Typefaces.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
-    <Compile Include="Internal\Java\ActionRunnable.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
     <Compile Include="Internal\NativeBuffer.cs" />
     <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />

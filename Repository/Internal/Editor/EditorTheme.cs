@@ -9,7 +9,6 @@ namespace Repository.Internal.Editor
     {
         private static EditorTheme s_default;
 
-        // TODO: Remove lazy init.
         public static EditorTheme Default =>
             EnsureInitialized(ref s_default, () => new EditorTheme(ColorTheme.Default, Typefaces.Inconsolata));
 

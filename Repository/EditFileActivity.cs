@@ -71,6 +71,14 @@ namespace Repository
             }
         }
 
+        private async void DoHighlightUpdate()
+        {
+            _colorer.Text.ClearColorSpans();
+            string newContent = _colorer.Text.ToString();
+            // TODO: Problem if multiple HighlightContents in progress due to the coloring buffer being overwritten?
+            await HighlightContent(newContent);
+        }
+
         private static IHighlighter GetHighlighter(string filePath, string content)
         {
             var fileExtension = Path.GetExtension(filePath).TrimStart('.');
@@ -114,9 +122,9 @@ namespace Repository
             var content = ReadEditorContent();
             _colorer = TextColorer.Create(content, theme.Colors);
             // TODO: Make last parameter named.
-            var triggerer = new UpdateHighlightingTriggerer(
-                // TODO: Move wrapping logic to Repository.JavaInterop and just pass UpdateHighlighting?
-                new ActionRunnable(UpdateHighlighting),
+            // TODO: Ensure DoHighlightUpdate doesn't get called until the previous one finishes?
+            var triggerer = new HighlightUpdateTrigger(
+                DoHighlightUpdate,
                 ThreadingUtilities.UIThreadHandler,
                 10);
             // TODO: Cleanup with extension method?
@@ -129,14 +137,6 @@ namespace Repository
             _editor.SetText(_colorer.Text, TextView.BufferType.Editable);
 
             return HighlightContent(content);
-        }
-
-        private async void UpdateHighlighting()
-        {
-            _colorer.Text.ClearColorSpans();
-            string newContent = _colorer.Text.ToString();
-            // TODO: Problem if multiple HighlightContents in progress due to the coloring buffer being overwritten?
-            await HighlightContent(newContent);
         }
     }
 }
