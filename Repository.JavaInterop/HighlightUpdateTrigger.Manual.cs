@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.OS;
+using Repository.JavaInterop.Internal;
 
 namespace Repository.JavaInterop
 {

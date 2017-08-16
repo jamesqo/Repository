@@ -3,7 +3,7 @@ using Java.Lang;
 using Repository.Common;
 using JavaObject = Java.Lang.Object;
 
-namespace Repository.JavaInterop
+namespace Repository.JavaInterop.Internal
 {
     internal class ActionRunnable : JavaObject, IRunnable
     {

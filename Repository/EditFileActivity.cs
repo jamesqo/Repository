@@ -11,7 +11,6 @@ using Repository.Internal;
 using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
-using Repository.Internal.Java;
 using Repository.Internal.Threading;
 using Repository.JavaInterop;
 using static Repository.Common.Verify;
