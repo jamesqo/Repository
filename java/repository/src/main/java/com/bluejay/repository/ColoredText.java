@@ -14,6 +14,12 @@ public class ColoredText extends SpannableStringBuilder {
         super(rawText);
     }
 
+    @Override
+    public void clearSpans() {
+        this.index = 0; // TODO: This is a temp hack. Remove when index field no longer exists.
+        super.clearSpans();
+    }
+
     public void colorWith(ColoringList colorings) {
         for (int i = 0; i < colorings.count(); i++) {
             long coloring = colorings.get(i);

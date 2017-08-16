@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+// TODO: HighlightingUpdate?
 public class UpdateHighlightingTriggerer implements TextWatcher {
     private  final Runnable updateHighlighting;
     private final Handler handler;
