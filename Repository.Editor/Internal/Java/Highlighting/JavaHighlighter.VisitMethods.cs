@@ -97,7 +97,13 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitEnumDeclaration([NotNull] EnumDeclarationContext context)
                 => VisitChildren(context, EnumDeclarationReplacement);
 
-            public override Task VisitErrorNode(IErrorNode node) => Task.CompletedTask;
+            public override Task VisitErrorNode(IErrorNode node)
+            {
+                Debug.Assert(node.ChildCount == 0);
+
+                var token = node.Symbol;
+                return Advance(token, GetKind(token));
+            }
 
             public override Task VisitFormalParameter([NotNull] FormalParameterContext context)
                 => VisitChildren(context, FormalParameterReplacement);
