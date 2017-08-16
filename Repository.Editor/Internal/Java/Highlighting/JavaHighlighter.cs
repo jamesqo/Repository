@@ -60,7 +60,19 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 }
             }
 
-            private SyntaxKind GetKind(IToken token) => SuggestKind(token).Kind;
+            private SyntaxKind GetHiddenKind(IToken token)
+            {
+                switch (token.Type)
+                {
+                    case WS:
+                        return SyntaxKind.Plaintext;
+                    case COMMENT:
+                    case LINE_COMMENT:
+                        return SyntaxKind.Comment;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
 
             private SyntaxSuggestion SuggestKind(IToken token)
             {
@@ -186,11 +198,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
                         return SyntaxKind.Annotation;
                     case ELLIPSIS:
                         return SyntaxKind.Plaintext;
-                    case WS:
-                        return SyntaxKind.Plaintext;
-                    case COMMENT:
-                    case LINE_COMMENT:
-                        return SyntaxKind.Comment;
+                    // Hidden token types are intentionally not handled here. GetHiddenKind() takes care of those.
                     default:
                         throw new NotSupportedException();
                 }
@@ -211,7 +219,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 return _colorer.Color(kind, count, _cancellationToken);
             }
 
-            private Task SurpassHidden(IToken token) => Surpass(token, GetKind(token));
+            private Task SurpassHidden(IToken token) => Surpass(token, GetHiddenKind(token));
         }
 
         public Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken)
