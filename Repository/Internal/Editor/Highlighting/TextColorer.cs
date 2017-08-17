@@ -11,7 +11,7 @@ namespace Repository.Internal.Editor.Highlighting
 {
     internal class TextColorer : ITextColorer
     {
-        private readonly ColoredText _text;
+        private readonly EditorText _text;
         private readonly IColorTheme _theme;
 
         private ByteBufferWrapper _colorings;
@@ -21,13 +21,13 @@ namespace Repository.Internal.Editor.Highlighting
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
-            _text = new ColoredText(text);
+            _text = new EditorText(text);
             _theme = theme;
         }
 
         public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
-        public ColoredText Text => _text;
+        public EditorText Text => _text;
 
         public Task Color(SyntaxKind kind, int count, CancellationToken cancellationToken)
         {
@@ -74,7 +74,7 @@ namespace Repository.Internal.Editor.Highlighting
             {
                 var colorings = ColoringList.FromBufferSpan(
                     _colorings.Unwrap(), 0, byteCount / 8);
-                _text.ColorWith(colorings); // Segments are separated by '\n'.
+                _text.ColorWith(colorings);
                 _colorings.Clear();
             }
         }
@@ -82,6 +82,7 @@ namespace Repository.Internal.Editor.Highlighting
         private async Task FlushAsync()
         {
             Flush();
+
             // This line is extremely important!
             // It interrupts our highlighting work at fixed intervals, giving the UI thread a chance
             // to run pending work such as input/rendering code, which keeps the app responsive.

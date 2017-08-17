@@ -219,11 +219,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
                 return _colorer.Color(kind, count, _cancellationToken);
             }
 
-            private Task SurpassHidden(IToken token)
-            {
-                var kind = GetHiddenKind(token);
-                return Surpass(token, kind);
-            }
+            private Task SurpassHidden(IToken token) => Surpass(token, GetHiddenKind(token));
         }
 
         public Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken)
