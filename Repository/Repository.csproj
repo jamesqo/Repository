@@ -123,6 +123,7 @@
     <Compile Include="ChooseRepoActivity.cs" />
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
+    <Compile Include="Internal\Android\SpannableExtensions.cs" />
     <Compile Include="Internal\Editor\Highlighting\Coloring.cs" />
     <Compile Include="Internal\Disposable.cs" />
     <Compile Include="Internal\Editor\EditorTheme.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Internal\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
+    <Compile Include="Internal\Threading\ThreadingUtilities.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="Internal\Java\ByteBufferWrapper.cs" />
     <Compile Include="MainActivity.cs" />

@@ -25,7 +25,7 @@ To prevent Mono from registering each `ForegroundColorSpan`, all of them are ins
 
 Since `ForegroundColorSpan` has to be instantiated in Java, `SetSpan` also has to be called from Java. Suppose we want to call `SetSpan` every time the text colorer colors a new region. Then we would have to call our custom Java method that calls `SetSpan` every time we color a region. Calling Java methods thousands of times from C# can become a bottleneck due to interop logic, so this isn't ideal.
 
-### Solution: Buffering writes to `ColoredText`
+### Solution: Buffering writes to `EditorText`
 
 Instead of calling the Java method each time a region is colored, we store the relevant info in a buffer. Adding info to the buffer doesn't require calling any Java code. When the buffer is full, we 'flush' the data, invoking a single Java method that uses info from the buffer to call `SetSpan` in bulk.
 

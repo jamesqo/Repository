@@ -11,6 +11,8 @@ using Repository.Internal;
 using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
+using Repository.Internal.Threading;
+using Repository.JavaInterop;
 using static Repository.Common.Verify;
 using Debug = System.Diagnostics.Debug;
 using Path = System.IO.Path;
@@ -24,6 +26,8 @@ namespace Repository
 
         private string _path;
 
+        private TextColorer _colorer;
+        private IHighlighter _highlighter;
         private CancellationTokenSource _highlightCts;
 
         public override void OnBackPressed()
@@ -74,6 +78,51 @@ namespace Repository
                 ?? Highlighter.Plaintext;
         }
 
+        private Task HighlightContent(HighlightRequester requester)
+        {
+            var editorText = _colorer.Text;
+            editorText.ClearColorSpans();
+            string newContent = editorText.ToString();
+            return HighlightContent(newContent, requester);
+        }
+
+        private async Task HighlightContent(string content, HighlightRequester requester)
+        {
+            Debug.Assert(requester.IsHighlightRequested);
+
+            _highlightCts = _highlightCts ?? new CancellationTokenSource();
+            await HighlightContentCore(content);
+
+            requester.OnHighlightFinished();
+            if (!requester.IsHighlightRequested)
+            {
+                return;
+            }
+
+            await HighlightContent(requester);
+        }
+
+        private async Task HighlightContentCore(string content)
+        {
+            // This controls how often we flush work done by the colorer and yield
+            // to pending work on the UI thread. A lower value means increased responsiveness
+            // because we let other work, such as input/rendering code, run more often.
+            const int FlushFrequency = 32;
+
+            using (_colorer.Setup(FlushFrequency))
+            {
+                // Do not reference `content` past this line.
+                // Doing so will cause it to be stored in a field in the async state
+                // machine for this method. Storing a reference to it will prevent the GC
+                // from collecting the string while the highlighter is running, which is
+                // undesirable for large files.
+                await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
+            }
+        }
+
+        private void OnHighlightRequested(HighlightRequester requester)
+            => ThreadingUtilities.PostToUIThread(() => HighlightContent(requester));
+
         private static string ReadEditorContent()
         {
             var content = EditorContent.Current;
@@ -87,35 +136,21 @@ namespace Repository
         private Task SetupEditor(EditorTheme theme)
         {
             var content = ReadEditorContent();
-            var colorer = TextColorer.Create(content, theme.Colors);
-            var highlighter = GetHighlighter(filePath: _path, content: content);
+            _colorer = TextColorer.Create(content, theme.Colors);
+            _highlighter = GetHighlighter(filePath: _path, content: content);
 
-            async Task HighlightContent()
-            {
-                // This controls how often we flush work done by the colorer and yield
-                // to pending work on the UI thread. A lower value means increased responsiveness
-                // because we let other work, such as input/rendering code, run more often.
-                const int FlushFrequency = 32;
-
-                _highlightCts = new CancellationTokenSource();
-
-                using (colorer.Setup(FlushFrequency))
-                {
-                    // Do not reference `content` past this line.
-                    // Doing so will cause it to be stored in a field in the async state
-                    // machine for this method. Storing a reference to it will prevent the GC
-                    // from collecting the string while the highlighter is running, which is
-                    // undesirable for large files.
-                    await highlighter.Highlight(content, colorer, _highlightCts.Token);
-                }
-            }
+            // TODO: Ensure DoHighlightUpdate doesn't get called until the previous one finishes?
+            var requester = new HighlightRequester(
+                OnHighlightRequested,
+                10);
+            _colorer.Text.SetSpan(requester);
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
             _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
-            _editor.SetText(colorer.Text, TextView.BufferType.Editable);
+            _editor.SetText(_colorer.Text, TextView.BufferType.Editable);
 
-            return HighlightContent();
+            return HighlightContent(content, requester);
         }
     }
 }
