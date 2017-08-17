@@ -88,14 +88,27 @@ namespace Repository
 
         private async Task HighlightContent(string content, HighlightRequester requester)
         {
+            Debug.Assert(requester.IsHighlightRequested);
+
+            _highlightCts = _highlightCts ?? new CancellationTokenSource();
+            await HighlightContentCore(content);
+
+            requester.OnHighlightFinished();
+            if (!requester.IsHighlightRequested)
+            {
+                return;
+            }
+
+            await HighlightContent(requester);
+        }
+
+        private async Task HighlightContentCore(string content)
+        {
             // This controls how often we flush work done by the colorer and yield
             // to pending work on the UI thread. A lower value means increased responsiveness
             // because we let other work, such as input/rendering code, run more often.
             const int FlushFrequency = 32;
 
-            _highlightCts = _highlightCts ?? new CancellationTokenSource();
-
-            Debug.Assert(requester.IsHighlightRequested);
             using (_colorer.Setup(FlushFrequency))
             {
                 // Do not reference `content` past this line.
@@ -105,14 +118,6 @@ namespace Repository
                 // undesirable for large files.
                 await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
             }
-
-            requester.OnHighlightFinished();
-            if (!requester.IsHighlightRequested)
-            {
-                return;
-            }
-
-            await HighlightContent(requester);
         }
 
         private void OnHighlightRequested(HighlightRequester requester)
