@@ -42,16 +42,16 @@ public class EditorText extends SpannableStringBuilder {
         }
     }
 
-    @Override
-    public void clearSpans() {
-        throw new UnsupportedOperationException();
-    }
-
     public void colorWith(ColoringList colorings) {
         for (int i = 0; i < colorings.count(); i++) {
             long coloring = colorings.get(i);
             this.advance(getColor(coloring), getCount(coloring));
         }
+    }
+
+    @Override
+    public void clearSpans() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

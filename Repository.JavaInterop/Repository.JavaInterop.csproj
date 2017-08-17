@@ -39,8 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Internal\ActionRunnable.cs" />
-    <Compile Include="HighlightUpdateSource.Manual.cs" />
+    <Compile Include="HighlightRequester.Manual.cs" />
+    <Compile Include="Internal\OnInitialRequestCallback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

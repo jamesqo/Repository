@@ -70,15 +70,6 @@ namespace Repository
             }
         }
 
-        private async void DoHighlightUpdate()
-        {
-            var editorText = _colorer.Text;
-            editorText.ClearColorSpans();
-            string newContent = editorText.ToString();
-            // TODO: Problem if multiple HighlightContents in progress due to the coloring buffer being overwritten?
-            await HighlightContent(newContent);
-        }
-
         private static IHighlighter GetHighlighter(string filePath, string content)
         {
             var fileExtension = Path.GetExtension(filePath).TrimStart('.');
@@ -87,7 +78,15 @@ namespace Repository
                 ?? Highlighter.Plaintext;
         }
 
-        private async Task HighlightContent(string content)
+        private Task HighlightContent(HighlightRequester requester)
+        {
+            var editorText = _colorer.Text;
+            editorText.ClearColorSpans();
+            string newContent = editorText.ToString();
+            return HighlightContent(newContent, requester);
+        }
+
+        private async Task HighlightContent(string content, HighlightRequester requester)
         {
             // This controls how often we flush work done by the colorer and yield
             // to pending work on the UI thread. A lower value means increased responsiveness
@@ -96,6 +95,7 @@ namespace Repository
 
             _highlightCts = _highlightCts ?? new CancellationTokenSource();
 
+            Debug.Assert(requester.IsHighlightRequested);
             using (_colorer.Setup(FlushFrequency))
             {
                 // Do not reference `content` past this line.
@@ -105,7 +105,18 @@ namespace Repository
                 // undesirable for large files.
                 await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
             }
+
+            requester.OnHighlightFinished();
+            if (!requester.IsHighlightRequested)
+            {
+                return;
+            }
+
+            await HighlightContent(requester);
         }
+
+        private void OnHighlightRequested(HighlightRequester requester)
+            => ThreadingUtilities.PostToUIThread(() => HighlightContent(requester));
 
         private static string ReadEditorContent()
         {
@@ -121,20 +132,20 @@ namespace Repository
         {
             var content = ReadEditorContent();
             _colorer = TextColorer.Create(content, theme.Colors);
-            // TODO: Ensure DoHighlightUpdate doesn't get called until the previous one finishes?
-            var updateSource = new HighlightUpdateSource(
-                DoHighlightUpdate,
-                ThreadingUtilities.UIThreadHandler,
-                10);
-            _colorer.Text.SetSpan(updateSource);
             _highlighter = GetHighlighter(filePath: _path, content: content);
+
+            // TODO: Ensure DoHighlightUpdate doesn't get called until the previous one finishes?
+            var requester = new HighlightRequester(
+                OnHighlightRequested,
+                10);
+            _colorer.Text.SetSpan(requester);
 
             _editor.InputType |= InputTypes.TextFlagNoSuggestions;
             _editor.SetEditableFactory(NoCopyEditableFactory.Instance);
             _editor.SetTypeface(theme.Typeface, TypefaceStyle.Normal);
             _editor.SetText(_colorer.Text, TextView.BufferType.Editable);
 
-            return HighlightContent(content);
+            return HighlightContent(content, requester);
         }
     }
 }
