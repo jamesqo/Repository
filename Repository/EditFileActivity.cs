@@ -153,7 +153,7 @@ namespace Repository
         private Task SetupEditor(EditorTheme theme)
         {
             var content = ReadEditorContent();
-            _colorer = TextColorer.Create(content, theme.Colors);
+            _colorer = new TextColorer(content, theme.Colors);
             _highlighter = GetHighlighter(filePath: _path, content: content);
 
             _requester = new HighlightRequester(

@@ -13,9 +13,7 @@ namespace Repository.Editor.Internal
 
         private readonly List<T> _list;
 
-        private ReadOnlyList(List<T> list) => _list = list;
-
-        internal static ReadOnlyList<T> Create(List<T> list) => new ReadOnlyList<T>(list);
+        internal ReadOnlyList(List<T> list) => _list = list;
 
         public int Count => _list.Count;
 
@@ -25,6 +23,6 @@ namespace Repository.Editor.Internal
 
         public T this[int index] => _list[index];
 
-        private string DebuggerDisplay => $"Count = {Count}";
+        private string DebuggerDisplay => $"{nameof(Count)} = {Count}";
     }
 }

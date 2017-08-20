@@ -12,7 +12,7 @@ namespace Repository.Editor.Internal
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct ImmutableSpan<T> : IEnumerable<T>
     {
-        private ImmutableSpan(ImmutableArray<T> array, int index, int count)
+        internal ImmutableSpan(ImmutableArray<T> array, int index, int count)
         {
             Debug.Assert(!array.IsDefault);
             Debug.Assert(index >= 0 && count >= 0);
@@ -25,12 +25,7 @@ namespace Repository.Editor.Internal
 
         public static implicit operator ImmutableSpan<T>(ImmutableArray<T> array)
         {
-            return Create(array, 0, array.Length);
-        }
-
-        internal static ImmutableSpan<T> Create(ImmutableArray<T> array, int index, int count)
-        {
-            return new ImmutableSpan<T>(array, index, count);
+            return new ImmutableSpan<T>(array, 0, array.Length);
         }
 
         public ImmutableArray<T> Array { get; }
@@ -49,7 +44,8 @@ namespace Repository.Editor.Internal
 
         private string DebuggerDisplay => $"[{Index}..{Index + Count})";
 
-        public ImmutableSpan<T> Slice(int index) => Create(Array, Index + index, Count - index);
+        public ImmutableSpan<T> Slice(int index)
+            => new ImmutableSpan<T>(Array, Index + index, Count - index);
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)Array).GetEnumerator();
 

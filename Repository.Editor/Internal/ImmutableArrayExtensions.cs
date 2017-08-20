@@ -10,7 +10,7 @@ namespace Repository.Editor.Internal
     {
         public static ImmutableSpan<T> Slice<T>(this ImmutableArray<T> array, int index, int count)
         {
-            return ImmutableSpan<T>.Create(array, index, count);
+            return new ImmutableSpan<T>(array, index, count);
         }
     }
 }

@@ -7,15 +7,13 @@ namespace Repository.Internal.Editor.Highlighting
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct Coloring
     {
-        private Coloring(Color color, int count)
+        public Coloring(Color color, int count)
         {
             Verify.InRange(count > 0, nameof(count));
 
             Color = color;
             Count = count;
         }
-
-        public static Coloring Create(Color color, int count) => new Coloring(color, count);
 
         public Color Color { get; }
 

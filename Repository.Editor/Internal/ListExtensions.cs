@@ -7,6 +7,6 @@ namespace Repository.Editor.Internal
 {
     internal static class ListExtensions
     {
-        public static ReadOnlyList<T> AsReadOnlyList<T>(this List<T> list) => ReadOnlyList<T>.Create(list);
+        public static ReadOnlyList<T> AsReadOnlyList<T>(this List<T> list) => new ReadOnlyList<T>(list);
     }
 }

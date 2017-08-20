@@ -16,7 +16,7 @@ namespace Repository.Internal.Editor.Highlighting
 
         private ByteBufferWrapper _colorings;
 
-        private TextColorer(string text, IColorTheme theme)
+        public TextColorer(string text, IColorTheme theme)
         {
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
@@ -24,8 +24,6 @@ namespace Repository.Internal.Editor.Highlighting
             _text = new EditorText(text);
             _theme = theme;
         }
-
-        public static TextColorer Create(string text, IColorTheme theme) => new TextColorer(text, theme);
 
         public EditorText Text => _text;
 
@@ -39,7 +37,7 @@ namespace Repository.Internal.Editor.Highlighting
             }
 
             var color = _theme.GetForegroundColor(kind);
-            _colorings.Add(Coloring.Create(color, count).ToLong());
+            _colorings.Add(new Coloring(color, count).ToLong());
 
             return _colorings.IsFull
                 ? FlushAsync()
@@ -62,7 +60,7 @@ namespace Repository.Internal.Editor.Highlighting
             Debug.Assert(_colorings == null);
 
             _colorings = new ByteBufferWrapper(flushFrequency * 8);
-            return Disposable.Create(Teardown);
+            return new Disposable(Teardown);
         }
 
         private void Flush()
