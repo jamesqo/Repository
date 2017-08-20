@@ -4,17 +4,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 public class HighlightRequester implements TextWatcher {
-    public interface OnInitialRequestCallback {
-        void run(HighlightRequester requester);
-    }
-
-    private final OnInitialRequestCallback onInitialRequest;
+    private final Runnable onInitialRequest;
     private final int maxEditsBeforeRequest;
 
     private int newEdits;
     private int pendingRequests;
 
-    public HighlightRequester(OnInitialRequestCallback onInitialRequest, int maxEditsBeforeRequest) {
+    public HighlightRequester(Runnable onInitialRequest, int maxEditsBeforeRequest) {
         this.onInitialRequest = onInitialRequest;
         this.maxEditsBeforeRequest = maxEditsBeforeRequest;
         // We always want to highlight once just after the file loads, even though no edits have been made yet.
@@ -64,7 +60,7 @@ public class HighlightRequester implements TextWatcher {
         // NOTE: 'onInitialRequest' refers to when we switch from no pending requests to 1.
         // It does not mean it fires only the very first time this method is called.
         if (++this.pendingRequests == 1) {
-            this.onInitialRequest.run(this);
+            this.onInitialRequest.run();
         }
     }
 }

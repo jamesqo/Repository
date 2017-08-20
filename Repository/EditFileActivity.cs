@@ -29,6 +29,7 @@ namespace Repository
         private TextColorer _colorer;
         private IHighlighter _highlighter;
         private CancellationTokenSource _highlightCts;
+        private HighlightRequester _requester;
 
         public override void OnBackPressed()
         {
@@ -80,37 +81,31 @@ namespace Repository
         /// <summary>
         /// Highlights the content of the editor.
         /// </summary>
-        /// <param name="requester">
-        /// The <see cref="HighlightRequester"/> that requested a highlight.
-        /// </param>
-        private Task HighlightContent(HighlightRequester requester)
+        private Task HighlightContent()
         {
             var editorText = _colorer.Text;
             editorText.ClearColorSpans();
             string newContent = editorText.ToString();
-            return HighlightContent(newContent, requester);
+            return HighlightContent(newContent);
         }
 
         /// <summary>
         /// Highlights the content of the editor.
         /// </summary>
         /// <param name="content">The textual content of the editor.</param>
-        /// <param name="requester">
-        /// The <see cref="HighlightRequester"/> that requested a highlight.
-        /// </param>
-        private async Task HighlightContent(string content, HighlightRequester requester)
+        private async Task HighlightContent(string content)
         {
-            Debug.Assert(requester.IsHighlightRequested);
+            Debug.Assert(_requester.IsHighlightRequested);
 
             await HighlightContentCore(content);
 
-            requester.OnHighlightFinished();
-            if (!requester.IsHighlightRequested)
+            _requester.OnHighlightFinished();
+            if (!_requester.IsHighlightRequested)
             {
                 return;
             }
 
-            await HighlightContent(requester);
+            await HighlightContent();
         }
 
         /// <summary>
@@ -140,12 +135,9 @@ namespace Repository
         /// <summary>
         /// Handles an initial request for a highlight.
         /// </summary>
-        /// <param name="requester">
-        /// The <see cref="HighlightRequester"/> that requested a highlight.
-        /// </param>
-        private void OnHighlightRequested(HighlightRequester requester)
+        private void OnHighlightRequested()
         {
-            ThreadingUtilities.PostToUIThread(() => HighlightContent(requester));
+            ThreadingUtilities.PostToUIThread(() => HighlightContent());
         }
 
         private static string ReadEditorContent()
@@ -164,13 +156,13 @@ namespace Repository
             _colorer = TextColorer.Create(content, theme.Colors);
             _highlighter = GetHighlighter(filePath: _path, content: content);
 
-            var requester = new HighlightRequester(
+            _requester = new HighlightRequester(
                 onInitialRequest: OnHighlightRequested,
                 maxEditsBeforeRequest: 10);
-            _colorer.Text.SetSpan(requester);
+            _colorer.Text.SetSpan(_requester);
 
             SetupEditorCore(theme, _colorer.Text);
-            return HighlightContent(content, requester);
+            return HighlightContent(content);
         }
 
         private void SetupEditorCore(EditorTheme theme, EditorText text)

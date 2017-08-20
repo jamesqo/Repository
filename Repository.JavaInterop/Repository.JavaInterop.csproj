@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HighlightRequester.Manual.cs" />
-    <Compile Include="Internal\OnInitialRequestCallback.cs" />
+    <Compile Include="Internal\Runnable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

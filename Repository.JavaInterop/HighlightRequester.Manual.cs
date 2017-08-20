@@ -5,8 +5,8 @@ namespace Repository.JavaInterop
 {
     public partial class HighlightRequester
     {
-        public HighlightRequester(Action<HighlightRequester> onInitialRequest, int maxEditsBeforeRequest)
-            : this(new OnInitialRequestCallback(onInitialRequest), maxEditsBeforeRequest)
+        public HighlightRequester(Action onInitialRequest, int maxEditsBeforeRequest)
+            : this(new Runnable(onInitialRequest), maxEditsBeforeRequest)
         {
         }
 
