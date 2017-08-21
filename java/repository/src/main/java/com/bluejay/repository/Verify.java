@@ -5,7 +5,7 @@ class Verify {
     }
 
     public static void isTrue(boolean condition) {
-        if (BuildConfig.DEBUG && !condition) {
+        if (!condition) {
             throw new AssertionError();
         }
     }
