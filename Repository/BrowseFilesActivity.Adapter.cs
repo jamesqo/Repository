@@ -8,6 +8,7 @@ using Android.Widget;
 using Octokit;
 using Repository.Common;
 using Repository.Internal;
+using Repository.Internal.Collections;
 using Debug = System.Diagnostics.Debug;
 
 namespace Repository

@@ -1,16 +1,14 @@
 ﻿using Android.Graphics;
 using Repository.Common;
+using Repository.Internal.Android;
 using Repository.Internal.Editor.Highlighting;
-using static System.Threading.LazyInitializer;
 
 namespace Repository.Internal.Editor
 {
     internal class EditorTheme
     {
-        private static EditorTheme s_default;
-
-        public static EditorTheme Default =>
-            EnsureInitialized(ref s_default, () => new EditorTheme(ColorTheme.Default, Typefaces.Inconsolata));
+        public static EditorTheme GetDefault(AppTypefaces typefaces)
+            => new EditorTheme(ColorTheme.Default, typefaces.Inconsolata);
 
         public EditorTheme(IColorTheme colors, Typeface typeface)
         {

@@ -48,7 +48,6 @@ namespace Repository
         {
             SetupAppDomain();
             SetupDebug();
-            SetupTypefaces();
         }
 
         private static void SetupAppDomain()
@@ -57,8 +56,6 @@ namespace Repository
         }
 
         private static void SetupDebug() => Debug.Listeners.Add(new DebugListener());
-
-        private void SetupTypefaces() => Typefaces.Initialize(Assets);
 
         private void StartButton_Click(object sender, EventArgs e) => StartChooseProvider();
 

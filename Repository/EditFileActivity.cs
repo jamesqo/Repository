@@ -61,10 +61,16 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            if (await SetupEditor(EditorTheme.Default).BecomesCanceled())
+            var theme = GetEditorTheme();
+            if (await SetupEditor(theme).BecomesCanceled())
             {
                 return;
             }
+        }
+
+        private EditorTheme GetEditorTheme()
+        {
+            return EditorTheme.GetDefault(AppTypefaces.GetInstance(Assets));
         }
 
         /// <summary>

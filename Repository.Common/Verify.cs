@@ -16,6 +16,11 @@ namespace Repository.Common
         public static void NotNull<T>(T argument, string argumentName)
             where T : class
         {
+            NotNullGeneric(argument, argumentName);
+        }
+
+        public static void NotNullGeneric<T>(T argument, string argumentName)
+        {
             if (argument == null)
             {
                 throw new ArgumentNullException(argumentName);
@@ -25,10 +30,7 @@ namespace Repository.Common
         public static void NotNullOrEmpty<TEnumerable>(TEnumerable argument, string argumentName)
             where TEnumerable : class, IEnumerable
         {
-            if (argument == null)
-            {
-                throw new ArgumentNullException(argumentName);
-            }
+            NotNull(argument, argumentName);
 
             if (!argument.GetEnumerator().MoveNext())
             {

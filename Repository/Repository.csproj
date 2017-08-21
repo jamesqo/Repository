@@ -124,6 +124,8 @@
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
     <Compile Include="Internal\Android\SpannableExtensions.cs" />
+    <Compile Include="Internal\Collections\DictionaryExtensions.cs" />
+    <Compile Include="Internal\Collections\ReferenceEqualityComparer.cs" />
     <Compile Include="Internal\Editor\Highlighting\Coloring.cs" />
     <Compile Include="Internal\Disposable.cs" />
     <Compile Include="Internal\Editor\EditorTheme.cs" />
@@ -137,8 +139,8 @@
     <Compile Include="Internal\Editor\EditorContent.cs" />
     <Compile Include="Internal\Editor\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\Editor\Highlighting\NoCopyEditableFactory.cs" />
-    <Compile Include="Internal\Editor\Typefaces.cs" />
-    <Compile Include="Internal\EnumerableExtensions.cs" />
+    <Compile Include="Internal\Android\AppTypefaces.cs" />
+    <Compile Include="Internal\Collections\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
     <Compile Include="Internal\NativeBuffer.cs" />
