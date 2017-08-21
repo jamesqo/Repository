@@ -80,7 +80,8 @@ namespace Repository
 
             internal Task PopDirectory()
             {
-                Debug.Assert(!IsAtRoot);
+                Verify.ValidState(!IsAtRoot);
+
                 _directoryStack.Pop();
                 return UpdateContents();
             }

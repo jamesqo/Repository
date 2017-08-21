@@ -28,7 +28,7 @@ namespace Repository.Internal
             {
                 int equalsIndex = kvp.IndexOf('=');
                 // There should be exactly one occurrence of = in between &s in a well-formed query string.
-                Debug.Assert(equalsIndex != -1 && equalsIndex == kvp.LastIndexOf('='));
+                Verify.Argument(equalsIndex != -1 && equalsIndex == kvp.LastIndexOf('='), nameof(url));
 
                 var key = kvp.Substring(0, equalsIndex);
                 var value = WebUtility.UrlDecode(kvp.Substring(equalsIndex + 1));
