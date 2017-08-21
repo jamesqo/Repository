@@ -13,6 +13,14 @@ namespace Repository.Common
             }
         }
 
+        public static void InRange(bool condition, string argumentName)
+        {
+            if (!condition)
+            {
+                throw new ArgumentOutOfRangeException(argumentName);
+            }
+        }
+
         public static void NotNull<T>(T argument, string argumentName)
             where T : class
         {

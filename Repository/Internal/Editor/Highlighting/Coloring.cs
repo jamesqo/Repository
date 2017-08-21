@@ -24,7 +24,7 @@ namespace Repository.Internal.Editor.Highlighting
 
         private string DebuggerDisplay => $"{nameof(Color)} = {Color}, {nameof(Count)} = {Count}";
 
-        public void WriteTo(ByteBufferWrapper buffer)
+        public void WriteTo(NativeByteBuffer buffer)
         {
             buffer.WriteInt32(Color.ToArgb());
             buffer.WriteInt32(Count);

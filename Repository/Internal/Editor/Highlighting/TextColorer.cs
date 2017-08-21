@@ -14,7 +14,7 @@ namespace Repository.Internal.Editor.Highlighting
         private readonly EditorText _text;
         private readonly IColorTheme _theme;
 
-        private ByteBufferWrapper _colorings;
+        private NativeByteBuffer _colorings;
 
         public TextColorer(string text, IColorTheme theme)
         {
@@ -59,7 +59,7 @@ namespace Repository.Internal.Editor.Highlighting
         {
             Verify.ValidState(_colorings == null, "Only one highlight may be in progress at a time.");
 
-            _colorings = new ByteBufferWrapper(flushFrequency * Coloring.Size);
+            _colorings = new NativeByteBuffer(flushFrequency * Coloring.Size);
             return new Disposable(Teardown);
         }
 
