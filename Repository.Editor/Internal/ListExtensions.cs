@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Editor.Internal
 {

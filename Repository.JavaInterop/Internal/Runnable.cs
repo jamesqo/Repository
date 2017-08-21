@@ -1,6 +1,6 @@
 ﻿using System;
 using Java.Lang;
-using Repository.Common;
+using Repository.Common.Validation;
 using JavaObject = Java.Lang.Object;
 
 namespace Repository.JavaInterop.Internal

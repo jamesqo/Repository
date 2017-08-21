@@ -1,5 +1,5 @@
 ﻿using Android.Graphics;
-using Repository.Common;
+using Repository.Common.Validation;
 using Repository.Internal.Android;
 using Repository.Internal.Editor.Highlighting;
 

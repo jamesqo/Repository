@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Android.App;
 using Android.Views;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Internal.Android
 {

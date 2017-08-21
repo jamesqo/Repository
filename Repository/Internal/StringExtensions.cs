@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Internal
 {

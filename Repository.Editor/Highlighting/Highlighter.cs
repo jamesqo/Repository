@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Repository.Common;
+﻿using Repository.Common.Validation;
 using Repository.Editor.Internal.CSharp.Highlighting;
 using Repository.Editor.Internal.Java.Highlighting;
 using Repository.Editor.Internal.Plaintext.Highlighting;

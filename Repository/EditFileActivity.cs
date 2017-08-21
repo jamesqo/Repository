@@ -6,7 +6,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Text;
 using Android.Widget;
-using Repository.Common;
+using Repository.Common.Validation;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;

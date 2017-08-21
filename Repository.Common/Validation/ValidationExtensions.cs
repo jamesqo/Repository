@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Repository.Common
+namespace Repository.Common.Validation
 {
     public static class ValidationExtensions
     {

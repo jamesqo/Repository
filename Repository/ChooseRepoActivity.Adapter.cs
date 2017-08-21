@@ -4,7 +4,7 @@ using Android.App;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository
 {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Repository.Common;
+using Repository.Common.Validation;
 using Repository.Editor.Highlighting;
 using Repository.Internal.Java;
 using Repository.JavaInterop;

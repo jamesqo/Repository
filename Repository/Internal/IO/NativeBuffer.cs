@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Internal.IO
 {

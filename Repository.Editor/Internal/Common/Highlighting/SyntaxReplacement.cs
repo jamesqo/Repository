@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using Antlr4.Runtime.Tree;
-using Repository.Editor.Highlighting;
 using Repository.Common;
+using Repository.Common.Validation;
+using Repository.Editor.Highlighting;
 
 namespace Repository.Editor.Internal.Common.Highlighting
 {

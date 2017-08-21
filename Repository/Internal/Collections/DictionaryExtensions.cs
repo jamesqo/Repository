@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Internal.Collections
 {

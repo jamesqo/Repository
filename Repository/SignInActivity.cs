@@ -4,7 +4,7 @@ using Android.Content;
 using Android.OS;
 using Android.Webkit;
 using Octokit;
-using Repository.Common;
+using Repository.Common.Validation;
 using Repository.Internal;
 using Repository.Internal.Android;
 using Activity = Android.App.Activity;

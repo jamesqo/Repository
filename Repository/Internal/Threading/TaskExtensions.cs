@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Internal.Threading
 {

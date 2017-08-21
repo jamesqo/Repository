@@ -1,6 +1,6 @@
 ﻿using System;
 using Antlr4.Runtime;
-using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Editor.Internal.Common.Highlighting
 {
