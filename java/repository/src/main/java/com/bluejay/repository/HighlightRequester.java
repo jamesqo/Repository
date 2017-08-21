@@ -22,7 +22,7 @@ public class HighlightRequester implements TextWatcher {
     }
 
     public void onHighlightFinished() {
-        assert this.isHighlightRequested();
+        Verify.isTrue(this.isHighlightRequested());
         this.pendingRequests--;
     }
 
@@ -53,7 +53,7 @@ public class HighlightRequester implements TextWatcher {
     }
 
     private void sendRequest() {
-        assert this.canSendRequest();
+        Verify.isTrue(this.canSendRequest());
 
         this.newEdits = 0;
 

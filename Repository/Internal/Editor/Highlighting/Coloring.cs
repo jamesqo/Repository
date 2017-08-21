@@ -1,15 +1,18 @@
 ﻿using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
+using Repository.Internal.Java;
 
 namespace Repository.Internal.Editor.Highlighting
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct Coloring
     {
+        public const int Size = 8;
+
         public Coloring(Color color, int count)
         {
-            Verify.InRange(count > 0, nameof(count));
+            Debug.Assert(count > 0);
 
             Color = color;
             Count = count;
@@ -19,8 +22,12 @@ namespace Repository.Internal.Editor.Highlighting
 
         public int Count { get; }
 
-        private string DebuggerDisplay => $"{nameof(Color)}: {Color}, {nameof(Count)}: {Count}";
+        private string DebuggerDisplay => $"{nameof(Color)} = {Color}, {nameof(Count)} = {Count}";
 
-        public long ToLong() => ((long)Color.ToArgb() << 32) | (uint)Count;
+        public void WriteTo(ByteBufferWrapper buffer)
+        {
+            buffer.WriteInt32(Color.ToArgb());
+            buffer.WriteInt32(Count);
+        }
     }
 }

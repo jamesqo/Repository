@@ -83,9 +83,7 @@ namespace Repository
         /// </summary>
         private Task HighlightContent()
         {
-            var editorText = _colorer.Text;
-            editorText.ClearColorSpans();
-            string newContent = editorText.ToString();
+            string newContent = _colorer.Text.ToString();
             return HighlightContent(newContent);
         }
 
@@ -137,7 +135,7 @@ namespace Repository
         /// </summary>
         private void OnHighlightRequested()
         {
-            ThreadingUtilities.PostToUIThread(() => HighlightContent());
+            ThreadingUtilities.PostToUIThread(async () => await HighlightContent());
         }
 
         private static string ReadEditorContent()
