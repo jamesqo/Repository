@@ -28,8 +28,6 @@ namespace Repository.Internal.Java
 
         private string DebuggerDisplay => _buffer.DebuggerDisplay;
 
-        public void Add(long value) => _buffer.Add(value);
-
         public void Clear() => _buffer.Clear();
 
         public void Dispose()
@@ -42,5 +40,7 @@ namespace Repository.Internal.Java
         }
 
         public ByteBuffer Unwrap() => _javaBuffer;
+
+        public void WriteInt32(int value) => _buffer.WriteInt32(value);
     }
 }

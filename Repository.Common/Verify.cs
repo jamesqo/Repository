@@ -50,7 +50,7 @@ namespace Repository.Common
             return argument;
         }
 
-        public static void State(bool condition, string message = null)
+        public static void ValidState(bool condition, string message = null)
         {
             if (!condition)
             {

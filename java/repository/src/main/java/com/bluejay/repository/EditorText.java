@@ -4,108 +4,76 @@ import android.support.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 // It would be preferable to implement Editable and wrap a SpannableStringBuilder,
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
 public class EditorText extends SpannableStringBuilder {
-    private final HashSet<Object> systemSpans;
-
-    private int index;
+    private int colorCursor;
 
     public EditorText(String rawText) {
         super(rawText);
-
-        this.systemSpans = new HashSet<>();
-    }
-
-    public void clearColorSpans() {
-        this.index = 0;
-
-        // For large files, there may be tens of thousands of color spans.
-        // The naive approach of adding each of them to an ArrayList in setSpan()
-        // and calling removeSpan() for each is quite slow.
-        // Instead, we maintain a HashSet of spans that are *not* color spans.
-        // Here, we capture info about each one, call clearSpans() to remove
-        // all spans, then restore those spans.
-
-        ArrayList<SpanInfo> systemSpanInfos = this.captureSpans(this.systemSpans);
-        super.clearSpans();
-        this.restoreSpans(systemSpanInfos);
     }
 
     public void colorWith(ColoringList colorings) {
         for (int i = 0; i < colorings.count(); i++) {
-            long coloring = colorings.get(i);
-            this.advance(getColor(coloring), getCount(coloring));
+            @ColorInt int color = colorings.getColor(i);
+            int count = colorings.getCount(i);
+            this.colorWith(color, count);
         }
     }
 
-    @Override
-    public void clearSpans() {
-        throw new UnsupportedOperationException();
+    public void resetColorCursor() {
+        this.colorCursor = 0;
     }
 
-    @Override
-    public void removeSpan(Object what) {
-        this.systemSpans.remove(what);
-        super.removeSpan(what);
+    private void advanceColorCursor(int count) {
+        this.colorCursor += count;
     }
 
-    @Override
-    public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
-        // If text is deleted or inserted while the highlighter is running, make sure the regions
-        // of text it highlights stays in sync with the source code.
-        int count = end - start;
-        int tbcount = tbend - tbstart;
-        int diff = tbcount - count;
-        this.index += diff;
+    private void colorWith(@ColorInt int color, int count) {
+        Verify.isTrue(this.colorCursor >= 0);
+        Verify.isTrue(count > 0);
+        Verify.isTrue(this.colorCursor + count <= this.length());
 
-        return super.replace(start, end, tb, tbstart, tbend);
-    }
+        int start = this.colorCursor, end = start + count;
+        ForegroundColorSpan[] overlaps = this.getSpans(start, end, ForegroundColorSpan.class);
 
-    @Override
-    public void setSpan(Object what, int start, int end, int flags) {
-        this.systemSpans.add(what);
-        super.setSpan(what, start, end, flags);
-    }
+        if (overlaps.length > 0) {
+            if (overlaps.length == 1 && overlaps[0].getForegroundColor() == color) {
+                // 'start' and 'end' are in the same span and already have this color.
+                this.advanceColorCursor(count);
+                return;
+            }
 
-    private void advance(@ColorInt int color, int count) {
-        assert count > 0;
-        assert this.index + count <= this.length();
+            this.makeGap(start, end, overlaps);
+        }
 
         ForegroundColorSpan span = new ForegroundColorSpan(color);
-        super.setSpan(span, this.index, this.index + count, SPAN_INCLUSIVE_EXCLUSIVE);
-        this.index += count;
+        this.setSpan(span, start, end, SPAN_INCLUSIVE_EXCLUSIVE);
+        this.advanceColorCursor(count);
     }
 
-    private ArrayList<SpanInfo> captureSpans(Iterable<Object> spans) {
-        ArrayList<SpanInfo> spanInfos = new ArrayList<>();
-        for (Object span : spans) {
-            spanInfos.add(new SpanInfo(
-                    span,
-                    this.getSpanStart(span),
-                    this.getSpanEnd(span),
-                    this.getSpanFlags(span)
-            ));
+    private void makeGap(int start, int end, ForegroundColorSpan[] overlaps) {
+        ForegroundColorSpan first = overlaps[0];
+        int firstStart = this.getSpanStart(first);
+
+        ForegroundColorSpan last = overlaps[overlaps.length - 1];
+        int lastEnd = this.getSpanEnd(last);
+
+        this.removeSpans(overlaps);
+
+        if (firstStart < start) {
+            this.setSpan(first, firstStart, start, SPAN_INCLUSIVE_EXCLUSIVE);
         }
-        return spanInfos;
+
+        if (lastEnd > end) {
+            this.setSpan(last, end, lastEnd, SPAN_INCLUSIVE_EXCLUSIVE);
+        }
     }
 
-    @ColorInt
-    private static int getColor(long coloring) {
-        return (int)(coloring >> 32);
-    }
-
-    private static int getCount(long coloring) {
-        return (int)coloring;
-    }
-
-    private void restoreSpans(Iterable<SpanInfo> spanInfos) {
-        for (SpanInfo info : spanInfos) {
-            this.setSpan(info.span, info.start, info.end, info.flags);
+    private void removeSpans(Object[] spans) {
+        for (Object span : spans) {
+            this.removeSpan(span);
         }
     }
 }

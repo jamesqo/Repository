@@ -1,16 +1,20 @@
 package com.bluejay.repository;
 
+import android.support.annotation.ColorInt;
+
 import java.nio.ByteBuffer;
 
 public class ColoringList {
+    private static final int COLORING_SIZE = 8;
+
     private final ByteBuffer buffer;
     private final int byteStart;
     private final int count;
 
     private ColoringList(ByteBuffer buffer, int byteStart, int count) {
-        assert buffer != null;
-        assert byteStart >= 0;
-        assert count > 0;
+        Verify.isTrue(buffer != null);
+        Verify.isTrue(byteStart >= 0);
+        Verify.isTrue(count > 0);
 
         this.buffer = buffer;
         this.byteStart = byteStart;
@@ -25,23 +29,22 @@ public class ColoringList {
         return this.count;
     }
 
-    public long get(int index) {
+    @ColorInt
+    public int getColor(int index) {
+        Verify.isTrue(index >= 0 && index < this.count());
+
         int byteIndex = this.getByteIndex(index);
-        return this.buffer.getLong(byteIndex);
+        return this.buffer.getInt(byteIndex);
     }
 
-    public void set(int index, long element) {
+    public int getCount(int index) {
+        Verify.isTrue(index >= 0 && index < this.count());
+
         int byteIndex = this.getByteIndex(index);
-        this.buffer.putLong(byteIndex, element);
-    }
-
-    public ColoringList slice(int index) {
-        assert index < this.count();
-
-        return fromBufferSpan(this.buffer, this.getByteIndex(index), this.count() - index);
+        return this.buffer.getInt(byteIndex + 4);
     }
 
     private int getByteIndex(int index) {
-        return this.byteStart + index * 8;
+        return this.byteStart + index * COLORING_SIZE;
     }
 }

@@ -12,10 +12,9 @@ namespace Repository.Internal
     [DebuggerTypeProxy(typeof(DebuggerProxy))]
     internal partial class NativeBuffer : IDisposable
     {
-        private readonly int _capacity;
-
         private unsafe byte* _address;
-        private int _count;
+        private int _capacity;
+        private int _byteCount;
 
         public unsafe NativeBuffer(int capacity)
         {
@@ -25,52 +24,48 @@ namespace Repository.Internal
 
         public unsafe IntPtr Address => new IntPtr(_address);
 
-        public int ByteCount => _count;
+        public int ByteCount => _byteCount;
 
         public int Capacity => _capacity;
 
-        public bool IsFull => _count == _capacity;
+        public bool IsFull => _byteCount == _capacity;
 
         public unsafe bool IsValid => _address != null;
 
         internal string DebuggerDisplay => $"{nameof(ByteCount)} = {ByteCount}, {nameof(Capacity)} = {Capacity}";
 
-        public unsafe void Add(long value)
-        {
-            Verify.State(IsValid);
-            Verify.State(HasRoom(sizeof(long)));
-
-            // It's tempting to use pointer arithmetic here, but we must write the data out in the correct endianness.
-            _address[_count] = (byte)(value >> 56);
-            _address[_count + 1] = (byte)(value >> 48);
-            _address[_count + 2] = (byte)(value >> 40);
-            _address[_count + 3] = (byte)(value >> 32);
-            _address[_count + 4] = (byte)(value >> 24);
-            _address[_count + 5] = (byte)(value >> 16);
-            _address[_count + 6] = (byte)(value >> 8);
-            _address[_count + 7] = (byte)value;
-            _count += sizeof(long);
-        }
-
-        public void Clear() => _count = 0;
+        public void Clear() => _byteCount = 0;
 
         public unsafe void Dispose()
         {
-            Verify.State(IsValid);
+            Verify.ValidState(IsValid);
 
             Marshal.FreeHGlobal(Address);
             _address = null;
+            _capacity = 0;
+            _byteCount = 0;
         }
 
         public byte[] ToByteArray()
         {
-            Verify.State(IsValid);
+            Verify.ValidState(IsValid);
 
-            var array = new byte[_count];
-            Marshal.Copy(Address, array, 0, _count);
+            var array = new byte[_byteCount];
+            Marshal.Copy(Address, array, 0, _byteCount);
             return array;
         }
 
-        private bool HasRoom(int byteCount) => _count + byteCount <= _capacity;
+        public unsafe void WriteInt32(int value)
+        {
+            Verify.ValidState(IsValid && HasRoom(4));
+
+            _address[_byteCount] = (byte)(value >> 24);
+            _address[_byteCount + 1] = (byte)(value >> 16);
+            _address[_byteCount + 2] = (byte)(value >> 8);
+            _address[_byteCount + 3] = (byte)value;
+            _byteCount += 4;
+        }
+
+        private bool HasRoom(int byteCount) => _byteCount + byteCount <= _capacity;
     }
 }

@@ -37,7 +37,7 @@ namespace Repository.Internal.Editor.Highlighting
             }
 
             var color = _theme.GetForegroundColor(kind);
-            _colorings.Add(new Coloring(color, count).ToLong());
+            new Coloring(color, count).WriteTo(_colorings);
 
             return _colorings.IsFull
                 ? FlushAsync()
@@ -57,21 +57,21 @@ namespace Repository.Internal.Editor.Highlighting
         /// </returns>
         public IDisposable Setup(int flushFrequency)
         {
-            Debug.Assert(_colorings == null);
+            Verify.ValidState(_colorings == null, "Only one highlight may be in progress at a time.");
 
-            _colorings = new ByteBufferWrapper(flushFrequency * 8);
+            _colorings = new ByteBufferWrapper(flushFrequency * Coloring.Size);
             return new Disposable(Teardown);
         }
 
         private void Flush()
         {
             int byteCount = _colorings.ByteCount;
-            Debug.Assert(byteCount % 8 == 0);
+            Debug.Assert(byteCount % Coloring.Size == 0);
 
             if (byteCount > 0)
             {
                 var colorings = ColoringList.FromBufferSpan(
-                    _colorings.Unwrap(), 0, byteCount / 8);
+                    _colorings.Unwrap(), 0, byteCount / Coloring.Size);
                 _text.ColorWith(colorings);
                 _colorings.Clear();
             }
@@ -90,11 +90,13 @@ namespace Repository.Internal.Editor.Highlighting
 
         private void Teardown()
         {
-            Debug.Assert(_colorings != null);
+            Verify.ValidState(_colorings != null, "Dispose was called twice.");
 
             // Control will soon be returned to the caller, so there's no point in yielding.
             // Call the synchronous version of Flush().
             Flush();
+            _text.ResetColorCursor();
+
             _colorings.Dispose();
             _colorings = null;
         }
