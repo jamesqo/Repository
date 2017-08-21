@@ -6,8 +6,8 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Octokit;
+using Repository.Common;
 using Repository.Internal;
-using static Repository.Common.Verify;
 using Debug = System.Diagnostics.Debug;
 
 namespace Repository
@@ -23,7 +23,7 @@ namespace Repository
                 internal ViewHolder(View view, Action<int> onClick)
                     : base(view)
                 {
-                    FilenameView = NotNull(view.FindViewById<TextView>(Resource.Id.BrowseFiles_FilenameView));
+                    FilenameView = view.FindViewById<TextView>(Resource.Id.BrowseFiles_FilenameView).NotNull();
 
                     view.Click += (sender, e) => onClick(AdapterPosition);
                 }

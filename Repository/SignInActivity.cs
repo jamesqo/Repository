@@ -4,9 +4,9 @@ using Android.Content;
 using Android.OS;
 using Android.Webkit;
 using Octokit;
+using Repository.Common;
 using Repository.Internal;
 using Repository.Internal.Android;
-using static Repository.Common.Verify;
 using Activity = Android.App.Activity;
 using Debug = System.Diagnostics.Debug;
 
@@ -33,8 +33,8 @@ namespace Repository
 
             void CacheParameters()
             {
-                _url = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_Url));
-                _callbackUrl = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_SignIn_CallbackUrl));
+                _url = Intent.Extras.GetString(Strings.Extra_SignIn_Url).NotNullOrEmpty();
+                _callbackUrl = Intent.Extras.GetString(Strings.Extra_SignIn_CallbackUrl).NotNullOrEmpty();
             }
 
             base.OnCreate(savedInstanceState);
@@ -51,7 +51,7 @@ namespace Repository
         private async void HandleSessionCode(string code)
         {
             var token = await RequestAccessToken(code);
-            Argument(WriteAccessToken(key: Strings.SPKey_AccessTokens_GitHubAccessToken, token: token));
+            WriteAccessToken(key: Strings.SPKey_AccessTokens_GitHubAccessToken, token: token);
 
             StartChooseRepo(token);
         }
@@ -78,12 +78,13 @@ namespace Repository
             StartActivity(intent);
         }
 
-        private bool WriteAccessToken(string key, string token)
+        private void WriteAccessToken(string key, string token)
         {
             var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens);
             var editor = prefs.Edit();
             editor.PutString(key, token);
-            return editor.Commit();
+            bool committed = editor.Commit();
+            Debug.Assert(committed);
         }
     }
 }

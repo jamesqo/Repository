@@ -4,7 +4,7 @@ using Android.App;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
-using static Repository.Common.Verify;
+using Repository.Common;
 
 namespace Repository
 {
@@ -19,7 +19,7 @@ namespace Repository
                 internal ViewHolder(View view, Action<int> onClick)
                     : base(view)
                 {
-                    RepoNameView = NotNull(view.FindViewById<TextView>(Resource.Id.ChooseRepo_RepoNameView));
+                    RepoNameView = view.FindViewById<TextView>(Resource.Id.ChooseRepo_RepoNameView).NotNull();
 
                     view.Click += (sender, e) => onClick(AdapterPosition);
                 }
@@ -27,7 +27,9 @@ namespace Repository
 
             internal Adapter(IReadOnlyList<Octokit.Repository> repos)
             {
-                Repos = NotNull(repos, nameof(repos));
+                Verify.NotNull(repos, nameof(repos));
+
+                Repos = repos;
             }
 
             public event EventHandler<int> ItemClick;

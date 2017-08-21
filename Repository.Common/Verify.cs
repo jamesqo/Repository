@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Repository.Common
 {
     public static class Verify
     {
-        public static void Argument(bool condition, string argumentName = null)
+        public static void Argument(bool condition, string argumentName)
         {
             if (!condition)
             {
@@ -16,25 +13,16 @@ namespace Repository.Common
             }
         }
 
-        public static void InRange(bool condition, string argumentName = null)
-        {
-            if (!condition)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-        }
-
-        public static T NotNull<T>(T argument, string argumentName = null) where T : class
+        public static void NotNull<T>(T argument, string argumentName)
+            where T : class
         {
             if (argument == null)
             {
                 throw new ArgumentNullException(argumentName);
             }
-
-            return argument;
         }
 
-        public static TEnumerable NotNullOrEmpty<TEnumerable>(TEnumerable argument, string argumentName = null)
+        public static void NotNullOrEmpty<TEnumerable>(TEnumerable argument, string argumentName)
             where TEnumerable : class, IEnumerable
         {
             if (argument == null)
@@ -46,8 +34,6 @@ namespace Repository.Common
             {
                 throw new ArgumentException($"{argumentName} was empty.", argumentName);
             }
-
-            return argument;
         }
 
         public static void ValidState(bool condition, string message = null)

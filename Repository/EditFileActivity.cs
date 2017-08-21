@@ -6,6 +6,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Text;
 using Android.Widget;
+using Repository.Common;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
@@ -13,7 +14,6 @@ using Repository.Internal.Editor;
 using Repository.Internal.Editor.Highlighting;
 using Repository.Internal.Threading;
 using Repository.JavaInterop;
-using static Repository.Common.Verify;
 using Debug = System.Diagnostics.Debug;
 using Path = System.IO.Path;
 
@@ -50,7 +50,7 @@ namespace Repository
                 // The content is not cached since it may be an arbitrarily large string.
                 // If we stored it in a field, we would want to clear that field ASAP anyway
                 // to allow the GC to collect the string.
-                _path = NotNullOrEmpty(Intent.Extras.GetString(Strings.Extra_EditFile_Path));
+                _path = Intent.Extras.GetString(Strings.Extra_EditFile_Path).NotNullOrEmpty();
             }
 
             base.OnCreate(savedInstanceState);

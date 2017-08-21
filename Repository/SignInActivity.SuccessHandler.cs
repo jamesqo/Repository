@@ -1,7 +1,6 @@
 ﻿using Android.Webkit;
 using Repository.Common;
 using Repository.Internal;
-using static Repository.Common.Verify;
 
 namespace Repository
 {
@@ -14,8 +13,11 @@ namespace Repository
 
             internal SuccessHandler(SignInActivity activity, string callbackUrl)
             {
-                _activity = NotNull(activity, nameof(activity));
-                _callbackUrl = NotNullOrEmpty(callbackUrl, nameof(callbackUrl));
+                Verify.NotNull(activity, nameof(activity));
+                Verify.NotNullOrEmpty(callbackUrl, nameof(callbackUrl));
+
+                _activity = activity;
+                _callbackUrl = callbackUrl;
             }
 
             public override void OnPageFinished(WebView view, string url)
