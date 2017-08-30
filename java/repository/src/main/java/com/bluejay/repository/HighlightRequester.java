@@ -4,32 +4,32 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 public class HighlightRequester implements TextWatcher {
-    private final Runnable onInitialRequest;
-    private final int maxEditsBeforeRequest;
+    private final Runnable mOnInitialRequest;
+    private final int mMaxEditsBeforeRequest;
 
-    private int newEdits;
-    private int pendingRequests;
+    private int mNewEdits;
+    private int mPendingRequests;
 
     public HighlightRequester(Runnable onInitialRequest, int maxEditsBeforeRequest) {
-        this.onInitialRequest = onInitialRequest;
-        this.maxEditsBeforeRequest = maxEditsBeforeRequest;
+        mOnInitialRequest = onInitialRequest;
+        mMaxEditsBeforeRequest = maxEditsBeforeRequest;
         // We always want to highlight once just after the file loads, even though no edits have been made yet.
-        this.pendingRequests = 1;
+        mPendingRequests = 1;
     }
 
     public boolean isHighlightRequested() {
-        return this.pendingRequests > 0;
+        return mPendingRequests > 0;
     }
 
     public void onHighlightFinished() {
-        Verify.isTrue(this.isHighlightRequested());
-        this.pendingRequests--;
+        Verify.isTrue(isHighlightRequested());
+        mPendingRequests--;
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        if (this.canSendRequest() && ++this.newEdits == this.maxEditsBeforeRequest) {
-            this.sendRequest();
+        if (canSendRequest() && ++mNewEdits == mMaxEditsBeforeRequest) {
+            sendRequest();
         }
     }
 
@@ -49,18 +49,18 @@ public class HighlightRequester implements TextWatcher {
         // After the first highlight finishes, it makes sense to run a *single*
         // second highlight to account for the 90 new chars. However, it's clearly
         // pointless to run the highlighter 9 times against the same exact text.
-        return this.pendingRequests <= 1;
+        return mPendingRequests <= 1;
     }
 
     private void sendRequest() {
-        Verify.isTrue(this.canSendRequest());
+        Verify.isTrue(canSendRequest());
 
-        this.newEdits = 0;
+        mNewEdits = 0;
 
         // NOTE: 'onInitialRequest' refers to when we switch from no pending requests to 1.
         // It does not mean it fires only the very first time this method is called.
-        if (++this.pendingRequests == 1) {
-            this.onInitialRequest.run();
+        if (++mPendingRequests == 1) {
+            mOnInitialRequest.run();
         }
     }
 }
