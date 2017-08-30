@@ -55,11 +55,13 @@
     <Compile Include="Internal\IO\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
     <Compile Include="Internal\Java\NativeByteBuffer.cs" />
+    <Compile Include="Internal\Threading\DefaultYielder.cs" />
     <Compile Include="ITypefaceProvider.cs" />
     <Compile Include="NoCopyEditableFactory.cs" />
     <Compile Include="Highlighting\TextColorer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Threading\IYielder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
