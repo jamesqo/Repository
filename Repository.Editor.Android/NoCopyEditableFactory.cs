@@ -1,9 +1,9 @@
 ﻿using Android.Text;
 using Java.Lang;
 
-namespace Repository.Internal.Editor.Highlighting
+namespace Repository.Editor.Android
 {
-    internal class NoCopyEditableFactory : EditableFactory
+    public class NoCopyEditableFactory : EditableFactory
     {
         public new static NoCopyEditableFactory Instance { get; } = new NoCopyEditableFactory();
 

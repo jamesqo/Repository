@@ -1,7 +1,7 @@
 ﻿using System;
 using Repository.Common.Validation;
 
-namespace Repository.Internal
+namespace Repository.Editor.Android.Internal
 {
     internal class Disposable : IDisposable
     {

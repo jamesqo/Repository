@@ -1,13 +1,12 @@
 ﻿using Android.Graphics;
 using Repository.Common.Validation;
-using Repository.Internal.Android;
-using Repository.Internal.Editor.Highlighting;
+using Repository.Editor.Android.Highlighting;
 
-namespace Repository.Internal.Editor
+namespace Repository.Editor.Android
 {
-    internal class EditorTheme
+    public class EditorTheme
     {
-        public static EditorTheme GetDefault(AppTypefaces typefaces)
+        public static EditorTheme GetDefault(ITypefaceProvider typefaces)
             => new EditorTheme(ColorTheme.Default, typefaces.Inconsolata);
 
         public EditorTheme(IColorTheme colors, Typeface typeface)
