@@ -67,6 +67,7 @@
     <Reference Include="Xamarin.Android.NUnitLite" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Highlighting\ColorThemeTests.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="EditorThemeTests.cs" />
     <Compile Include="NoCopyEditableFactoryTests.cs" />
