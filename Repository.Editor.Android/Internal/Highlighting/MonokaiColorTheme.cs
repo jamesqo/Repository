@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Android.Graphics;
+using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Highlighting;
 
-namespace Repository.Internal.Editor.Highlighting
+namespace Repository.Editor.Android.Internal.Highlighting
 {
     internal class MonokaiColorTheme : IColorTheme
     {

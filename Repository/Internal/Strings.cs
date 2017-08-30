@@ -11,6 +11,8 @@
         // This is not to be used in a string displayed to the user. Use Resource.String.app_name instead.
         public const string AppName = "Repository";
 
+        public const string Asset_Font_Inconsolata = "fonts/Inconsolata.ttf";
+
         public const string Extra_BrowseFiles_RepoId = nameof(Extra_BrowseFiles_RepoId);
 
         public const string Extra_EditFile_Path = nameof(Extra_EditFile_Path);

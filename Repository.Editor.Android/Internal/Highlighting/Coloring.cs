@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
-using Repository.Internal.Java;
+using Repository.Editor.Android.Internal.Java;
 
-namespace Repository.Internal.Editor.Highlighting
+namespace Repository.Editor.Android.Internal.Highlighting
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct Coloring

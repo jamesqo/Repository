@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{F8475452-CA0A-4CC5-9F2E-1EA3A72CDD57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Editor", "Repository.Editor\Repository.Editor.csproj", "{4490BE7B-C620-40B1-8C62-5396EECC6F3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Editor", "Repository.Editor\Repository.Editor.csproj", "{4490BE7B-C620-40B1-8C62-5396EECC6F3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Common", "Repository.Common\Repository.Common.csproj", "{50FB1CDA-38B0-4E70-A175-7D733E2B5C9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Common", "Repository.Common\Repository.Common.csproj", "{50FB1CDA-38B0-4E70-A175-7D733E2B5C9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.JavaInterop", "Repository.JavaInterop\Repository.JavaInterop.csproj", "{D84B83DC-37B4-443A-BB4B-4A9ACC01D4AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Editor.Android", "Repository.Editor.Android\Repository.Editor.Android.csproj", "{FBACC4C2-B89F-4C98-9B7A-71EB7A15E840}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +37,15 @@ Global
 		{D84B83DC-37B4-443A-BB4B-4A9ACC01D4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D84B83DC-37B4-443A-BB4B-4A9ACC01D4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D84B83DC-37B4-443A-BB4B-4A9ACC01D4AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBACC4C2-B89F-4C98-9B7A-71EB7A15E840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBACC4C2-B89F-4C98-9B7A-71EB7A15E840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBACC4C2-B89F-4C98-9B7A-71EB7A15E840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBACC4C2-B89F-4C98-9B7A-71EB7A15E840}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FEC72F8-C0BB-44C8-9A17-DE49E5B51967}
 	EndGlobalSection
 EndGlobal

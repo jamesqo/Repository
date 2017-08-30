@@ -7,11 +7,12 @@ using Android.OS;
 using Android.Text;
 using Android.Widget;
 using Repository.Common.Validation;
+using Repository.Editor.Android;
+using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
 using Repository.Internal.Editor;
-using Repository.Internal.Editor.Highlighting;
 using Repository.Internal.Threading;
 using Repository.JavaInterop;
 using Debug = System.Diagnostics.Debug;
@@ -70,7 +71,7 @@ namespace Repository
 
         private EditorTheme GetEditorTheme()
         {
-            return EditorTheme.GetDefault(AppTypefaces.GetInstance(Assets));
+            return EditorTheme.GetDefault(TypefaceProvider.GetInstance(Assets));
         }
 
         /// <summary>

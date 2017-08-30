@@ -3,13 +3,15 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Repository.Common.Validation;
+using Repository.Editor.Android.Internal;
+using Repository.Editor.Android.Internal.Highlighting;
+using Repository.Editor.Android.Internal.Java;
 using Repository.Editor.Highlighting;
-using Repository.Internal.Java;
 using Repository.JavaInterop;
 
-namespace Repository.Internal.Editor.Highlighting
+namespace Repository.Editor.Android.Highlighting
 {
-    internal class TextColorer : ITextColorer
+    public class TextColorer : ITextColorer
     {
         private readonly EditorText _text;
         private readonly IColorTheme _theme;
