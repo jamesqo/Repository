@@ -3,7 +3,7 @@ using Android.Graphics;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Repository.Editor.Android.UnitTests.Highlighting
+namespace Repository.Editor.Android.UnitTests
 {
     [TestFixture]
     public class EditorThemeTests
