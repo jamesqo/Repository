@@ -93,7 +93,7 @@ namespace Repository.Editor.Android.Highlighting
             // It interrupts our highlighting work at fixed intervals, giving the UI thread a chance
             // to run pending work such as input/rendering code, which keeps the app responsive.
             // Without it, user input would be ignored, and the app would freeze until all text was highlighted.
-            await _yielder.YieldAsync();
+            await _yielder.Yield();
         }
 
         private void Teardown()

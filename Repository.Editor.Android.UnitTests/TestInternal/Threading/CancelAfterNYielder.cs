@@ -20,7 +20,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
             _n = n;
         }
 
-        public Task YieldAsync()
+        public Task Yield()
         {
             if (_numberOfYields == _n)
             {
@@ -28,7 +28,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
             }
 
             _numberOfYields++;
-            return _yielder.YieldAsync();
+            return _yielder.Yield();
         }
     }
 }

@@ -11,6 +11,6 @@ namespace Repository.Editor.Android.Internal.Threading
         {
         }
 
-        public async Task YieldAsync() => await Task.Yield();
+        public async Task Yield() => await Task.Yield();
     }
 }

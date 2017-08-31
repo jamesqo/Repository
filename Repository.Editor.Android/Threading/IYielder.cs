@@ -4,6 +4,6 @@ namespace Repository.Editor.Android.Threading
 {
     public interface IYielder
     {
-        Task YieldAsync();
+        Task Yield();
     }
 }

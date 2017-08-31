@@ -9,7 +9,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
     internal static class TextColorerExtensions
     {
-        public static IEnumerable<(string token, SyntaxKind kind)> GetSyntaxAssignments(this TextColorer colorer)
+        public static IEnumerable<(string token, SyntaxKind kind)> GetSyntaxAssignments(this TextColorer colorer, bool skipWhitespaceTokens = true)
         {
             Verify.NotNull(colorer, nameof(colorer));
             Verify.Argument(colorer.Theme == TestColorTheme.Instance, nameof(colorer));
@@ -26,10 +26,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
                 var token = rawText.Substring(spanStart, spanCount);
                 var kind = TestColorTheme.Decode(span.ForegroundColor);
 
-                // Skip whitespace tokens. In the future, there will be an optimization where we avoid
-                // attaching color spans for whitespace tokens, and it'd be painful to modify the tests
-                // after such a change if we didn't do this.
-                if (!string.IsNullOrWhiteSpace(token))
+                if (!skipWhitespaceTokens || !string.IsNullOrWhiteSpace(token))
                 {
                     yield return (token, kind);
                 }

@@ -13,7 +13,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
             try
             {
                 await task;
-                throw new ArgumentException("The task was never canceled.");
+                throw new ArgumentException("The task was never canceled.", nameof(task));
             }
             catch (TaskCanceledException)
             {

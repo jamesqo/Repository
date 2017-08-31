@@ -11,6 +11,6 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
         {
         }
 
-        public Task YieldAsync() => Task.CompletedTask;
+        public Task Yield() => Task.CompletedTask;
     }
 }
