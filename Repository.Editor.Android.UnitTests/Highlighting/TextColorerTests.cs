@@ -40,7 +40,7 @@ class C {
                 await highlighter.Highlight(sourceText, colorer).IgnoreCancellations();
             }
 
-            var expected = new[]
+            var expected = new SyntaxAssignment[]
             {
                 ("package", Keyword),
                 ("com", Identifier),

@@ -5,14 +5,14 @@ using Repository.Editor.Highlighting;
 
 namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
-    internal static class EnumerableExtensions
+    internal static class SyntaxAssignmentExtensions
     {
-        public static IEnumerable<(string token, SyntaxKind kind)> RemoveWhitespaceTokens(
-            this IEnumerable<(string token, SyntaxKind kind)> assignments)
+        public static IEnumerable<SyntaxAssignment> RemoveWhitespaceTokens(
+            this IEnumerable<SyntaxAssignment> assignments)
         {
             Verify.NotNull(assignments, nameof(assignments));
 
-            return assignments.Where(a => !string.IsNullOrWhiteSpace(a.token));
+            return assignments.Where(a => !string.IsNullOrWhiteSpace(a.Token));
         }
     }
 }

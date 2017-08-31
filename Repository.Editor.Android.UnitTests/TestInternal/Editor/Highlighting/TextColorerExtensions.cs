@@ -10,7 +10,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
     internal static class TextColorerExtensions
     {
-        public static IEnumerable<(string token, SyntaxKind kind)> GetSyntaxAssignments(this TextColorer colorer)
+        public static IEnumerable<SyntaxAssignment> GetSyntaxAssignments(this TextColorer colorer)
         {
             Verify.NotNull(colorer, nameof(colorer));
             Verify.Argument(colorer.Theme == TestColorTheme.Instance, nameof(colorer));

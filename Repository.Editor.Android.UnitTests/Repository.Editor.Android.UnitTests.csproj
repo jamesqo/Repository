@@ -116,7 +116,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestInternal\Android\SpannedExtensions.cs" />
     <Compile Include="TestInternal\Collections\EnumerableExtensions.cs" />
-    <Compile Include="TestInternal\Editor\Highlighting\EnumerableExtensions.cs" />
+    <Compile Include="TestInternal\Editor\Highlighting\SyntaxAssignmentExtensions.cs" />
+    <Compile Include="TestInternal\Editor\Highlighting\SyntaxAssignment.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TestColorTheme.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TextColorerExtensions.cs" />
     <Compile Include="TestInternal\Threading\CancelAfterNYielder.cs" />

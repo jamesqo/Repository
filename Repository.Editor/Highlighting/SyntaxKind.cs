@@ -27,7 +27,7 @@
         End = TypeIdentifier
     }
 
-    internal static class SyntaxKindExtensions
+    public static class SyntaxKindExtensions
     {
         public static bool IsNone(this SyntaxKind kind) => kind == SyntaxKind.None;
 
