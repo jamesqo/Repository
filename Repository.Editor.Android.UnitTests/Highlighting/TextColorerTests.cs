@@ -79,9 +79,9 @@ class C {
 
         public static IEnumerable<object[]> Flushing_Data()
         {
-            foreach (int numberOfFlushes in Enumerable.Range(1, 10))
+            foreach (int numberOfFlushes in Enumerable.Range(1, 8))
             {
-                foreach (int flushSize in Enumerable.Range(1, 10))
+                foreach (int flushSize in Enumerable.Range(1, 8))
                 {
                     yield return new object[] { numberOfFlushes, flushSize };
                 }
