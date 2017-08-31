@@ -134,15 +134,11 @@
     <Compile Include="Internal\Editor\TypefaceProvider.cs" />
     <Compile Include="Internal\Collections\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
-    <Compile Include="Internal\Java\Jni.cs" />
-    <Compile Include="Internal\IO\NativeBuffer.cs" />
-    <Compile Include="Internal\IO\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\Threading\TaskExtensions.cs" />
     <Compile Include="Internal\Threading\ThreadingUtilities.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
-    <Compile Include="Internal\Java\NativeByteBuffer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="BrowseFilesActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

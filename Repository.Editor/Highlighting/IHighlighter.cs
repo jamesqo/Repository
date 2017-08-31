@@ -5,6 +5,6 @@ namespace Repository.Editor.Highlighting
 {
     public interface IHighlighter
     {
-        Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken);
+        Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken = default);
     }
 }
