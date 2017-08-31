@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using NUnit.Framework;
 using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting;
 using Repository.Editor.Android.UnitTests.TestInternal.Threading;
@@ -10,10 +13,13 @@ namespace Repository.Editor.Android.UnitTests.Highlighting
     [TestFixture]
     public class TextColorerTests
     {
-        [Test]
-        public async void Foo()
+        [TestCaseSource(nameof(Flushing_Data))]
+        public async void Flushing(int numberOfFlushes, int flushSize)
         {
-            var yielder = NopYielder.Instance.CancelAfter(0);
+            Debug.Assert(numberOfFlushes > 0);
+            Debug.Assert(flushSize > 0);
+
+            var yielder = NopYielder.Instance.CancelAfter(numberOfFlushes - 1);
             var sourceText = @"
 package com.mycompany;
 
@@ -27,14 +33,18 @@ class C {
             var colorer = new TextColorer(sourceText, theme, yielder);
             var highlighter = Highlighter.Java;
 
-            await highlighter.Highlight(sourceText, colorer).RunToCancellation();
+            using (colorer.Setup(flushSize))
+            {
+                await highlighter.Highlight(sourceText, colorer).RunToCancellation();
+            }
 
-            Assert.AreEqual(new[]
+            var expected = new[]
             {
                 ("package", Keyword),
                 ("com", Identifier),
                 (".", Plaintext),
                 ("mycompany", Identifier),
+                (";", Plaintext),
                 ("class", Keyword),
                 ("C", TypeDeclaration),
                 ("{", Plaintext),
@@ -42,9 +52,40 @@ class C {
                 ("m", MethodDeclaration),
                 ("(", Plaintext),
                 (")", Plaintext),
-                ("{", Plaintext)
-            },
-            colorer.GetSyntaxAssignments());
+                ("{", Plaintext),
+                ("System", Identifier),
+                ("out", Identifier),
+                ("println", MethodIdentifier),
+                ("(", Plaintext),
+                (@"""Hello, world!""", StringLiteral),
+                (")", Plaintext),
+                (";", Plaintext),
+                ("System", Identifier),
+                ("out", Identifier),
+                ("println", MethodIdentifier),
+                ("(", Plaintext),
+                (@"""Scary to see Java in the middle of C# code, isn't it?""", StringLiteral),
+                (")", Plaintext),
+                (";", Plaintext),
+                ("}", Plaintext),
+                ("}", Plaintext)
+            };
+
+            int tokenCount = numberOfFlushes * flushSize;
+            Assert.AreEqual(
+                expected.Take(tokenCount),
+                colorer.GetSyntaxAssignments().Take(tokenCount).RemoveWhitespace());
+        }
+
+        public static IEnumerable<object[]> Flushing_Data()
+        {
+            foreach (int numberOfFlushes in Enumerable.Range(1, 10))
+            {
+                foreach (int flushSize in Enumerable.Range(1, 10))
+                {
+                    yield return new object[] { numberOfFlushes, flushSize };
+                }
+            }
         }
     }
 }

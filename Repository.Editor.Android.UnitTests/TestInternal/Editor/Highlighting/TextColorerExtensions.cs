@@ -9,7 +9,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
     internal static class TextColorerExtensions
     {
-        public static IEnumerable<(string token, SyntaxKind kind)> GetSyntaxAssignments(this TextColorer colorer, bool skipWhitespaceTokens = true)
+        public static IEnumerable<(string token, SyntaxKind kind)> GetSyntaxAssignments(this TextColorer colorer)
         {
             Verify.NotNull(colorer, nameof(colorer));
             Verify.Argument(colorer.Theme == TestColorTheme.Instance, nameof(colorer));
@@ -26,10 +26,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
                 var token = rawText.Substring(spanStart, spanCount);
                 var kind = TestColorTheme.Decode(span.ForegroundColor);
 
-                if (!skipWhitespaceTokens || !string.IsNullOrWhiteSpace(token))
-                {
-                    yield return (token, kind);
-                }
+                yield return (token, kind);
             }
         }
     }
