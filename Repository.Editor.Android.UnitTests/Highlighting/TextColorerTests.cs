@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
@@ -76,19 +77,28 @@ class C {
                 ("}", Plaintext)
             };
 
-            int tokenCount = numberOfFlushes * flushSize;
-            var actual = colorer.GetSyntaxAssignments()
-                .Take(tokenCount)
-                .RemoveWhitespaceTokens()
-                .ToArray(); // Improve debugger view.
-            Assert.IsTrue(expected.StartsWith(actual));
+            int maxTokenCount = numberOfFlushes * flushSize;
+            var actual = colorer.GetSyntaxAssignments().ToArray();
+
+            if (actual.Length < maxTokenCount)
+            {
+                actual = actual.RemoveWhitespaceTokens().ToArray();
+                Assert.AreEqual(expected, actual);
+            }
+            else
+            {
+                Assert.AreEqual(maxTokenCount, actual.Length);
+
+                actual = actual.RemoveWhitespaceTokens().ToArray();
+                Assert.IsTrue(expected.StartsWith(actual));
+            }
         }
 
         public static IEnumerable<object[]> Flushing_Data()
         {
-            foreach (int numberOfFlushes in Enumerable.Range(1, 8))
+            foreach (int numberOfFlushes in Enumerable.Range(1, 6))
             {
-                foreach (int flushSize in Enumerable.Range(1, 8))
+                foreach (int flushSize in Enumerable.Range(1, 6))
                 {
                     yield return new object[] { numberOfFlushes, flushSize };
                 }
