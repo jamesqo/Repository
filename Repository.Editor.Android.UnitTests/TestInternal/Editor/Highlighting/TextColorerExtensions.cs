@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Android.Text.Style;
 using Repository.Common.Validation;
 using Repository.Editor.Android.Highlighting;
@@ -16,7 +17,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 
             var text = colorer.Text;
             var rawText = text.ToString();
-            var colorSpans = text.GetSpans<ForegroundColorSpan>();
+            var colorSpans = text.GetSpans<ForegroundColorSpan>().OrderBy(s => text.GetSpanStart(s));
 
             foreach (var span in colorSpans)
             {

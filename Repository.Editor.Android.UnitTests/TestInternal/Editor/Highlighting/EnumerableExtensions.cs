@@ -7,7 +7,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
     internal static class EnumerableExtensions
     {
-        public static IEnumerable<(string token, SyntaxKind kind)> RemoveWhitespace(
+        public static IEnumerable<(string token, SyntaxKind kind)> RemoveWhitespaceTokens(
             this IEnumerable<(string token, SyntaxKind kind)> assignments)
         {
             Verify.NotNull(assignments, nameof(assignments));

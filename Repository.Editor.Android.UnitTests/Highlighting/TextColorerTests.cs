@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using Repository.Editor.Android.Highlighting;
+using Repository.Editor.Android.UnitTests.TestInternal.Collections;
 using Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting;
 using Repository.Editor.Android.UnitTests.TestInternal.Threading;
 using Repository.Editor.Highlighting;
@@ -35,7 +36,7 @@ class C {
 
             using (colorer.Setup(flushSize))
             {
-                await highlighter.Highlight(sourceText, colorer).RunToCancellation();
+                await highlighter.Highlight(sourceText, colorer).IgnoreCancellations();
             }
 
             var expected = new[]
@@ -54,14 +55,18 @@ class C {
                 (")", Plaintext),
                 ("{", Plaintext),
                 ("System", Identifier),
+                (".", Plaintext),
                 ("out", Identifier),
+                (".", Plaintext),
                 ("println", MethodIdentifier),
                 ("(", Plaintext),
                 (@"""Hello, world!""", StringLiteral),
                 (")", Plaintext),
                 (";", Plaintext),
                 ("System", Identifier),
+                (".", Plaintext),
                 ("out", Identifier),
+                (".", Plaintext),
                 ("println", MethodIdentifier),
                 ("(", Plaintext),
                 (@"""Scary to see Java in the middle of C# code, isn't it?""", StringLiteral),
@@ -72,9 +77,11 @@ class C {
             };
 
             int tokenCount = numberOfFlushes * flushSize;
-            Assert.AreEqual(
-                expected.Take(tokenCount),
-                colorer.GetSyntaxAssignments().Take(tokenCount).RemoveWhitespace());
+            var actual = colorer.GetSyntaxAssignments()
+                .Take(tokenCount)
+                .RemoveWhitespaceTokens()
+                .ToArray(); // Improve debugger view.
+            Assert.IsTrue(expected.StartsWith(actual));
         }
 
         public static IEnumerable<object[]> Flushing_Data()

@@ -115,6 +115,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestInternal\Android\SpannedExtensions.cs" />
+    <Compile Include="TestInternal\Collections\EnumerableExtensions.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\EnumerableExtensions.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TestColorTheme.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TextColorerExtensions.cs" />
