@@ -1,4 +1,4 @@
-﻿using Repository.Editor.Android.Internal.Highlighting;
+﻿using Repository.Editor.Android.Internal.Editor.Highlighting;
 
 namespace Repository.Editor.Android.Highlighting
 {

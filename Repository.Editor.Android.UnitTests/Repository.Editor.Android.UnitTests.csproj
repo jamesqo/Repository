@@ -68,11 +68,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Highlighting\ColorThemeTests.cs" />
+    <Compile Include="Highlighting\TextColorerTests.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="EditorThemeTests.cs" />
     <Compile Include="NoCopyEditableFactoryTests.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestInternal\Android\SpannedExtensions.cs" />
+    <Compile Include="TestInternal\Editor\Highlighting\TestColorTheme.cs" />
+    <Compile Include="TestInternal\Editor\Highlighting\TextColorerExtensions.cs" />
+    <Compile Include="TestInternal\Threading\CancelAfterNYielder.cs" />
+    <Compile Include="TestInternal\Threading\NopYielder.cs" />
+    <Compile Include="TestInternal\Threading\TaskExtensions.cs" />
+    <Compile Include="TestInternal\Threading\ThreadingUtilities.cs" />
+    <Compile Include="TestInternal\Threading\YielderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -90,11 +99,24 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Repository.Common\Repository.Common.csproj">
+      <Project>{50fb1cda-38b0-4e70-a175-7d733e2b5c9f}</Project>
+      <Name>Repository.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Repository.Editor.Android\Repository.Editor.Android.csproj">
       <Project>{fbacc4c2-b89f-4c98-9b7a-71eb7a15e840}</Project>
       <Name>Repository.Editor.Android</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Repository.Editor\Repository.Editor.csproj">
+      <Project>{4490be7b-c620-40b1-8c62-5396eecc6f3e}</Project>
+      <Name>Repository.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository.JavaInterop\Repository.JavaInterop.csproj">
+      <Project>{d84b83dc-37b4-443a-bb4b-4a9acc01d4ab}</Project>
+      <Name>Repository.JavaInterop</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.

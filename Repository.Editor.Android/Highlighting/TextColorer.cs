@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Repository.Common.Validation;
 using Repository.Editor.Android.Internal;
-using Repository.Editor.Android.Internal.Highlighting;
+using Repository.Editor.Android.Internal.Editor.Highlighting;
 using Repository.Editor.Android.Internal.Java;
 using Repository.Editor.Android.Internal.Threading;
 using Repository.Editor.Android.Threading;
@@ -32,6 +32,8 @@ namespace Repository.Editor.Android.Highlighting
         }
 
         public EditorText Text => _text;
+
+        public IColorTheme Theme => _theme;
 
         public Task Color(SyntaxKind kind, int count, CancellationToken cancellationToken)
         {

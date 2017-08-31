@@ -4,6 +4,7 @@ using JavaObject = Java.Lang.Object;
 
 namespace Repository.Internal.Android
 {
+    // TODO: Consolidate with SpannedExtensions in a Repository.Common.Android lib.
     internal static class SpannableExtensions
     {
         /// <summary>

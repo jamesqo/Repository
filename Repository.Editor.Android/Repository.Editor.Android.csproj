@@ -47,10 +47,10 @@
   <ItemGroup>
     <Compile Include="EditorTheme.cs" />
     <Compile Include="Internal\Disposable.cs" />
-    <Compile Include="Internal\Highlighting\Coloring.cs" />
+    <Compile Include="Internal\Editor\Highlighting\Coloring.cs" />
     <Compile Include="Highlighting\ColorTheme.cs" />
     <Compile Include="Highlighting\IColorTheme.cs" />
-    <Compile Include="Internal\Highlighting\MonokaiColorTheme.cs" />
+    <Compile Include="Internal\Editor\Highlighting\MonokaiColorTheme.cs" />
     <Compile Include="Internal\IO\NativeBuffer.cs" />
     <Compile Include="Internal\IO\NativeBuffer.DebuggerProxy.cs" />
     <Compile Include="Internal\Java\Jni.cs" />
