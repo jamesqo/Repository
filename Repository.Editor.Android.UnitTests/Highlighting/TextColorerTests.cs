@@ -64,6 +64,7 @@ class C {
         };
 
         [Test]
+        [Ignore("https://github.com/jamesqo/Repository/issues/103")]
         public async void DeletionBeforeColorCursor_DoesNotAffectPendingColorings()
         {
             async Task RunTest()
