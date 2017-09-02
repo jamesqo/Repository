@@ -14,7 +14,7 @@ public class EditorText extends SpannableStringBuilder {
         super(rawText);
     }
 
-    public void colorWith(ColoringList colorings) {
+    public void addColorings(ColoringList colorings) {
         for (int i = 0; i < colorings.count(); i++) {
             @ColorInt int color = colorings.getColor(i);
             int count = colorings.getCount(i);

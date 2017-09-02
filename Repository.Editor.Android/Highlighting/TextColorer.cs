@@ -80,7 +80,7 @@ namespace Repository.Editor.Android.Highlighting
             {
                 var colorings = ColoringList.FromBufferSpan(
                     _colorings.Unwrap(), 0, byteCount / Coloring.Size);
-                _text.ColorWith(colorings);
+                _text.AddColorings(colorings);
                 _colorings.Clear();
             }
         }

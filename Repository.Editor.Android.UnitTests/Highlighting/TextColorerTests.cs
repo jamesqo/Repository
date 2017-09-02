@@ -65,7 +65,7 @@ class C {
 
         [Test]
         [Ignore("https://github.com/jamesqo/Repository/issues/103")]
-        public async void EditBeforeColorCursor_DoesNotAffectPendingColorings([Values] bool editIsDeletion)
+        public async void Edit_BeforeColorCursor_DoesNotAffectPendingColorings([Values] bool editIsDeletion)
         {
             async Task RunTest()
             {
