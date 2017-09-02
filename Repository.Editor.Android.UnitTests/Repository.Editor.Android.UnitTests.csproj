@@ -120,11 +120,8 @@
     <Compile Include="TestInternal\Editor\Highlighting\SyntaxAssignment.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TestColorTheme.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TextColorerExtensions.cs" />
-    <Compile Include="TestInternal\Threading\CancelAfterNYielder.cs" />
+    <Compile Include="TestInternal\Threading\CallbackRunnerYielder.cs" />
     <Compile Include="TestInternal\Threading\NopYielder.cs" />
-    <Compile Include="TestInternal\Threading\TaskExtensions.cs" />
-    <Compile Include="TestInternal\Threading\ThreadingUtilities.cs" />
-    <Compile Include="TestInternal\Threading\YielderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Android.UnitTests.TestInternal.Collections;
@@ -17,7 +19,9 @@ namespace Repository.Editor.Android.UnitTests.Highlighting
             [Range(1, 6)] int numberOfFlushes,
             [Range(1, 6)] int flushSize)
         {
-            var sourceText = @"
+            async Task RunTest()
+            {
+                var sourceText = @"
 package com.mycompany;
 
 class C {
@@ -26,73 +30,83 @@ class C {
         System.out.println(""Scary to see Java in the middle of C# code, isn't it?"");
     }
 }";
-            var yielder = NopYielder.Instance.CancelAfter(numberOfFlushes - 1);
-            var colorer = CreateTextColorer(sourceText, yielder);
+                var colorer = CreateTextColorer(sourceText, out var yielder);
+                SetCallback(yielder, colorer, numberOfFlushes - 1, Callback1);
 
-            var highlighter = Highlighter.Java;
-
-            using (colorer.Setup(flushSize))
-            {
-                await highlighter.Highlight(sourceText, colorer).IgnoreCancellations();
+                using (colorer.Setup(flushSize))
+                {
+                    await Highlighter.Java.Highlight(sourceText, colorer);
+                }
             }
 
-            var expected = new SyntaxAssignment[]
+            void Callback1(CallbackRunnerYielder yielder, TextColorer colorer)
             {
-                ("package", Keyword),
-                ("com", Identifier),
-                (".", Plaintext),
-                ("mycompany", Identifier),
-                (";", Plaintext),
-                ("class", Keyword),
-                ("C", TypeDeclaration),
-                ("{", Plaintext),
-                ("void", Keyword),
-                ("m", MethodDeclaration),
-                ("(", Plaintext),
-                (")", Plaintext),
-                ("{", Plaintext),
-                ("System", Identifier),
-                (".", Plaintext),
-                ("out", Identifier),
-                (".", Plaintext),
-                ("println", MethodIdentifier),
-                ("(", Plaintext),
-                (@"""Hello, world!""", StringLiteral),
-                (")", Plaintext),
-                (";", Plaintext),
-                ("System", Identifier),
-                (".", Plaintext),
-                ("out", Identifier),
-                (".", Plaintext),
-                ("println", MethodIdentifier),
-                ("(", Plaintext),
-                (@"""Scary to see Java in the middle of C# code, isn't it?""", StringLiteral),
-                (")", Plaintext),
-                (";", Plaintext),
-                ("}", Plaintext),
-                ("}", Plaintext)
-            };
+                var expected = new SyntaxAssignment[]
+                {
+                    ("package", Keyword),
+                    ("com", Identifier),
+                    (".", Plaintext),
+                    ("mycompany", Identifier),
+                    (";", Plaintext),
+                    ("class", Keyword),
+                    ("C", TypeDeclaration),
+                    ("{", Plaintext),
+                    ("void", Keyword),
+                    ("m", MethodDeclaration),
+                    ("(", Plaintext),
+                    (")", Plaintext),
+                    ("{", Plaintext),
+                    ("System", Identifier),
+                    (".", Plaintext),
+                    ("out", Identifier),
+                    (".", Plaintext),
+                    ("println", MethodIdentifier),
+                    ("(", Plaintext),
+                    (@"""Hello, world!""", StringLiteral),
+                    (")", Plaintext),
+                    (";", Plaintext),
+                    ("System", Identifier),
+                    (".", Plaintext),
+                    ("out", Identifier),
+                    (".", Plaintext),
+                    ("println", MethodIdentifier),
+                    ("(", Plaintext),
+                    (@"""Scary to see Java in the middle of C# code, isn't it?""", StringLiteral),
+                    (")", Plaintext),
+                    (";", Plaintext),
+                    ("}", Plaintext),
+                    ("}", Plaintext)
+                };
 
-            int maxTokenCount = numberOfFlushes * flushSize;
-            var actual = colorer.GetSyntaxAssignments().ToArray();
+                int maxTokenCount = numberOfFlushes * flushSize;
+                var actual = colorer.GetSyntaxAssignments().ToArray();
 
-            if (actual.Length < maxTokenCount)
-            {
-                actual = actual.RemoveWhitespaceTokens().ToArray();
-                Assert.AreEqual(expected, actual);
+                if (actual.Length < maxTokenCount)
+                {
+                    actual = actual.RemoveWhitespaceTokens().ToArray();
+                    Assert.AreEqual(expected, actual);
+                }
+                else
+                {
+                    Assert.AreEqual(maxTokenCount, actual.Length);
+
+                    actual = actual.RemoveWhitespaceTokens().ToArray();
+                    Assert.IsTrue(expected.StartsWith(actual));
+                }
             }
-            else
-            {
-                Assert.AreEqual(maxTokenCount, actual.Length);
 
-                actual = actual.RemoveWhitespaceTokens().ToArray();
-                Assert.IsTrue(expected.StartsWith(actual));
-            }
+            await RunTest();
         }
 
-        private static TextColorer CreateTextColorer(string text, IYielder yielder)
+        private static TextColorer CreateTextColorer(string text, out CallbackRunnerYielder yielder)
         {
+            yielder = new CallbackRunnerYielder(NopYielder.Instance);
             return new TextColorer(text, TestColorTheme.Instance, yielder);
+        }
+
+        private static void SetCallback(CallbackRunnerYielder yielder, TextColorer colorer, int numberOfYields, Action<CallbackRunnerYielder, TextColorer> callback)
+        {
+            yielder.SetCallback(numberOfYields, () => callback(yielder, colorer));
         }
     }
 }
