@@ -1,11 +1,10 @@
 ﻿using System;
 using Java.Lang;
 using Repository.Common.Validation;
-using JavaObject = Java.Lang.Object;
 
 namespace Repository.JavaInterop.Internal
 {
-    internal class Runnable : JavaObject, IRunnable
+    internal class Runnable : Java.Lang.Object, IRunnable
     {
         private readonly Action _action;
 

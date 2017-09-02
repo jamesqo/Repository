@@ -1,6 +1,5 @@
 ﻿using Android.Text;
 using Repository.Common.Validation;
-using JavaObject = Java.Lang.Object;
 
 namespace Repository.Internal.Android
 {
@@ -11,7 +10,7 @@ namespace Repository.Internal.Android
         /// </summary>
         /// <param name="spannable">The spannable.</param>
         /// <param name="what">The span.</param>
-        public static void SetSpan(this ISpannable spannable, JavaObject what)
+        public static void SetSpan(this ISpannable spannable, Java.Lang.Object what)
         {
             Verify.NotNull(spannable, nameof(spannable));
 

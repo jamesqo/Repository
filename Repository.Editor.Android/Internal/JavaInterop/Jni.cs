@@ -1,7 +1,6 @@
 ﻿using System;
 using Android.Runtime;
 using Java.Nio;
-using JavaObject = Java.Lang.Object;
 
 namespace Repository.Editor.Android.Internal.JavaInterop
 {
@@ -10,7 +9,7 @@ namespace Repository.Editor.Android.Internal.JavaInterop
         public static ByteBuffer NewDirectByteBuffer(IntPtr address, long capacity)
         {
             var handle = JNIEnv.NewDirectByteBuffer(address, capacity);
-            return JavaObject.GetObject<ByteBuffer>(handle, JniHandleOwnership.TransferLocalRef);
+            return Java.Lang.Object.GetObject<ByteBuffer>(handle, JniHandleOwnership.TransferLocalRef);
         }
     }
 }
