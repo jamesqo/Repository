@@ -18,8 +18,10 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.JavaInterop
             _index = index;
         }
 
-        public TestCursor Delete(string text)
+        public TestCursor DeleteRight(string text)
         {
+            Verify.NotNullOrEmpty(text, nameof(text));
+
             var (start, end) = (_index, _index + text.Length);
             Verify.Argument(text == _text.SubSequence(start, end), nameof(text));
 
@@ -27,7 +29,16 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.JavaInterop
             return this;
         }
 
-        public TestCursor SkipWhitespace()
+        public TestCursor InsertLeft(string text)
+        {
+            Verify.NotNullOrEmpty(text, nameof(text));
+
+            _text.Insert(_index, text);
+            _index += text.Length;
+            return this;
+        }
+
+        public TestCursor SkipWhitespaceRight()
         {
             int length = _text.Length();
             while (_index < length && char.IsWhiteSpace(_text.CharAt(_index)))

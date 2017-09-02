@@ -65,7 +65,7 @@ class C {
 
         [Test]
         [Ignore("https://github.com/jamesqo/Repository/issues/103")]
-        public async void DeletionBeforeColorCursor_DoesNotAffectPendingColorings()
+        public async void EditBeforeColorCursor_DoesNotAffectPendingColorings([Values] bool editIsDeletion)
         {
             async Task RunTest()
             {
@@ -84,12 +84,21 @@ class C {
             void Callback1(CallbackRunnerYielder yielder, TextColorer colorer)
             {
                 var cursor = colorer.Text.GetCursor(0);
-                cursor.SkipWhitespace().Delete("package");
+                if (editIsDeletion)
+                {
+                    cursor.SkipWhitespaceRight().DeleteRight("package");
+                }
+                else
+                {
+                    cursor.InsertLeft("Hello, galaxy!");
+                }
             }
 
             void AfterHighlight(TextColorer colorer)
             {
-                var expected = JavaSourceCode1Assignments.Skip(1);
+                var expected = editIsDeletion
+                    ? JavaSourceCode1Assignments.Skip(1)
+                    : JavaSourceCode1Assignments;
                 var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
                 Assert.AreEqual(expected, actual);
             }
