@@ -6,6 +6,7 @@
     <PackageTargetFallback>portable-net45+win8+wp8+wpa81</PackageTargetFallback>
     <AssemblyName>Repository.Editor</AssemblyName>
     <RootNamespace>Repository.Editor</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@ using Android.Graphics;
 using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Highlighting;
 
-namespace Repository.Editor.Android.Internal.Highlighting
+namespace Repository.Editor.Android.Internal.Editor.Highlighting
 {
     internal class MonokaiColorTheme : IColorTheme
     {

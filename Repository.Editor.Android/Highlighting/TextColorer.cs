@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Repository.Common.Validation;
 using Repository.Editor.Android.Internal;
-using Repository.Editor.Android.Internal.Highlighting;
+using Repository.Editor.Android.Internal.Editor.Highlighting;
 using Repository.Editor.Android.Internal.Java;
+using Repository.Editor.Android.Internal.Threading;
+using Repository.Editor.Android.Threading;
 using Repository.Editor.Highlighting;
 using Repository.JavaInterop;
 
@@ -15,19 +17,23 @@ namespace Repository.Editor.Android.Highlighting
     {
         private readonly EditorText _text;
         private readonly IColorTheme _theme;
+        private readonly IYielder _yielder;
 
         private NativeByteBuffer _colorings;
 
-        public TextColorer(string text, IColorTheme theme)
+        public TextColorer(string text, IColorTheme theme, IYielder yielder = null)
         {
             Verify.NotNull(text, nameof(text));
             Verify.NotNull(theme, nameof(theme));
 
             _text = new EditorText(text);
             _theme = theme;
+            _yielder = yielder ?? DefaultYielder.Instance;
         }
 
         public EditorText Text => _text;
+
+        public IColorTheme Theme => _theme;
 
         public Task Color(SyntaxKind kind, int count, CancellationToken cancellationToken)
         {
@@ -87,7 +93,7 @@ namespace Repository.Editor.Android.Highlighting
             // It interrupts our highlighting work at fixed intervals, giving the UI thread a chance
             // to run pending work such as input/rendering code, which keeps the app responsive.
             // Without it, user input would be ignored, and the app would freeze until all text was highlighted.
-            await Task.Yield();
+            await _yielder.Yield();
         }
 
         private void Teardown()
