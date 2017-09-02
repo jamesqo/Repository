@@ -5,7 +5,7 @@ using Repository.Common;
 using Repository.Common.Validation;
 using Repository.Editor.Android.Internal.IO;
 
-namespace Repository.Editor.Android.Internal.Java
+namespace Repository.Editor.Android.Internal.JavaInterop
 {
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal class NativeByteBuffer : IDisposable

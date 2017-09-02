@@ -3,7 +3,7 @@ using Android.Runtime;
 using Java.Nio;
 using JavaObject = Java.Lang.Object;
 
-namespace Repository.Editor.Android.Internal.Java
+namespace Repository.Editor.Android.Internal.JavaInterop
 {
     internal static class Jni
     {

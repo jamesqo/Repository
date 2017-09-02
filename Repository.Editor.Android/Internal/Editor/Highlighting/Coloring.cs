@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
-using Repository.Editor.Android.Internal.Java;
+using Repository.Editor.Android.Internal.JavaInterop;
 
 namespace Repository.Editor.Android.Internal.Editor.Highlighting
 {
