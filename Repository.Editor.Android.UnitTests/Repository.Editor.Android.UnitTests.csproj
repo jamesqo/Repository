@@ -120,6 +120,8 @@
     <Compile Include="TestInternal\Editor\Highlighting\SyntaxAssignment.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TestColorTheme.cs" />
     <Compile Include="TestInternal\Editor\Highlighting\TextColorerExtensions.cs" />
+    <Compile Include="TestInternal\JavaInterop\EditorTextExtensions.cs" />
+    <Compile Include="TestInternal\JavaInterop\TestCursor.cs" />
     <Compile Include="TestInternal\Threading\CallbackRunnerYielder.cs" />
     <Compile Include="TestInternal\Threading\NopYielder.cs" />
   </ItemGroup>
