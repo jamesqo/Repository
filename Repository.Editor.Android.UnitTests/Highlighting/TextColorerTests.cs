@@ -15,12 +15,11 @@ namespace Repository.Editor.Android.UnitTests.Highlighting
     [TestFixture]
     public class TextColorerTests
     {
-        [TestCaseSource(nameof(Flushing_Data))]
-        public async void Flushing(int numberOfFlushes, int flushSize)
+        [Test]
+        public async void Flushing(
+            [Range(1, 6)] int numberOfFlushes,
+            [Range(1, 6)] int flushSize)
         {
-            Debug.Assert(numberOfFlushes > 0);
-            Debug.Assert(flushSize > 0);
-
             var yielder = NopYielder.Instance.CancelAfter(numberOfFlushes - 1);
             var sourceText = @"
 package com.mycompany;
@@ -91,17 +90,6 @@ class C {
 
                 actual = actual.RemoveWhitespaceTokens().ToArray();
                 Assert.IsTrue(expected.StartsWith(actual));
-            }
-        }
-
-        public static IEnumerable<object[]> Flushing_Data()
-        {
-            foreach (int numberOfFlushes in Enumerable.Range(1, 6))
-            {
-                foreach (int flushSize in Enumerable.Range(1, 6))
-                {
-                    yield return new object[] { numberOfFlushes, flushSize };
-                }
             }
         }
     }
