@@ -241,17 +241,14 @@ namespace Repository
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f080000
+			public const int Label_ChooseProvider = 2131230720;
+			
 			// aapt resource value: 0x7f080001
-			public const int Label_ChooseProvider = 2131230721;
+			public const int Label_ChooseRepo = 2131230721;
 			
 			// aapt resource value: 0x7f080002
-			public const int Label_ChooseRepo = 2131230722;
-			
-			// aapt resource value: 0x7f080003
-			public const int Text_Main_StartButton = 2131230723;
-			
-			// aapt resource value: 0x7f080000
-			public const int app_name = 2131230720;
+			public const int Text_Main_StartButton = 2131230722;
 			
 			static String()
 			{
