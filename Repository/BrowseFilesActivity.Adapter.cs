@@ -6,10 +6,9 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Octokit;
+using Repository.Common.Collections;
 using Repository.Common.Validation;
 using Repository.Internal;
-using Repository.Internal.Collections;
-using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {

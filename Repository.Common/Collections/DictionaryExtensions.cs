@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Repository.Common.Validation;
 
-namespace Repository.Internal.Collections
+namespace Repository.Common.Collections
 {
-    internal static class DictionaryExtensions
+    public static class DictionaryExtensions
     {
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
         {

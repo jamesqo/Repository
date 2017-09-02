@@ -124,7 +124,6 @@
     <Compile Include="EditFileActivity.cs" />
     <Compile Include="Internal\Android\ActivityExtensions.cs" />
     <Compile Include="Internal\Android\SpannableExtensions.cs" />
-    <Compile Include="Internal\Collections\DictionaryExtensions.cs" />
     <Compile Include="Internal\Collections\ReferenceEqualityComparer.cs" />
     <Compile Include="Internal\Android\ContextExtensions.cs" />
     <Compile Include="Internal\Creds.cs" />
@@ -132,7 +131,6 @@
     <Compile Include="Internal\Diagnostics\DebugListener.cs" />
     <Compile Include="Internal\Editor\EditorContent.cs" />
     <Compile Include="Internal\Editor\TypefaceProvider.cs" />
-    <Compile Include="Internal\Collections\EnumerableExtensions.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />

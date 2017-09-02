@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Android.Content.Res;
 using Android.Graphics;
+using Repository.Common.Collections;
 using Repository.Editor.Android;
 using Repository.Internal.Collections;
 

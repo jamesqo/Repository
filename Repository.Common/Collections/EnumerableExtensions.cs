@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Repository.Common.Validation;
 
-namespace Repository.Editor.Android.UnitTests.TestInternal.Collections
+namespace Repository.Common.Collections
 {
-    internal static class EnumerableExtensions
+    public static class EnumerableExtensions
     {
         public static bool StartsWith<T>(this IEnumerable<T> source, IEnumerable<T> prefix, IEqualityComparer<T> comparer = null)
         {
@@ -33,6 +35,11 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Collections
                     }
                 }
             }
+        }
+
+        public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> source)
+        {
+            return new ReadOnlyCollection<T>(source.ToList());
         }
     }
 }
