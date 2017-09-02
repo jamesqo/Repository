@@ -1,15 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Android.Text.Style;
 using Repository.Common.Validation;
 using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Android.UnitTests.TestInternal.Android;
-using Repository.Editor.Highlighting;
 
 namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
     internal static class TextColorerExtensions
     {
+        public static IDisposable FlushEveryToken(this TextColorer colorer)
+        {
+            Verify.NotNull(colorer, nameof(colorer));
+
+            return colorer.Setup(flushFrequency: 1);
+        }
+
         public static IEnumerable<SyntaxAssignment> GetSyntaxAssignments(this TextColorer colorer)
         {
             Verify.NotNull(colorer, nameof(colorer));
