@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
 using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Android.UnitTests.TestInternal.Collections;
@@ -20,7 +17,6 @@ namespace Repository.Editor.Android.UnitTests.Highlighting
             [Range(1, 6)] int numberOfFlushes,
             [Range(1, 6)] int flushSize)
         {
-            var yielder = NopYielder.Instance.CancelAfter(numberOfFlushes - 1);
             var sourceText = @"
 package com.mycompany;
 
@@ -30,8 +26,9 @@ class C {
         System.out.println(""Scary to see Java in the middle of C# code, isn't it?"");
     }
 }";
-            var theme = TestColorTheme.Instance;
-            var colorer = new TextColorer(sourceText, theme, yielder);
+            var yielder = NopYielder.Instance.CancelAfter(numberOfFlushes - 1);
+            var colorer = CreateTextColorer(sourceText, yielder);
+
             var highlighter = Highlighter.Java;
 
             using (colorer.Setup(flushSize))
@@ -91,6 +88,11 @@ class C {
                 actual = actual.RemoveWhitespaceTokens().ToArray();
                 Assert.IsTrue(expected.StartsWith(actual));
             }
+        }
+
+        private static TextColorer CreateTextColorer(string text, IYielder yielder)
+        {
+            return new TextColorer(text, TestColorTheme.Instance, yielder);
         }
     }
 }
