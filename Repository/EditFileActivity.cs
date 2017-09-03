@@ -100,7 +100,7 @@ namespace Repository
         /// <param name="content">The textual content of the editor.</param>
         private async Task HighlightContent(string content)
         {
-            Debug.Assert(_requester.IsHighlightRequested);
+            Verify.ValidState(_requester.IsHighlightRequested, "A highlight should have been requested.");
 
             await HighlightContentCore(content);
 

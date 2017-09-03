@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using Repository.Common.Validation;
 using Repository.Editor.Highlighting;
 using Repository.Editor.Internal.Common.Highlighting;
 using static Repository.Editor.Internal.Java.Highlighting.JavaParser;
@@ -206,7 +207,7 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
             private Task Surpass(IToken token, SyntaxKind kind)
             {
-                Debug.Assert(_tokenIndex == token.TokenIndex);
+                Verify.ValidState(_tokenIndex == token.TokenIndex, "We skipped some tokens!");
 
                 if (kind == SyntaxKind.Eof)
                 {

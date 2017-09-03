@@ -22,7 +22,7 @@ namespace Repository
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            Debug.Assert(
+            Verify.ValidState(
                 GitHub.Client.Credentials.AuthenticationType != AuthenticationType.Oauth,
                 "The point of being here is to get an OAuth access token.");
 
@@ -80,11 +80,12 @@ namespace Repository
 
         private void WriteAccessToken(string key, string token)
         {
-            var prefs = ApplicationContext.GetSharedPreferences(Strings.SPFile_AccessTokens);
+            string fileName = Strings.SPFile_AccessTokens;
+            var prefs = ApplicationContext.GetSharedPreferences(fileName);
             var editor = prefs.Edit();
             editor.PutString(key, token);
             bool committed = editor.Commit();
-            Debug.Assert(committed);
+            Verify.ValidState(committed, Strings.SPFile_CommitFailed_Message(fileName));
         }
     }
 }

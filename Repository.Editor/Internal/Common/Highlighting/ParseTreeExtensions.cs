@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Antlr4.Runtime.Tree;
+using Repository.Common.Validation;
 
 namespace Repository.Editor.Internal.Common.Highlighting
 {
@@ -11,8 +11,8 @@ namespace Repository.Editor.Internal.Common.Highlighting
     {
         public static bool HasDescendant(this IParseTree ancestor, IParseTree descendant)
         {
-            Debug.Assert(ancestor != null);
-            Debug.Assert(descendant != null);
+            Verify.NotNull(ancestor, nameof(ancestor));
+            Verify.NotNull(descendant, nameof(descendant));
 
             var current = descendant.Parent;
             while (current != null)

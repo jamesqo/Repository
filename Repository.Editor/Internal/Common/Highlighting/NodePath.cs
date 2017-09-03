@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Antlr4.Runtime.Tree;
 using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Editor.Internal.Common.Highlighting
 {
@@ -17,7 +18,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
 
         private NodePath(ImmutableSpan<Type> nodeTypes)
         {
-            Debug.Assert(!nodeTypes.IsDefaultOrEmpty);
+            Verify.Argument(!nodeTypes.IsDefaultOrEmpty, nameof(nodeTypes));
 
             _nodeTypes = nodeTypes;
         }
