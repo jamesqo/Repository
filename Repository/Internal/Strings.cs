@@ -23,6 +23,11 @@
 
         public const string SPFile_AccessTokens = nameof(SPFile_AccessTokens);
 
+        public static string SPFile_CommitFailed_Message(string fileName)
+        {
+            return $"Unable to commit to SharedPreferences file {fileName}";
+        }
+
         public const string SPKey_AccessTokens_GitHubAccessToken = nameof(SPKey_AccessTokens_GitHubAccessToken);
     }
 }

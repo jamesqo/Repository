@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Repository.Common;
+using Repository.Common.Validation;
 
 namespace Repository.Editor.Internal
 {
@@ -14,9 +15,9 @@ namespace Repository.Editor.Internal
     {
         internal ImmutableSpan(ImmutableArray<T> array, int index, int count)
         {
-            Debug.Assert(!array.IsDefault);
-            Debug.Assert(index >= 0 && count >= 0);
-            Debug.Assert(array.Length - index >= count);
+            Verify.Argument(!array.IsDefault, nameof(array));
+            Verify.InRange(index >= 0, nameof(index));
+            Verify.InRange(count >= 0 && array.Length - index >= count, nameof(count));
 
             Array = array;
             Index = index;

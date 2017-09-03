@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Repository.Common;
+using Repository.Common.Validation;
 using Repository.Editor.Highlighting;
 
 namespace Repository.Editor.Internal.Common.Highlighting
@@ -17,13 +18,13 @@ namespace Repository.Editor.Internal.Common.Highlighting
 
         public static implicit operator SyntaxSuggestion(SyntaxKind kind)
         {
-            Debug.Assert(kind.IsValid() && !kind.IsNone());
+            Verify.Argument(kind.IsValid() && !kind.IsNone(), nameof(kind));
             return new SyntaxSuggestion((int)kind);
         }
 
         public static SyntaxSuggestion Replaceable(SyntaxKind kind)
         {
-            Debug.Assert(kind.IsValid() && !kind.IsNone());
+            Verify.Argument(kind.IsValid() && !kind.IsNone(), nameof(kind));
             return new SyntaxSuggestion((int)kind | int.MinValue);
         }
 
@@ -35,7 +36,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
 
         public SyntaxKind TryReplace(SyntaxKind replacement)
         {
-            Debug.Assert(replacement.IsValid());
+            Verify.Argument(replacement.IsValid(), nameof(replacement));
             return IsReplaceable && !replacement.IsNone() ? replacement : Kind;
         }
     }

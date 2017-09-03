@@ -37,7 +37,8 @@ namespace Repository.Editor.Android.Highlighting
 
         public Task Color(SyntaxKind kind, int count, CancellationToken cancellationToken)
         {
-            Debug.Assert(count > 0);
+            Verify.Argument(kind.IsValid(), nameof(kind));
+            Verify.InRange(count > 0, nameof(count));
 
             if (cancellationToken.IsCancellationRequested)
             {

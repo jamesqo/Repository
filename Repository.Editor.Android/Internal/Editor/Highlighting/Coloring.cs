@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Android.Graphics;
 using Repository.Common;
+using Repository.Common.Validation;
 using Repository.Editor.Android.Internal.JavaInterop;
 
 namespace Repository.Editor.Android.Internal.Editor.Highlighting
@@ -12,7 +13,7 @@ namespace Repository.Editor.Android.Internal.Editor.Highlighting
 
         public Coloring(Color color, int count)
         {
-            Debug.Assert(count > 0);
+            Verify.InRange(count > 0, nameof(count));
 
             Color = color;
             Count = count;
