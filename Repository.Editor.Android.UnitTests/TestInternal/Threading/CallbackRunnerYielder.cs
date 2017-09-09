@@ -21,12 +21,12 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
             _callbackMap = new Dictionary<int, Action>();
         }
 
-        public void SetCallback(int numberOfYields, Action callback)
+        public void SetCallback<TArg>(int numberOfYields, Action<CallbackRunnerYielder, TArg> callback, TArg arg)
         {
             Verify.InRange(numberOfYields >= 0, nameof(numberOfYields));
             Verify.NotNull(callback, nameof(callback));
 
-            _callbackMap.Add(numberOfYields, callback);
+            _callbackMap.Add(numberOfYields, () => callback(this, arg));
         }
 
         public Task Yield()

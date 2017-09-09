@@ -71,7 +71,7 @@ class C {
             {
                 var sourceCode = JavaSourceCode1;
                 var colorer = CreateTextColorer(sourceCode, out var yielder);
-                SetCallback(yielder, colorer, 0, Callback1);
+                yielder.SetCallback(0, Callback1, colorer);
 
                 using (colorer.FlushEveryToken())
                 {
@@ -114,7 +114,7 @@ class C {
             {
                 var sourceCode = JavaSourceCode1;
                 var colorer = CreateTextColorer(sourceCode, out var yielder);
-                SetCallback(yielder, colorer, 0, Callback1);
+                yielder.SetCallback(0, Callback1, colorer);
 
                 using (colorer.FlushEveryToken())
                 {
@@ -168,7 +168,7 @@ class C {
             {
                 var sourceCode = JavaSourceCode1;
                 var colorer = CreateTextColorer(sourceCode, out var yielder);
-                SetCallback(yielder, colorer, numberOfFlushes - 1, Callback1);
+                yielder.SetCallback(numberOfFlushes - 1, Callback1, colorer);
 
                 using (colorer.Setup(flushSize))
                 {
@@ -203,11 +203,6 @@ class C {
         {
             yielder = new CallbackRunnerYielder(NopYielder.Instance);
             return new TextColorer(text, TestColorTheme.Instance, yielder);
-        }
-
-        private static void SetCallback(CallbackRunnerYielder yielder, TextColorer colorer, int numberOfYields, Action<CallbackRunnerYielder, TextColorer> callback)
-        {
-            yielder.SetCallback(numberOfYields, () => callback(yielder, colorer));
         }
     }
 }
