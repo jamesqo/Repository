@@ -96,20 +96,11 @@ class C {
 
             void AfterHighlight(TextColorer colorer)
             {
-                var expected = GetExpectedAssignments();
+                var expected = editIsDeletion
+                    ? JavaSourceCode1Assignments.Skip(1)
+                    : JavaSourceCode1Assignments;
                 var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
                 Assert.AreEqual(expected, actual);
-            }
-
-            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
-            {
-                if (!editIsDeletion)
-                {
-                    return JavaSourceCode1Assignments;
-                }
-
-                var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "System", ".", "out", ".", "println" }, out int index);
-                return result.Insert(index, ("ln", MethodIdentifier));
             }
 
             await RunTest();
@@ -149,11 +140,20 @@ class C {
 
             void AfterHighlight(TextColorer colorer)
             {
-                var expected = editIsDeletion
-                    ? JavaSourceCode1Assignments.Skip(1)
-                    : JavaSourceCode1Assignments;
+                var expected = GetExpectedAssignments();
                 var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
                 Assert.AreEqual(expected, actual);
+            }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
+            {
+                if (!editIsDeletion)
+                {
+                    return JavaSourceCode1Assignments;
+                }
+
+                var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "System", ".", "out", ".", "println" }, out int index);
+                return result.Insert(index, ("ln", MethodIdentifier));
             }
 
             await RunTest();

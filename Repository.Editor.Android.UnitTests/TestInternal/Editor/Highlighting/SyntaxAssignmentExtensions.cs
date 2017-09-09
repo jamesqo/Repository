@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Repository.Common;
+using Repository.Common.Collections;
 using Repository.Common.Validation;
 
 namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
@@ -17,10 +17,8 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 
             var allTokens = assignments.Select(a => a.Token);
             index = allTokens.IndexOf(tokens);
-
             Verify.ValidState(index != -1, $"{nameof(tokens)} is not a sublist of {nameof(allTokens)}!");
-
-            return allTokens.Take(index).Concat(allTokens.Skip(index + tokens.Count()));
+            return assignments.Take(index).Concat(assignments.Skip(index + tokens.Count()));
         }
 
         public static IEnumerable<SyntaxAssignment> RemoveWhitespaceTokens(

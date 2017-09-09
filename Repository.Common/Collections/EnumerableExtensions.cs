@@ -7,31 +7,18 @@ namespace Repository.Common.Collections
 {
     public static class EnumerableExtensions
     {
-        public static int IndexOf<T>(this IEnumerable<T> source, IEnumerable<T> subEnumerable, IEqualityComparer<T> comparer = null)
+        public static int IndexOf<T>(this IEnumerable<T> source, IEnumerable<T> subenumerable, IEqualityComparer<T> comparer = null)
         {
-            bool StartsWith(T[] prefix, T[] sourceArray, int index)
-            {
-                for (int i = 0; i < prefix.Length; i++)
-                {
-                    if (!comparer.Equals(prefix[i], sourceArray[index + i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
             Verify.NotNull(source, nameof(source));
-            Verify.NotNullOrEmpty(subEnumerable, nameof(subEnumerable));
+            Verify.NotNullOrEmpty(subenumerable, nameof(subenumerable));
 
             var array = source.ToArray();
-            var subArray = subEnumerable.ToArray();
-            int diff = array.Length - subArray.Length;
+            var subarray = subenumerable.ToArray();
+            int diff = array.Length - subarray.Length;
 
             for (int i = 0; i <= diff; i++)
             {
-                if (StartsWith(subArray, array, i))
+                if (array.Slice(i).StartsWith(subarray))
                 {
                     return i;
                 }
