@@ -18,9 +18,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
             var allTokens = assignments.Select(a => a.Token);
             index = allTokens.IndexOf(tokens);
 
-            Verify.ValidState(
-                index != -1,
-                $"{nameof(tokens)}: {Dumper.ToString(tokens)} is not a sublist of {nameof(allTokens)}: {Dumper.ToString(allTokens)}.");
+            Verify.ValidState(index != -1, $"{nameof(tokens)} is not a sublist of {nameof(allTokens)}!");
 
             return allTokens.Take(index).Concat(allTokens.Skip(index + tokens.Count()));
         }

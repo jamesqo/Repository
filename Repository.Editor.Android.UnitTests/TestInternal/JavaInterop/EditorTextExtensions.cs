@@ -18,7 +18,7 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.JavaInterop
             Verify.NotNullOrEmpty(subtext, nameof(subtext));
 
             int index = text.ToString().IndexOf(subtext);
-            Verify.ValidState(index != -1, $"{nameof(subtext)}: {subtext} is not a substring of {nameof(text)}: {text}");
+            Verify.ValidState(index != -1, $"{nameof(subtext)} is not a substring of {nameof(text)}!");
             return text.GetCursor(index);
         }
     }

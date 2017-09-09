@@ -4,10 +4,4 @@
     <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Update="Dumper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
 </Project>
