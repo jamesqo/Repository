@@ -69,7 +69,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
                 return true;
             }
 
-            newPath = default(NodePath);
+            newPath = default;
             return false;
         }
 
