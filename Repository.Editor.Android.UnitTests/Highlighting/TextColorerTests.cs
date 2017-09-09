@@ -83,7 +83,7 @@ class C {
 
             void Callback1(CallbackRunnerYielder yielder, TextColorer colorer)
             {
-                var cursor = colorer.Text.GetCursor(0);
+                var cursor = colorer.Text.GetStartCursor();
                 if (editIsDeletion)
                 {
                     cursor.SkipWhitespaceRight().DeleteRight("package");
@@ -91,6 +91,59 @@ class C {
                 else
                 {
                     cursor.InsertLeft("Hello, galaxy!");
+                }
+            }
+
+            void AfterHighlight(TextColorer colorer)
+            {
+                var expected = GetExpectedAssignments();
+                var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
+                Assert.AreEqual(expected, actual);
+            }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
+            {
+                if (!editIsDeletion)
+                {
+                    return JavaSourceCode1Assignments;
+                }
+
+                var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "System", ".", "out", ".", "println" }, out int index);
+                return result.Insert(index, ("ln", MethodIdentifier));
+            }
+
+            await RunTest();
+        }
+
+        [Test]
+        [Ignore("https://github.com/jamesqo/Repository/issues/103")]
+        public async void Edit_AfterColorCursor_DoesNotAffectPendingColorings([Values] bool editIsDeletion)
+        {
+            async Task RunTest()
+            {
+                var sourceCode = JavaSourceCode1;
+                var colorer = CreateTextColorer(sourceCode, out var yielder);
+                SetCallback(yielder, colorer, 0, Callback1);
+
+                using (colorer.FlushEveryToken())
+                {
+                    await Highlighter.Java.Highlight(sourceCode, colorer);
+                }
+
+                AfterHighlight(colorer);
+            }
+
+            void Callback1(CallbackRunnerYielder yielder, TextColorer colorer)
+            {
+                var subtext = "System.out.print";
+                var cursor = colorer.Text.GetStartCursor(subtext);
+                if (editIsDeletion)
+                {
+                    cursor.DeleteRight(subtext);
+                }
+                else
+                {
+                    cursor.InsertLeft("SSSSSS");
                 }
             }
 
