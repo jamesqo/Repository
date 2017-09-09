@@ -18,7 +18,7 @@ namespace Repository.Common.Collections
 
             for (int i = 0; i <= diff; i++)
             {
-                if (array.Slice(i).StartsWith(subarray))
+                if (array.Slice(i).StartsWith(subarray, comparer))
                 {
                     return i;
                 }
