@@ -4,21 +4,22 @@ import android.support.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 
 // It would be preferable to implement Editable and wrap a SpannableStringBuilder,
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
 public class EditorText extends SpannableStringBuilder {
-    // TODO: For now, we're pretending only insertions exist.
-    private final PriorityQueue<TextEdit> mPendingEdits;
+    private final EditQueue mPendingEdits;
 
     private int mColorCursor;
 
     public EditorText(String rawText) {
         super(rawText);
 
-        mPendingEdits = new PriorityQueue<>();
+        mPendingEdits = new EditQueue();
     }
 
     public void addColorings(ColoringList colorings) {
@@ -31,10 +32,15 @@ public class EditorText extends SpannableStringBuilder {
 
     @Override
     public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
-        super.replace(start, end, tb, tbstart, tbend);
+        if (start != end) {
+            mPendingEdits.registerDeletion(start, end - start);
+        }
 
-        registerDeletion(start, end - start);
-        registerInsertion(start, tbend - tbstart);
+        if (tbstart != tbend) {
+            mPendingEdits.registerInsertion(start, tbend - tbstart);
+        }
+
+        return super.replace(start, end, tb, tbstart, tbend);
     }
 
     public void resetColorCursor() {
@@ -50,27 +56,29 @@ public class EditorText extends SpannableStringBuilder {
         Verify.isTrue(count > 0);
         Verify.isTrue(mColorCursor + count <= length());
 
-        TextEdit nextEdit = peekPendingEdit();
+        TextEdit nextEdit = mPendingEdits.peek();
         if (nextEdit != null) {
-            Verify.isTrue(mColorCursor < nextEdit.start);
+            Verify.isTrue(mColorCursor < nextEdit.start());
 
-            if (mColorCursor + count >= nextEdit.start) {
-                int colorCount = nextEdit.start - mColorCursor;
-                colorWith(color, colorCount); // TODO: This will recurse infinitely
-                count -= colorCount;
+            if (mColorCursor + count > nextEdit.start()) {
+                int beforeCount = nextEdit.start() - mColorCursor;
+                colorWith(color, beforeCount);
+                count -= beforeCount;
 
                 if (nextEdit.isDeletion()) {
-                    if (count < nextEdit.count) {
-                        nextEdit.count -= count;
+                    if (count < nextEdit.count()) {
+                        nextEdit.setCount(nextEdit.count() - count);
                         return;
                     }
-                    count -= nextEdit.count;
-                    mPendingEdits.remove();
+                    count -= nextEdit.count();
                 } else {
                     mColorCursor += nextEdit.count;
                 }
 
-                colorWith(color, count);
+                mPendingEdits.remove();
+                if (count != 0) {
+                    colorWith(color, count);
+                }
                 return;
             }
         }
@@ -109,28 +117,6 @@ public class EditorText extends SpannableStringBuilder {
         if (lastEnd > end) {
             setSpan(last, end, lastEnd, SPAN_INCLUSIVE_EXCLUSIVE);
         }
-    }
-
-    private void registerDeletion(int start, int count) {
-        Verify.isTrue(start >= 0);
-        Verify.isTrue(count >= 0);
-
-        if (count == 0) {
-            return;
-        }
-
-        mPendingEdits.add(TextEdit.deletion(start, count));
-    }
-
-    private void registerInsertion(int start, int count) {
-        Verify.isTrue(start >= 0);
-        Verify.isTrue(count >= 0);
-
-        if (count == 0) {
-            return;
-        }
-
-        mPendingEdits.add(TextEdit.insertion(start, count));
     }
 
     private void removeSpans(Object[] spans) {
