@@ -4,10 +4,6 @@ import android.support.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-
 // It would be preferable to implement Editable and wrap a SpannableStringBuilder,
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
@@ -33,11 +29,11 @@ public class EditorText extends SpannableStringBuilder {
     @Override
     public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
         if (start != end) {
-            mPendingEdits.registerDeletion(start, end - start);
+            registerDeletion(start, end - start);
         }
 
         if (tbstart != tbend) {
-            mPendingEdits.registerInsertion(start, tbend - tbstart);
+            registerInsertion(start, tbend - tbstart);
         }
 
         return super.replace(start, end, tb, tbstart, tbend);
@@ -56,23 +52,26 @@ public class EditorText extends SpannableStringBuilder {
         Verify.isTrue(count > 0);
         Verify.isTrue(mColorCursor + count <= length());
 
-        TextEdit nextEdit = mPendingEdits.peek();
+        Edit nextEdit = mPendingEdits.peek();
         if (nextEdit != null) {
-            Verify.isTrue(mColorCursor < nextEdit.start());
+            Verify.isTrue(mColorCursor <= nextEdit.start());
 
             if (mColorCursor + count > nextEdit.start()) {
                 int beforeCount = nextEdit.start() - mColorCursor;
                 colorWith(color, beforeCount);
                 count -= beforeCount;
 
-                if (nextEdit.isDeletion()) {
-                    if (count < nextEdit.count()) {
-                        nextEdit.setCount(nextEdit.count() - count);
-                        return;
-                    }
-                    count -= nextEdit.count();
-                } else {
-                    mColorCursor += nextEdit.count;
+                switch (nextEdit.type()) {
+                    case DELETION:
+                        if (count < nextEdit.count()) {
+                            nextEdit.setCount(nextEdit.count() - count);
+                            return;
+                        }
+                        count -= nextEdit.count();
+                        break;
+                    case INSERTION:
+                        mColorCursor += nextEdit.count();
+                        break;
                 }
 
                 mPendingEdits.remove();
@@ -117,6 +116,35 @@ public class EditorText extends SpannableStringBuilder {
         if (lastEnd > end) {
             setSpan(last, end, lastEnd, SPAN_INCLUSIVE_EXCLUSIVE);
         }
+    }
+
+    private void registerDeletion(int start, int count) {
+        Verify.isTrue(start >= 0);
+        Verify.isTrue(count > 0);
+
+        if (start < mColorCursor) {
+            int beforeCount = Math.min(mColorCursor - start, count);
+            mColorCursor -= beforeCount;
+        }
+        int end = start + count;
+        if (end > mColorCursor) {
+            int afterStart = Math.max(mColorCursor, start);
+            int afterCount = end - afterStart;
+            Verify.isTrue(afterCount == Math.min(end - mColorCursor, count));
+            mPendingEdits.addDeletion(afterStart, afterCount);
+        }
+    }
+
+    private void registerInsertion(int start, int count) {
+        Verify.isTrue(start >= 0);
+        Verify.isTrue(count > 0);
+
+        if (start <= mColorCursor) {
+            mColorCursor += count;
+            return;
+        }
+
+        mPendingEdits.addInsertion(start, count);
     }
 
     private void removeSpans(Object[] spans) {
