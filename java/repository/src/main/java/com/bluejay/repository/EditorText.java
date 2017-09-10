@@ -4,14 +4,21 @@ import android.support.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
 
+import java.util.PriorityQueue;
+
 // It would be preferable to implement Editable and wrap a SpannableStringBuilder,
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
 public class EditorText extends SpannableStringBuilder {
+    // TODO: For now, we're pretending only insertions exist.
+    private final PriorityQueue<TextEdit> mPendingEdits;
+
     private int mColorCursor;
 
     public EditorText(String rawText) {
         super(rawText);
+
+        mPendingEdits = new PriorityQueue<>();
     }
 
     public void addColorings(ColoringList colorings) {
@@ -20,6 +27,14 @@ public class EditorText extends SpannableStringBuilder {
             int count = colorings.getCount(i);
             colorWith(color, count);
         }
+    }
+
+    @Override
+    public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
+        super.replace(start, end, tb, tbstart, tbend);
+
+        registerDeletion(start, end - start);
+        registerInsertion(start, tbend - tbstart);
     }
 
     public void resetColorCursor() {
@@ -34,6 +49,31 @@ public class EditorText extends SpannableStringBuilder {
         Verify.isTrue(mColorCursor >= 0);
         Verify.isTrue(count > 0);
         Verify.isTrue(mColorCursor + count <= length());
+
+        TextEdit nextEdit = peekPendingEdit();
+        if (nextEdit != null) {
+            Verify.isTrue(mColorCursor < nextEdit.start);
+
+            if (mColorCursor + count >= nextEdit.start) {
+                int colorCount = nextEdit.start - mColorCursor;
+                colorWith(color, colorCount); // TODO: This will recurse infinitely
+                count -= colorCount;
+
+                if (nextEdit.isDeletion()) {
+                    if (count < nextEdit.count) {
+                        nextEdit.count -= count;
+                        return;
+                    }
+                    count -= nextEdit.count;
+                    mPendingEdits.remove();
+                } else {
+                    mColorCursor += nextEdit.count;
+                }
+
+                colorWith(color, count);
+                return;
+            }
+        }
 
         int start = mColorCursor, end = start + count;
         ForegroundColorSpan[] overlaps = getSpans(start, end, ForegroundColorSpan.class);
@@ -69,6 +109,28 @@ public class EditorText extends SpannableStringBuilder {
         if (lastEnd > end) {
             setSpan(last, end, lastEnd, SPAN_INCLUSIVE_EXCLUSIVE);
         }
+    }
+
+    private void registerDeletion(int start, int count) {
+        Verify.isTrue(start >= 0);
+        Verify.isTrue(count >= 0);
+
+        if (count == 0) {
+            return;
+        }
+
+        mPendingEdits.add(TextEdit.deletion(start, count));
+    }
+
+    private void registerInsertion(int start, int count) {
+        Verify.isTrue(start >= 0);
+        Verify.isTrue(count >= 0);
+
+        if (count == 0) {
+            return;
+        }
+
+        mPendingEdits.add(TextEdit.insertion(start, count));
     }
 
     private void removeSpans(Object[] spans) {
