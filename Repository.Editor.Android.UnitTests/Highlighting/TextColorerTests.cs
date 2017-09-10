@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -154,6 +153,49 @@ class C {
 
                 var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "System", ".", "out", ".", "println" }, out int index);
                 return result.Insert(index, ("ln", MethodIdentifier));
+            }
+
+            await RunTest();
+        }
+
+        [Test]
+        [Ignore("https://github.com/jamesqo/Repository/issues/103")]
+        public async void Deletion_ContainsColorCursor_DoesNotAffectPendingColorings()
+        {
+            async Task RunTest()
+            {
+                var sourceCode = JavaSourceCode1;
+                var colorer = CreateTextColorer(sourceCode, out var yielder);
+                yielder.SetCallback(0, Callback1, colorer);
+
+                using (colorer.FlushEveryToken())
+                {
+                    await Highlighter.Java.Highlight(sourceCode, colorer);
+                }
+
+                AfterHighlight(colorer);
+            }
+
+            void Callback1(CallbackRunnerYielder yielder, TextColorer colorer)
+            {
+                var subtext = "age com.my"; // package com.mycompany
+                var cursor = colorer.Text.GetStartCursor(subtext);
+                cursor.DeleteRight(subtext);
+            }
+
+            void AfterHighlight(TextColorer colorer)
+            {
+                var expected = GetExpectedAssignments();
+                var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
+                Assert.AreEqual(expected, actual);
+            }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
+            {
+                var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "package", "com", ".", "mycompany" }, out int index);
+                return result
+                    .Insert(index, ("pack", Keyword))
+                    .Insert(index + 1, ("company", Identifier));
             }
 
             await RunTest();
