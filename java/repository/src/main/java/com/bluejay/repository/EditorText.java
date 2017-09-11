@@ -22,7 +22,7 @@ public class EditorText extends SpannableStringBuilder {
         for (int i = 0; i < colorings.count(); i++) {
             @ColorInt int color = colorings.getColor(i);
             int count = colorings.getCount(i);
-            colorWith(color, count);
+            addColoring(color, count);
         }
     }
 
@@ -43,41 +43,17 @@ public class EditorText extends SpannableStringBuilder {
         mColorCursor = 0;
     }
 
-    private void advanceColorCursor(int count) {
-        mColorCursor += count;
-    }
-
-    private void colorWith(@ColorInt int color, int count) {
+    private void addColoring(@ColorInt int color, int count) {
         Verify.isTrue(mColorCursor >= 0);
         Verify.isTrue(count > 0);
         Verify.isTrue(mColorCursor + count <= length());
 
-        Edit nextEdit = mPendingEdits.peek();
-        if (nextEdit != null) {
-            Verify.isTrue(mColorCursor <= nextEdit.start());
+        Edit edit = mPendingEdits.peek();
+        if (edit != null) {
+            Verify.isTrue(mColorCursor <= edit.start);
 
-            if (mColorCursor + count > nextEdit.start()) {
-                int beforeCount = nextEdit.start() - mColorCursor;
-                colorWith(color, beforeCount);
-                count -= beforeCount;
-
-                switch (nextEdit.type()) {
-                    case DELETION:
-                        if (count < nextEdit.count()) {
-                            nextEdit.setCount(nextEdit.count() - count);
-                            return;
-                        }
-                        count -= nextEdit.count();
-                        break;
-                    case INSERTION:
-                        mColorCursor += nextEdit.count();
-                        break;
-                }
-
-                mPendingEdits.remove();
-                if (count != 0) {
-                    colorWith(color, count);
-                }
+            if (mColorCursor + count > edit.start) {
+                addColoringAndHandleEdit(color, count);
                 return;
             }
         }
@@ -98,6 +74,45 @@ public class EditorText extends SpannableStringBuilder {
         ForegroundColorSpan span = new ForegroundColorSpan(color);
         setSpan(span, start, end, SPAN_INCLUSIVE_EXCLUSIVE);
         advanceColorCursor(count);
+    }
+
+    private void addColoringAndHandleEdit(@ColorInt int color, int count) {
+        Verify.isTrue(count > 0);
+
+        Edit edit = mPendingEdits.element();
+
+        // Color the text before the start of the edit.
+        int beforeCount = edit.start - mColorCursor;
+        addColoring(color, beforeCount);
+        count -= beforeCount;
+
+        if (edit.isInsertion()) {
+            // We haven't parsed the inserted text so we can't assume anything about how it should be colored.
+            // Skip it and leave it white.
+            mColorCursor += edit.count;
+        } else {
+            // Deletion
+            // Throw away the part of the coloring that is inside the deleted region.
+            if (count < edit.count) {
+                // The coloring ends inside the deleted region.
+                edit.count -= count;
+                return;
+            }
+            // The coloring ends at or after the end of the deleted region.
+            count -= edit.count;
+        }
+
+        mPendingEdits.remove();
+        
+        // addColoring() expects the count to be greater than 0.
+        // The count can be 0 if the end of the coloring coincides with the end of a deleted region.
+        if (count != 0) {
+            addColoring(color, count);
+        }
+    }
+
+    private void advanceColorCursor(int count) {
+        mColorCursor += count;
     }
 
     private void makeGap(int start, int end, ForegroundColorSpan[] overlaps) {
