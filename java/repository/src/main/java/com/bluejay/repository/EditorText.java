@@ -93,7 +93,7 @@ public class EditorText extends SpannableStringBuilder {
             // Skip it and leave it white.
             mColorCursor += edit.count();
         } else {
-            // Deletion
+            // The edit's a deletion.
             // Throw away the part of the coloring that is inside the deleted region.
             if (count < edit.count()) {
                 // The coloring ends inside the deleted region.
@@ -109,6 +109,8 @@ public class EditorText extends SpannableStringBuilder {
         // addColoring() expects the count to be greater than 0.
         // The count can be 0 if the end of the coloring coincides with the end of a deleted region.
         if (count != 0) {
+            // Finish the portion of the coloring after the edit, potentially handling other edits
+            // along the way via recursion.
             addColoring(color, count);
         }
     }
@@ -140,11 +142,16 @@ public class EditorText extends SpannableStringBuilder {
         Verify.isTrue(count > 0);
 
         if (start < mColorCursor) {
+            // Rewind the color cursor by the number of chars deleted before it.
             int beforeCount = Math.min(mColorCursor - start, count);
             mColorCursor -= beforeCount;
         }
+
         int end = start + count;
         if (end > mColorCursor) {
+            // Find the number of chars deleted after the color cursor.
+            // When we arrive at the start of that deleted region in the future, throw away the parts
+            // of the colorings that land inside that region.
             int afterStart = Math.max(mColorCursor, start);
             int afterCount = end - afterStart;
             Verify.isTrue(afterCount == Math.min(end - mColorCursor, count));
@@ -157,10 +164,12 @@ public class EditorText extends SpannableStringBuilder {
         Verify.isTrue(count > 0);
 
         if (start <= mColorCursor) {
+            // Synchronize the color cursor with the updated text.
             mColorCursor += count;
             return;
         }
 
+        // In the future, skip coloring the inserted text and leave it white.
         mPendingEdits.addInsertion(start, count);
     }
 
