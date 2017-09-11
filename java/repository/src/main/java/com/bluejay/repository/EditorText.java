@@ -50,9 +50,11 @@ public class EditorText extends SpannableStringBuilder {
 
         Edit edit = mPendingEdits.peek();
         if (edit != null) {
-            Verify.isTrue(mColorCursor <= edit.start);
+            // The color cursor shouldn't have reached the edit yet.
+            Verify.isTrue(mColorCursor <= edit.start());
 
-            if (mColorCursor + count > edit.start) {
+            // Will we overlap with the edit during this coloring?
+            if (mColorCursor + count > edit.start()) {
                 addColoringAndHandleEdit(color, count);
                 return;
             }
@@ -82,28 +84,28 @@ public class EditorText extends SpannableStringBuilder {
         Edit edit = mPendingEdits.element();
 
         // Color the text before the start of the edit.
-        int beforeCount = edit.start - mColorCursor;
+        int beforeCount = edit.start() - mColorCursor;
         addColoring(color, beforeCount);
         count -= beforeCount;
 
         if (edit.isInsertion()) {
             // We haven't parsed the inserted text so we can't assume anything about how it should be colored.
             // Skip it and leave it white.
-            mColorCursor += edit.count;
+            mColorCursor += edit.count();
         } else {
             // Deletion
             // Throw away the part of the coloring that is inside the deleted region.
-            if (count < edit.count) {
+            if (count < edit.count()) {
                 // The coloring ends inside the deleted region.
-                edit.count -= count;
+                edit.setCount(edit.count() - count);
                 return;
             }
             // The coloring ends at or after the end of the deleted region.
-            count -= edit.count;
+            count -= edit.count();
         }
 
         mPendingEdits.remove();
-        
+
         // addColoring() expects the count to be greater than 0.
         // The count can be 0 if the end of the coloring coincides with the end of a deleted region.
         if (count != 0) {
