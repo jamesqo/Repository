@@ -70,6 +70,12 @@
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Repository.JavaInterop\Repository.JavaInterop.csproj">
+      <Project>{d84b83dc-37b4-443a-bb4b-4a9acc01d4ab}</Project>
+      <Name>Repository.JavaInterop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.

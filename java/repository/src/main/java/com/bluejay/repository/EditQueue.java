@@ -30,12 +30,16 @@ public class EditQueue {
         return result;
     }
 
+    public boolean isEmpty() {
+        return mList.isEmpty();
+    }
+
     public Edit peek() {
-        return mList.isEmpty() ? null : mList.get(0);
+        return isEmpty() ? null : mList.get(0);
     }
 
     public Edit poll() {
-        return mList.isEmpty() ? null : mList.remove(0);
+        return isEmpty() ? null : mList.remove(0);
     }
 
     public Edit remove() {
@@ -55,14 +59,18 @@ public class EditQueue {
             Verify.isTrue(previous.start() <= edit.start());
             if (previous.isInsertion() == edit.isInsertion() &&
                     previous.containsInclusive(edit.start())) {
+                // Instead of adding a new edit, we can merge this one with the previous one, since they overlap or are adjacent.
                 // TODO: Check this, add comments
                 if (edit.start() < previous.start()) {
                     previous.setStart(edit.start());
                 }
                 int end = Math.max(edit.end(), previous.end());
                 previous.setCount(end - previous.start());
+                return;
             }
         }
+
+        mList.add(insertIndex, edit);
     }
 
     private int getInsertIndex(Edit edit) {

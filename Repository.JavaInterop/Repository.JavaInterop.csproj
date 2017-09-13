@@ -40,6 +40,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Edit.Manual.cs" />
+    <Compile Include="EditQueue.Manual.cs" />
     <Compile Include="HighlightRequester.Manual.cs" />
     <Compile Include="Internal\Runnable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

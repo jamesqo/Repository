@@ -34,6 +34,17 @@ public class Edit {
         return start() + count();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Edit && equals((Edit) obj);
+    }
+
+    public boolean equals(Edit other) {
+        return other != null &&
+                start() == other.start() &&
+                count() == other.count();
+    }
+
     public boolean isInsertion() {
         return mIsInsertion;
     }
@@ -52,5 +63,11 @@ public class Edit {
         Verify.isTrue(start >= 0);
 
         mStart = start;
+    }
+
+    @Override
+    public String toString() {
+        String prefix = isInsertion() ? "I" : "D";
+        return prefix + "@[" + start() + ".." + end() + ")";
     }
 }

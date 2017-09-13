@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using static Repository.JavaInterop.Edit;
 
 namespace Repository.JavaInterop.UnitTests
 {

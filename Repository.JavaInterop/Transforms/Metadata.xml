@@ -7,10 +7,17 @@
 
     <!-- Methods -->
 
-    <attr		
+    <attr
         path="/api/package[@name='com.bluejay.repository']/class[@name='HighlightRequester']/method[@name='isHighlightRequested']"
         name="managedName">_IsHighlightRequested</attr>
-    <attr		
+    <attr
         path="/api/package[@name='com.bluejay.repository']/class[@name='HighlightRequester']/method[@name='isHighlightRequested']"
+        name="visibility">internal</attr>
+
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='EditQueue']/method[@name='isEmpty']"
+        name="managedName">_IsEmpty</attr>
+    <attr
+        path="/api/package[@name='com.bluejay.repository']/class[@name='EditQueue']/method[@name='isEmpty']"
         name="visibility">internal</attr>
 </metadata>
