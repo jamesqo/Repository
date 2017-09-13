@@ -20,6 +20,20 @@ public class Edit {
         return new Edit(true, start, count);
     }
 
+    public boolean containsInclusive(int index) {
+        Verify.isTrue(index >= 0);
+
+        return index >= start() && index <= end();
+    }
+
+    public int count() {
+        return mCount;
+    }
+
+    public int end() {
+        return start() + count();
+    }
+
     public boolean isInsertion() {
         return mIsInsertion;
     }
@@ -28,19 +42,15 @@ public class Edit {
         return mStart;
     }
 
-    public void setStart(int start) {
-        Verify.isTrue(start >= 0);
-
-        mStart = start;
-    }
-
-    public int count() {
-        return mCount;
-    }
-
     public void setCount(int count) {
         Verify.isTrue(count > 0);
 
         mCount = count;
+    }
+
+    public void setStart(int start) {
+        Verify.isTrue(start >= 0);
+
+        mStart = start;
     }
 }
