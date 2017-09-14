@@ -1,6 +1,11 @@
 package com.bluejay.repository;
 
 public class Edit {
+    public enum Bounds {
+        INCLUSIVE_EXCLUSIVE,
+        INCLUSIVE_INCLUSIVE
+    }
+
     private final boolean mIsInsertion;
 
     private int mStart;
@@ -20,14 +25,25 @@ public class Edit {
         return new Edit(true, start, count);
     }
 
-    public boolean containsInclusive(int index) {
+    public boolean contains(int index, Bounds bounds) {
         Verify.isTrue(index >= 0);
 
-        return index >= start() && index <= end();
+        switch (bounds) {
+            case INCLUSIVE_EXCLUSIVE:
+                return index >= start() && index < end();
+            case INCLUSIVE_INCLUSIVE:
+                return index >= start() && index <= end();
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 
     public int count() {
         return mCount;
+    }
+
+    public int diff() {
+        return isInsertion() ? count() : -count();
     }
 
     public int end() {
@@ -41,6 +57,7 @@ public class Edit {
 
     public boolean equals(Edit other) {
         return other != null &&
+                isInsertion() == other.isInsertion() &&
                 start() == other.start() &&
                 count() == other.count();
     }

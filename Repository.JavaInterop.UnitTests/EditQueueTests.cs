@@ -59,7 +59,7 @@ namespace Repository.JavaInterop.UnitTests
 
             queue.AddDeletion(3, 4);
 
-            var expected = new[] { Deletion(3, 4), Insertion(6, 15), Deletion(47, 30) };
+            var expected = new[] { Deletion(3, 4), Insertion(6, 15), Deletion(51, 30) };
             Assert.AreEqual(expected, queue);
         }
 

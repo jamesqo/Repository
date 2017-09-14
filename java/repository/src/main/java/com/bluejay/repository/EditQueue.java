@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.bluejay.repository.Edit.Bounds;
+
 public class EditQueue {
     // There might be a way to improve complexity here by using a PriorityQueue. However, a plain List
     // works fine in practice, as users can't type fast enough to make n (the number of edits) really big
@@ -35,7 +37,7 @@ public class EditQueue {
     }
 
     public Edit peek() {
-        return isEmpty() ? null : mList.get(0);
+        return isEmpty() ? null : get(0);
     }
 
     public Edit poll() {
@@ -54,23 +56,52 @@ public class EditQueue {
         Verify.isTrue(edit != null);
 
         int insertIndex = getInsertIndex(edit);
+        adjustEdits(insertIndex, edit.diff());
+
         if (insertIndex != 0) {
-            Edit previous = mList.get(insertIndex - 1);
+            Edit previous = get(insertIndex - 1);
             Verify.isTrue(previous.start() <= edit.start());
+
             if (previous.isInsertion() == edit.isInsertion() &&
-                    previous.containsInclusive(edit.start())) {
+                    previous.contains(edit.start(), Bounds.INCLUSIVE_INCLUSIVE)) {
                 // Instead of adding a new edit, we can merge this one with the previous one, since they overlap or are adjacent.
                 // TODO: Check this, add comments
-                if (edit.start() < previous.start()) {
-                    previous.setStart(edit.start());
-                }
-                int end = Math.max(edit.end(), previous.end());
-                previous.setCount(end - previous.start());
+                previous.setCount(previous.count() + edit.count());
                 return;
+            }
+
+            if (previous.isInsertion()) {
+                Verify.isTrue(!edit.isInsertion());
+                if (previous.contains(edit.start(), Bounds.INCLUSIVE_EXCLUSIVE)) {
+                    int overlapStart = edit.start();
+                    int overlapEnd = Math.min(previous.end(), edit.end());
+                    int overlapCount = overlapEnd - overlapStart;
+
+                    previous.setCount(previous.count() + overlapCount);
+                    if (edit.count() == overlapCount) {
+                        // The new deletion was fully inside the insertion. No more work to do.
+                        return;
+                    }
+
+                    Verify.isTrue(overlapEnd == previous.end());
+                    edit.setStart(edit.start() + overlapCount);
+                    edit.setCount(edit.count() - overlapCount);
+                }
             }
         }
 
         mList.add(insertIndex, edit);
+    }
+
+    private void adjustEdits(int startIndex, int diff) {
+        for (int i = startIndex; i < mList.size(); i++) {
+            Edit edit = get(i);
+            edit.setStart(edit.start() + diff);
+        }
+    }
+
+    private Edit get(int index) {
+        return mList.get(index);
     }
 
     private int getInsertIndex(Edit edit) {
@@ -79,9 +110,9 @@ public class EditQueue {
 
         // mList should be sorted by each edit's start index.
         for (int i = 0; i < mList.size(); i++) {
-            Edit e = mList.get(i);
+            Edit e = get(i);
             if (i != 0) {
-                Edit previous = mList.get(i - 1);
+                Edit previous = get(i - 1);
                 Verify.isTrue(previous.start() <= e.start());
             }
             if (e.start() > edit.start()) {
