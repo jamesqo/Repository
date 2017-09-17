@@ -52,6 +52,10 @@ public class EditQueue {
         return result;
     }
 
+    public int size() {
+        return mList.size();
+    }
+
     private void add(Edit edit) {
         Verify.isTrue(edit != null);
 
@@ -69,9 +73,9 @@ public class EditQueue {
                 return;
             }
 
-            if (previous.isInsertion()) {
-                Verify.isTrue(!edit.isInsertion());
-                if (previous.contains(edit.start(), Bounds.INCLUSIVE_EXCLUSIVE)) {
+            if (!edit.isInsertion()) {
+                // This edit's a deletion.
+                if (previous.isInsertion() && previous.contains(edit.start(), Bounds.INCLUSIVE_EXCLUSIVE)) {
                     int overlapStart = edit.start();
                     int overlapEnd = Math.min(previous.end(), edit.end());
                     int overlapCount = overlapEnd - overlapStart;
@@ -83,7 +87,7 @@ public class EditQueue {
                     }
 
                     Verify.isTrue(overlapEnd == previous.end());
-                    // TODO: skip()? shiftRight()?
+                    // TODO: skip()? shiftRight()? contractRight()?
                     edit.setStart(edit.start() + overlapCount);
                     edit.setCount(edit.count() - overlapCount);
                 }
@@ -94,7 +98,7 @@ public class EditQueue {
     }
 
     private void adjustEdits(int startIndex, int diff) {
-        for (int i = startIndex; i < mList.size(); i++) {
+        for (int i = startIndex; i < size(); i++) {
             Edit edit = get(i);
             edit.setStart(edit.start() + diff);
         }
@@ -109,7 +113,7 @@ public class EditQueue {
         Verify.isTrue(!mList.contains(edit));
 
         // mList should be sorted by each edit's start index.
-        for (int i = 0; i < mList.size(); i++) {
+        for (int i = 0; i < size(); i++) {
             Edit e = get(i);
             if (i != 0) {
                 Edit previous = get(i - 1);
@@ -121,7 +125,7 @@ public class EditQueue {
         }
 
         // All edits had a start equal to or less than the new one. Insert the new one at the end of the list.
-        return mList.size();
+        return size();
     }
 
     private static boolean shouldMergeWithPreviousEdit(Edit edit, Edit previous) {
