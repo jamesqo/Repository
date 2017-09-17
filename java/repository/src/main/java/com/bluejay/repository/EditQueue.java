@@ -62,8 +62,7 @@ public class EditQueue {
             Edit previous = get(insertIndex - 1);
             Verify.isTrue(previous.start() <= edit.start());
 
-            if (previous.isInsertion() == edit.isInsertion() &&
-                    previous.contains(edit.start(), Bounds.INCLUSIVE_INCLUSIVE)) {
+            if (shouldMergeWithPreviousEdit(edit, previous)) {
                 // Instead of adding a new edit, we can merge this one with the previous one, since they overlap or are adjacent.
                 // TODO: Check this, add comments
                 previous.setCount(previous.count() + edit.count());
@@ -84,7 +83,7 @@ public class EditQueue {
                     }
 
                     Verify.isTrue(overlapEnd == previous.end());
-                    // TODO: skip()?
+                    // TODO: skip()? shiftRight()?
                     edit.setStart(edit.start() + overlapCount);
                     edit.setCount(edit.count() - overlapCount);
                 }
@@ -123,5 +122,28 @@ public class EditQueue {
 
         // All edits had a start equal to or less than the new one. Insert the new one at the end of the list.
         return mList.size();
+    }
+
+    private static boolean shouldMergeWithPreviousEdit(Edit edit, Edit previous) {
+        Verify.isTrue(edit != null);
+        Verify.isTrue(previous != null);
+        Verify.isTrue(previous.start() <= edit.start());
+
+        if (edit.isInsertion()) {
+            // Suppose the user inserts 5 chars at index 3, then inserts 6 chars.
+            // If the 6 chars are inserted anywhere from 3..8 inclusive, the edits can be represented with
+            // a single 11-char insertion at index 3.
+            return previous.isInsertion() && previous.contains(edit.start(), Bounds.INCLUSIVE_INCLUSIVE);
+        }
+
+        // The edit's a deletion.
+
+        // Suppose the user deletes 5 chars at index 3, then deletes 6 chars.
+        // Unless the second deletion also happens at index 3, the edits cannot be represented as a single
+        // 11-char deletion.
+        // If the user deletes 1 or more chars at index 2 for the second step, however, the two deletions
+        // can still be merged. In other words, it's easy for a deletion to merge with subsequent deletions.
+        // Since this function deals with merging the edit with the *previous* one, however, that isn't handled here.
+        return !previous.isInsertion() && previous.start() == edit.start();
     }
 }

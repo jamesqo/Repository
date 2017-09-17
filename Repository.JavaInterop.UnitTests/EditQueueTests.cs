@@ -7,13 +7,35 @@ namespace Repository.JavaInterop.UnitTests
     public class EditQueueTests
     {
         [Test]
-        public void AddDeletion_Adjacent_MergesDeletions()
+        public void AddDeletion_Adjacent_MergesDeletions_MergeeAfter()
         {
             var queue = new EditQueue();
             queue.AddDeletion(0, 3);
             queue.AddDeletion(0, 2);
 
             var expected = new[] { Deletion(0, 5) };
+            Assert.AreEqual(expected, queue);
+        }
+
+        [Test]
+        public void AddDeletion_Adjacent_MergesDeletions_MergeeBefore()
+        {
+            var queue = new EditQueue();
+            queue.AddDeletion(2, 3);
+            queue.AddDeletion(1, 1);
+
+            var expected = new[] { Deletion(1, 4) };
+            Assert.AreEqual(expected, queue);
+        }
+
+        [Test]
+        public void AddDeletion_Adjacent_MergesDeletions_MergeeBeforeAndAfter()
+        {
+            var queue = new EditQueue();
+            queue.AddDeletion(2, 3);
+            queue.AddDeletion(1, 2);
+
+            var expected = new[] { Deletion(1, 5) };
             Assert.AreEqual(expected, queue);
         }
 
@@ -40,13 +62,28 @@ namespace Repository.JavaInterop.UnitTests
         }
 
         [Test]
-        public void AddDeletion_Encompassing_RemovesInsertion()
+        public void AddDeletion_EncompassesInsertion_RemovesInsertion()
         {
             var queue = new EditQueue();
             queue.AddInsertion(1, 2);
             queue.AddDeletion(0, 4);
 
             var expected = new[] { Deletion(0, 2) };
+            Assert.AreEqual(expected, queue);
+        }
+
+        [Test]
+        public void AddDeletion_EncompassesMultipleDeletionsAndInsertions()
+        {
+            var queue = new EditQueue();
+            queue.AddInsertion(10, 20);
+            queue.AddInsertion(50, 50);
+            queue.AddDeletion(35, 50);
+            queue.AddDeletion(2, 4);
+
+            queue.AddDeletion(1, 200);
+
+            var expected = new[] { Deletion(1, 200 + 50 + 4 - 20 - 50) };
             Assert.AreEqual(expected, queue);
         }
 
