@@ -7,13 +7,24 @@ namespace Repository.JavaInterop.UnitTests
     public class EditQueueTests
     {
         [Test]
-        public void AddDeletion_MergesDeletions()
+        public void AddDeletion_Adjacent_MergesDeletions()
         {
             var queue = new EditQueue();
             queue.AddDeletion(0, 3);
             queue.AddDeletion(0, 2);
 
             var expected = new[] { Deletion(0, 5) };
+            Assert.AreEqual(expected, queue);
+        }
+
+        [Test]
+        public void AddDeletion_NotAdjacent_DoesNotMergeDeletions()
+        {
+            var queue = new EditQueue();
+            queue.AddDeletion(0, 3);
+            queue.AddDeletion(1, 2);
+
+            var expected = new[] { Deletion(0, 3), Deletion(1, 2) };
             Assert.AreEqual(expected, queue);
         }
 

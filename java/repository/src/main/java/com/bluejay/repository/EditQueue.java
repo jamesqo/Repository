@@ -84,6 +84,7 @@ public class EditQueue {
                     }
 
                     Verify.isTrue(overlapEnd == previous.end());
+                    // TODO: skip()?
                     edit.setStart(edit.start() + overlapCount);
                     edit.setCount(edit.count() - overlapCount);
                 }

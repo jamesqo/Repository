@@ -63,7 +63,6 @@ class C {
         };
 
         [Test]
-        [Ignore("https://github.com/jamesqo/Repository/issues/103")]
         public async void Edit_BeforeColorCursor_DoesNotAffectPendingColorings([Values] bool editIsDeletion)
         {
             async Task RunTest()
@@ -95,18 +94,22 @@ class C {
 
             void AfterHighlight(TextColorer colorer)
             {
-                var expected = editIsDeletion
-                    ? JavaSourceCode1Assignments.Skip(1)
-                    : JavaSourceCode1Assignments;
+                var expected = GetExpectedAssignments();
                 var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
                 Assert.AreEqual(expected, actual);
+            }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
+            {
+                return editIsDeletion
+                    ? JavaSourceCode1Assignments.Skip(1)
+                    : JavaSourceCode1Assignments;
             }
 
             await RunTest();
         }
 
         [Test]
-        [Ignore("https://github.com/jamesqo/Repository/issues/103")]
         public async void Edit_AfterColorCursor_DoesNotAffectPendingColorings([Values] bool editIsDeletion)
         {
             async Task RunTest()
@@ -151,15 +154,15 @@ class C {
                     return JavaSourceCode1Assignments;
                 }
 
-                var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "System", ".", "out", ".", "println" }, out int index);
-                return result.Insert(index, ("ln", MethodIdentifier));
+                var result = JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
+                    new[] { "System", ".", "out", ".", "println" },
+                    new[] { ("ln", MethodIdentifier) });
             }
 
             await RunTest();
         }
 
         [Test]
-        [Ignore("https://github.com/jamesqo/Repository/issues/103")]
         public async void Deletion_ContainsColorCursor_DoesNotAffectPendingColorings()
         {
             async Task RunTest()
@@ -192,10 +195,51 @@ class C {
 
             IEnumerable<SyntaxAssignment> GetExpectedAssignments()
             {
-                var result = JavaSourceCode1Assignments.RemoveConsecutiveTokens(new[] { "package", "com", ".", "mycompany" }, out int index);
-                return result
-                    .Insert(index, ("pack", Keyword))
-                    .Insert(index + 1, ("company", Identifier));
+                var result = JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
+                    new[] { "package", "com", ".", "mycompany" },
+                    new[] { ("pack", Keyword), ("company", Identifier) });
+            }
+
+            await RunTest();
+        }
+
+        [Test]
+        public async void Deletion_EndCoincidesWithEndOfPendingColoring()
+        {
+            // This test should fail if the following check is omitted:
+            // https://github.com/jamesqo/Repository/blob/102f610970d291eef2bf2c4177918cb355e292d4/java/repository/src/main/java/com/bluejay/repository/EditorText.java#L109-L111
+
+            async Task RunTest()
+            {
+                var sourceCode = JavaSourceCode1;
+                var colorer = CreateTextColorer(sourceCode, out _);
+                Callback1(colorer);
+
+                using (colorer.FlushEveryToken())
+                {
+                    await Highlighter.Java.Highlight(sourceCode, colorer);
+                }
+
+                AfterHighlight(colorer);
+            }
+
+            void Callback1(TextColorer colorer)
+            {
+                var subtext = "ackage"; // package
+                var cursor = colorer.Text.GetStartCursor(subtext);
+                cursor.DeleteRight(subtext);
+            }
+
+            void AfterHighlight(TextColorer colorer)
+            {
+                var expected = GetExpectedAssignments();
+                var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
+                Assert.AreEqual(expected, actual);
+            }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
+            {
+                return JavaSourceCode1Assignments.ReplaceToken("package", ("p", Keyword));
             }
 
             await RunTest();
@@ -220,7 +264,7 @@ class C {
 
             void Callback1(CallbackRunnerYielder yielder, TextColorer colorer)
             {
-                var expected = JavaSourceCode1Assignments;
+                var expected = GetExpectedAssignments();
                 int maxTokenCount = numberOfFlushes * flushSize;
                 var actual = colorer.GetSyntaxAssignments().ToArray();
 
@@ -237,6 +281,8 @@ class C {
                     Assert.IsTrue(expected.StartsWith(actual));
                 }
             }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments() => JavaSourceCode1Assignments;
 
             await RunTest();
         }

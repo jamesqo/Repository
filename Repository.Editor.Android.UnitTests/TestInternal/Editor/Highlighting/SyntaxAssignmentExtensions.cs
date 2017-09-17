@@ -7,18 +7,30 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
 {
     internal static class SyntaxAssignmentExtensions
     {
-        public static IEnumerable<SyntaxAssignment> RemoveConsecutiveTokens(
+        public static IEnumerable<SyntaxAssignment> ReplaceToken(
             this IEnumerable<SyntaxAssignment> assignments,
-            IEnumerable<string> tokens,
-            out int index)
+            string oldToken,
+            SyntaxAssignment replacement)
+        {
+            return assignments.ReplaceConsecutiveTokens(new[] { oldToken }, new[] { replacement });
+        }
+
+        public static IEnumerable<SyntaxAssignment> ReplaceConsecutiveTokens(
+            this IEnumerable<SyntaxAssignment> assignments,
+            IEnumerable<string> oldTokens,
+            IEnumerable<SyntaxAssignment> replacements)
         {
             Verify.NotNullOrEmpty(assignments, nameof(assignments));
-            Verify.NotNullOrEmpty(tokens, nameof(tokens));
+            Verify.NotNullOrEmpty(oldTokens, nameof(oldTokens));
+            Verify.NotNullOrEmpty(replacements, nameof(replacements));
 
             var allTokens = assignments.Select(a => a.Token);
-            index = allTokens.IndexOf(tokens);
-            Verify.ValidState(index != -1, $"{nameof(tokens)} is not a sublist of {nameof(allTokens)}!");
-            return assignments.Take(index).Concat(assignments.Skip(index + tokens.Count()));
+            int index = allTokens.IndexOf(oldTokens);
+            Verify.ValidState(index != -1, $"{nameof(oldTokens)} is not a sublist of {nameof(allTokens)}!");
+
+            var before = assignments.Take(index);
+            var after = assignments.Skip(index + oldTokens.Count());
+            return before.Concat(replacements).Concat(after);
         }
 
         public static IEnumerable<SyntaxAssignment> RemoveWhitespaceTokens(
