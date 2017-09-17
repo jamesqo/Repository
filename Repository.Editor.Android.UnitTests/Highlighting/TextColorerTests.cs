@@ -246,6 +246,53 @@ class C {
         }
 
         [Test]
+        public async void Deletion_EncompassesPreviousInsertion()
+        {
+            async Task RunTest()
+            {
+                var sourceCode = JavaSourceCode1;
+                var colorer = CreateTextColorer(sourceCode, out _);
+                Callback1(colorer);
+
+                using (colorer.FlushEveryToken())
+                {
+                    await Highlighter.Java.Highlight(sourceCode, colorer);
+                }
+
+                AfterHighlight(colorer);
+            }
+
+            void Callback1(TextColorer colorer)
+            {
+                var subtext1 = "package";
+                var message = "Hello, galaxy!";
+                var cursor = colorer.Text.GetEndCursor(subtext1);
+                cursor.InsertRight(message);
+
+                var subtext2 = subtext1.Substring(1);
+                cursor = colorer.Text.GetStartCursor(subtext2);
+                // packageHello, galaxy! com.mycompany => p mpany
+                cursor.DeleteRight($"{subtext2}{message} com.myco");
+            }
+
+            void AfterHighlight(TextColorer colorer)
+            {
+                var expected = GetExpectedAssignments();
+                var actual = colorer.GetSyntaxAssignments().RemoveWhitespaceTokens();
+                Assert.AreEqual(expected, actual);
+            }
+
+            IEnumerable<SyntaxAssignment> GetExpectedAssignments()
+            {
+                return JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
+                    new[] { "package", "com", ".", "mycompany" },
+                    new SyntaxAssignment[] { ("p", Keyword), ("mpany", Identifier) });
+            }
+
+            await RunTest();
+        }
+
+        [Test]
         public async void Flushing(
             [Range(1, 6)] int numberOfFlushes,
             [Range(1, 6)] int flushSize)

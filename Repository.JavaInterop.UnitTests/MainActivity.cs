@@ -16,4 +16,3 @@ namespace Repository.JavaInterop.UnitTests
         }
     }
 }
-
