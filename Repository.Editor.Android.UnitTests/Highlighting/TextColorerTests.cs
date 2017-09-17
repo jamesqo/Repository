@@ -154,9 +154,9 @@ class C {
                     return JavaSourceCode1Assignments;
                 }
 
-                var result = JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
+                return JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
                     new[] { "System", ".", "out", ".", "println" },
-                    new[] { ("ln", MethodIdentifier) });
+                    new SyntaxAssignment[] { ("ln", MethodIdentifier) });
             }
 
             await RunTest();
@@ -195,9 +195,9 @@ class C {
 
             IEnumerable<SyntaxAssignment> GetExpectedAssignments()
             {
-                var result = JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
+                return JavaSourceCode1Assignments.ReplaceConsecutiveTokens(
                     new[] { "package", "com", ".", "mycompany" },
-                    new[] { ("pack", Keyword), ("company", Identifier) });
+                    new SyntaxAssignment[] { ("pack", Keyword), ("company", Identifier) });
             }
 
             await RunTest();
