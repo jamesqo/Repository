@@ -76,14 +76,15 @@ namespace Repository.JavaInterop.UnitTests
         public void AddDeletion_EncompassesMultipleDeletionsAndInsertions()
         {
             var queue = new EditQueue();
+            queue.AddInsertion(100, 50);
             queue.AddInsertion(10, 20);
-            queue.AddInsertion(50, 50);
             queue.AddDeletion(35, 50);
             queue.AddDeletion(2, 4);
+            queue.AddInsertion(0, 5);
 
             queue.AddDeletion(1, 200);
 
-            var expected = new[] { Deletion(1, 200 + 50 + 4 - 20 - 50) };
+            var expected = new[] { Deletion(1, 200 - 4 + 4 - 20 - 50 + 50) };
             Assert.AreEqual(expected, queue);
         }
 
