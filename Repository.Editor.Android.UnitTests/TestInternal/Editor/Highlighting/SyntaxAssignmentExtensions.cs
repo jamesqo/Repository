@@ -12,6 +12,10 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
             string oldToken,
             SyntaxAssignment replacement)
         {
+            Verify.NotNullOrEmpty(assignments, nameof(assignments));
+            Verify.NotNullOrEmpty(oldToken, nameof(oldToken));
+            Verify.Argument(!replacement.IsDefault, nameof(replacement));
+
             return assignments.ReplaceConsecutiveTokens(new[] { oldToken }, new[] { replacement });
         }
 

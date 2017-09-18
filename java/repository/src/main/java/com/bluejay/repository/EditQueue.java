@@ -41,7 +41,7 @@ public class EditQueue {
     }
 
     public Edit poll() {
-        return isEmpty() ? null : mList.remove(0);
+        return isEmpty() ? null : remove(0);
     }
 
     public Edit remove() {
@@ -88,7 +88,7 @@ public class EditQueue {
                 if (previous.isInsertion() && previous.contains(edit.start(), Bounds.INCLUSIVE_EXCLUSIVE)) {
                     int overlapCount = Math.min(unprocessed, previous.end() - edit.start());
                     if (overlapCount == previous.count()) {
-                        mList.remove(insertIndex - 1);
+                        remove(insertIndex - 1);
                         insertIndex--;
                         i--;
                     } else {
@@ -122,7 +122,7 @@ public class EditQueue {
                 if (current.isInsertion()) {
                     int overlapCount = Math.min(unprocessed, current.count());
                     if (overlapCount == current.count()) {
-                        mList.remove(i);
+                        remove(i);
                         i--;
                     } else {
                         current.setCount(current.count() - overlapCount);
@@ -133,7 +133,7 @@ public class EditQueue {
                 } else {
                     // 'current' is a deletion. Merge it with 'edit'.
                     deletionCount += current.count();
-                    mList.remove(i);
+                    remove(i);
                     i--;
                 }
             }
@@ -141,6 +141,7 @@ public class EditQueue {
             if (deletionCount > 0) {
                 edit.setCount(deletionCount);
             } else {
+                // Represent an empty edit with null.
                 edit = null;
             }
         }
@@ -158,13 +159,17 @@ public class EditQueue {
         }
     }
 
+    private boolean contains(Edit edit) {
+        return mList.contains(edit);
+    }
+
     private Edit get(int index) {
         return mList.get(index);
     }
 
     private int getInsertIndex(Edit edit) {
         Verify.isTrue(edit != null);
-        Verify.isTrue(!mList.contains(edit));
+        Verify.isTrue(!contains(edit));
 
         // mList should be sorted by each edit's start index.
         for (int i = 0; i < size(); i++) {
@@ -180,6 +185,10 @@ public class EditQueue {
 
         // All edits had a start equal to or less than the new one. Insert the new one at the end of the list.
         return size();
+    }
+
+    private Edit remove(int index) {
+        return mList.remove(index);
     }
 
     private static boolean shouldMergeWithPreviousEdit(Edit edit, Edit previous) {
