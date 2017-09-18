@@ -82,6 +82,10 @@ public class Edit {
         mStart = start;
     }
 
+    public int visualEnd() {
+        return isInsertion() ? end() : start();
+    }
+
     @Override
     public String toString() {
         String prefix = isInsertion() ? "I" : "D";

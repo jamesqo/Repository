@@ -71,25 +71,74 @@ public class EditQueue {
                 previous.setCount(previous.count() + edit.count());
                 return;
             }
+        }
 
-            if (!edit.isInsertion()) {
-                // This edit's a deletion.
+        if (!edit.isInsertion()) {
+            // This edit's a deletion.
+            int deletionCount = edit.count();
+            int unprocessed = edit.count();
+
+            // First, consume the previous edit if it is an insertion and it overlaps with this deletion.
+            // If the previous edit is a deletion, merging with it is handled above, so we shouldn't reach here
+            // if the deletions overlap.
+            int i = insertIndex;
+            if (insertIndex != 0) {
+                Edit previous = get(insertIndex - 1);
+
                 if (previous.isInsertion() && previous.contains(edit.start(), Bounds.INCLUSIVE_EXCLUSIVE)) {
-                    int overlapStart = edit.start();
-                    int overlapEnd = Math.min(previous.end(), edit.end());
-                    int overlapCount = overlapEnd - overlapStart;
-
-                    previous.setCount(previous.count() - overlapCount);
-                    if (edit.count() == overlapCount) {
-                        // The new deletion was fully inside the insertion. No more work to do.
-                        return;
+                    int overlapCount = Math.min(unprocessed, previous.end() - edit.start());
+                    if (overlapCount == previous.count()) {
+                        mList.remove(insertIndex - 1);
+                        insertIndex--;
+                        i--;
+                    } else {
+                        previous.setCount(previous.count() - overlapCount);
                     }
 
-                    // There's a part of the deletion that sticks outside the insertion.
-                    Verify.isTrue(overlapStart == previous.end());
-                    edit.setCount(edit.count() - overlapCount);
+                    deletionCount -= overlapCount;
+                    unprocessed -= overlapCount;
                 }
             }
+
+            // Take care of subsequent insertions and deletions.
+            for (; unprocessed > 0 && i < size(); i++) {
+                Verify.isTrue(i >= 0);
+                Edit previous = i > 0 ? get(i - 1) : null;
+                Edit current = get(i);
+
+                // Take care of the 'unmarked' region between the previous edit's end and the current one's start.
+                int previousEnd = previous != null ? previous.visualEnd() : edit.start();
+                int unmarked = current.start() - previousEnd;
+
+                // We don't check <= here so that if 'edit' ends exactly where another deletion starts, the two get merged.
+                if (unprocessed < unmarked) {
+                    break;
+                }
+
+                unprocessed -= unmarked;
+
+                // Consume the current edit if it is an insertion.
+                // Merge with the current edit if it is a deletion.
+                if (current.isInsertion()) {
+                    int overlapCount = Math.min(unprocessed, current.count());
+                    if (overlapCount == current.count()) {
+                        mList.remove(i);
+                        i--;
+                    } else {
+                        current.setCount(current.count() - overlapCount);
+                    }
+
+                    deletionCount -= overlapCount;
+                    unprocessed -= overlapCount;
+                } else {
+                    // 'current' is a deletion. Merge it with 'edit'.
+                    deletionCount += current.count();
+                    mList.remove(i);
+                    i--;
+                }
+            }
+
+            edit.setCount(deletionCount);
         }
 
         adjustEdits(insertIndex, diff);

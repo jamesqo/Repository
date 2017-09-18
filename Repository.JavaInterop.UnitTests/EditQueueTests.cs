@@ -62,6 +62,17 @@ namespace Repository.JavaInterop.UnitTests
         }
 
         [Test]
+        public void AddDeletion_EncompassedByInsertion_ShortensInsertion()
+        {
+            var queue = new EditQueue();
+            queue.AddInsertion(0, 100);
+            queue.AddDeletion(50, 25);
+
+            var expected = new[] { Insertion(0, 75) };
+            Assert.AreEqual(expected, queue);
+        }
+
+        [Test]
         public void AddDeletion_EncompassesInsertion_RemovesInsertion()
         {
             var queue = new EditQueue();
@@ -85,6 +96,19 @@ namespace Repository.JavaInterop.UnitTests
             queue.AddDeletion(1, 200);
 
             var expected = new[] { Deletion(1, 200 - 4 + 4 - 20 - 50 + 50) };
+            Assert.AreEqual(expected, queue);
+        }
+
+        [Test]
+        public void AddDeletion_RemovesPrecedingInsertion()
+        {
+            var queue = new EditQueue();
+            queue.AddInsertion(0, 6);
+            queue.AddInsertion(10, 20);
+
+            queue.AddDeletion(0, 100);
+
+            var expected = new[] { Deletion(0, 100 - 20 - 6) };
             Assert.AreEqual(expected, queue);
         }
 
