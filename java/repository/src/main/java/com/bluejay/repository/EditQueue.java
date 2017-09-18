@@ -138,11 +138,17 @@ public class EditQueue {
                 }
             }
 
-            edit.setCount(deletionCount);
+            if (deletionCount > 0) {
+                edit.setCount(deletionCount);
+            } else {
+                edit = null;
+            }
         }
 
         adjustEdits(insertIndex, diff);
-        mList.add(insertIndex, edit);
+        if (edit != null) {
+            mList.add(insertIndex, edit);
+        }
     }
 
     private void adjustEdits(int startIndex, int diff) {
