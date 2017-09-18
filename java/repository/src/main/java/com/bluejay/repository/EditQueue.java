@@ -60,7 +60,7 @@ public class EditQueue {
         Verify.isTrue(edit != null);
 
         int insertIndex = getInsertIndex(edit);
-        adjustEdits(insertIndex, edit.diff());
+        int diff = edit.diff();
 
         if (insertIndex != 0) {
             Edit previous = get(insertIndex - 1);
@@ -68,7 +68,6 @@ public class EditQueue {
 
             if (shouldMergeWithPreviousEdit(edit, previous)) {
                 // Instead of adding a new edit, we can merge this one with the previous one, since they overlap or are adjacent.
-                // TODO: Check this, add comments
                 previous.setCount(previous.count() + edit.count());
                 return;
             }
@@ -80,20 +79,20 @@ public class EditQueue {
                     int overlapEnd = Math.min(previous.end(), edit.end());
                     int overlapCount = overlapEnd - overlapStart;
 
-                    previous.setCount(previous.count() + overlapCount);
+                    previous.setCount(previous.count() - overlapCount);
                     if (edit.count() == overlapCount) {
                         // The new deletion was fully inside the insertion. No more work to do.
                         return;
                     }
 
-                    Verify.isTrue(overlapEnd == previous.end());
-                    // TODO: skip()? shiftRight()? contractRight()?
-                    edit.setStart(edit.start() + overlapCount);
+                    // There's a part of the deletion that sticks outside the insertion.
+                    Verify.isTrue(overlapStart == previous.end());
                     edit.setCount(edit.count() - overlapCount);
                 }
             }
         }
 
+        adjustEdits(insertIndex, diff);
         mList.add(insertIndex, edit);
     }
 
