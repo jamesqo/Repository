@@ -15,6 +15,8 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.Editor.Highlighting
             Kind = kind;
         }
 
+        public bool IsDefault => Token == null;
+
         public SyntaxKind Kind { get; }
 
         public string Token { get; }
