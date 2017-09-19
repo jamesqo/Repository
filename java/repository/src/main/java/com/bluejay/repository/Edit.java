@@ -1,5 +1,7 @@
 package com.bluejay.repository;
 
+import static com.bluejay.repository.Validation.*;
+
 public class Edit {
     public enum Bounds {
         INCLUSIVE_EXCLUSIVE,
@@ -26,7 +28,8 @@ public class Edit {
     }
 
     public boolean contains(int index, Bounds bounds) {
-        Verify.isTrue(index >= 0);
+        requireRange(index >= 0, "index");
+        requireNonNull(bounds, "bounds");
 
         switch (bounds) {
             case INCLUSIVE_EXCLUSIVE:
@@ -71,13 +74,13 @@ public class Edit {
     }
 
     public void setCount(int count) {
-        Verify.isTrue(count > 0);
+        requireRange(count > 0, "count");
 
         mCount = count;
     }
 
     public void setStart(int start) {
-        Verify.isTrue(start >= 0);
+        requireRange(start >= 0, "start");
 
         mStart = start;
     }

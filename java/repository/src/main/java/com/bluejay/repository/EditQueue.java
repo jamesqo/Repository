@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.bluejay.repository.Edit.Bounds;
+import static com.bluejay.repository.Validation.*;
 
 public class EditQueue {
     // There might be a way to improve complexity here by using a PriorityQueue. However, a plain List
@@ -57,14 +58,14 @@ public class EditQueue {
     }
 
     private void add(Edit edit) {
-        Verify.isTrue(edit != null);
+        requireNonNull(edit, "edit");
 
         int insertIndex = getInsertIndex(edit);
         int diff = edit.diff();
 
         if (insertIndex != 0) {
             Edit previous = get(insertIndex - 1);
-            Verify.isTrue(previous.start() <= edit.start());
+            requireRange(previous.start() <= edit.start(), "previous");
 
             if (shouldMergeWithPreviousEdit(edit, previous)) {
                 // Instead of adding a new edit, we can merge this one with the previous one, since they overlap or are adjacent.
@@ -102,7 +103,7 @@ public class EditQueue {
 
             // Take care of subsequent insertions and deletions.
             for (; unprocessed > 0 && i < size(); i++) {
-                Verify.isTrue(i >= 0);
+                requireRange(i >= 0, "i");
                 Edit previous = i > 0 ? get(i - 1) : null;
                 Edit current = get(i);
 
@@ -168,15 +169,15 @@ public class EditQueue {
     }
 
     private int getInsertIndex(Edit edit) {
-        Verify.isTrue(edit != null);
-        Verify.isTrue(!contains(edit));
+        requireNonNull(edit, "edit");
+        requireTrue(!contains(edit), "edit");
 
         // mList should be sorted by each edit's start index.
         for (int i = 0; i < size(); i++) {
             Edit e = get(i);
             if (i != 0) {
                 Edit previous = get(i - 1);
-                Verify.isTrue(previous.start() <= e.start());
+                requireRange(previous.start() <= e.start(), "previous");
             }
             if (e.start() > edit.start()) {
                 return i;
@@ -192,9 +193,9 @@ public class EditQueue {
     }
 
     private static boolean shouldMergeWithPreviousEdit(Edit edit, Edit previous) {
-        Verify.isTrue(edit != null);
-        Verify.isTrue(previous != null);
-        Verify.isTrue(previous.start() <= edit.start());
+        requireNonNull(edit, "edit");
+        requireNonNull(previous, "previous");
+        requireRange(previous.start() <= edit.start(), "previous");
 
         if (edit.isInsertion()) {
             // Suppose the user inserts 5 chars at index 3, then inserts 6 chars.

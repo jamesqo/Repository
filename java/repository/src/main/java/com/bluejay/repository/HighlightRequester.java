@@ -3,6 +3,8 @@ package com.bluejay.repository;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import static com.bluejay.repository.Validation.*;
+
 public class HighlightRequester implements TextWatcher {
     private final Runnable mOnInitialRequest;
     private final int mMaxEditsBeforeRequest;
@@ -22,7 +24,8 @@ public class HighlightRequester implements TextWatcher {
     }
 
     public void onHighlightFinished() {
-        Verify.isTrue(isHighlightRequested());
+        requireTrue(isHighlightRequested(), "this");
+
         mPendingRequests--;
     }
 
@@ -53,7 +56,7 @@ public class HighlightRequester implements TextWatcher {
     }
 
     private void sendRequest() {
-        Verify.isTrue(canSendRequest());
+        requireTrue(canSendRequest(), "this");
 
         mNewEdits = 0;
 

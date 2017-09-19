@@ -4,6 +4,8 @@ import android.support.annotation.ColorInt;
 
 import java.nio.ByteBuffer;
 
+import static com.bluejay.repository.Validation.*;
+
 public class ColoringList {
     private static final int COLORING_SIZE = 8;
 
@@ -12,9 +14,9 @@ public class ColoringList {
     private final int mCount;
 
     private ColoringList(ByteBuffer buffer, int byteStart, int count) {
-        Verify.isTrue(buffer != null);
-        Verify.isTrue(byteStart >= 0);
-        Verify.isTrue(count > 0);
+        requireNonNull(buffer, "buffer");
+        requireRange(byteStart >= 0, "byteStart");
+        requireRange(count > 0, "count");
 
         mBuffer = buffer;
         mByteStart = byteStart;
@@ -31,14 +33,14 @@ public class ColoringList {
 
     @ColorInt
     public int getColor(int index) {
-        Verify.isTrue(index >= 0 && index < count());
+        requireRange(index >= 0 && index < count(), "index");
 
         int byteIndex = getByteIndex(index);
         return mBuffer.getInt(byteIndex);
     }
 
     public int getCount(int index) {
-        Verify.isTrue(index >= 0 && index < count());
+        requireRange(index >= 0 && index < count(), "index");
 
         int byteIndex = getByteIndex(index);
         return mBuffer.getInt(byteIndex + 4);

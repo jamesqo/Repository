@@ -4,6 +4,8 @@ import android.support.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
 
+import static com.bluejay.repository.Validation.*;
+
 // It would be preferable to implement Editable and wrap a SpannableStringBuilder,
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
@@ -44,14 +46,13 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void addColoring(@ColorInt int color, int count) {
-        Verify.isTrue(mColorCursor >= 0);
-        Verify.isTrue(count > 0);
-        Verify.isTrue(mColorCursor + count <= length());
+        requireRange(mColorCursor >= 0, "mColorCursor");
+        requireRange(count > 0 && count <= length() - mColorCursor, "count");
 
         Edit edit = mPendingEdits.peek();
         if (edit != null) {
             // The color cursor shouldn't have reached the edit yet.
-            Verify.isTrue(mColorCursor <= edit.start());
+            requireRange(mColorCursor <= edit.start(), "mColorCursor");
 
             // Will we overlap with the edit during this coloring?
             if (mColorCursor + count > edit.start()) {
@@ -79,7 +80,7 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void addColoringAndHandleEdit(@ColorInt int color, int count) {
-        Verify.isTrue(count > 0);
+        requireRange(count > 0, "count");
 
         Edit edit = mPendingEdits.element();
 
@@ -141,8 +142,8 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void registerDeletion(int start, int count) {
-        Verify.isTrue(start >= 0);
-        Verify.isTrue(count > 0);
+        requireRange(start >= 0, "start");
+        requireRange(count > 0, "count");
 
         if (start < mColorCursor) {
             // Rewind the color cursor by the number of chars deleted before it.
@@ -157,14 +158,15 @@ public class EditorText extends SpannableStringBuilder {
             // of the colorings that land inside that region.
             int afterStart = Math.max(mColorCursor, start);
             int afterCount = end - afterStart;
-            Verify.isTrue(afterCount == Math.min(end - mColorCursor, count));
+
+            requireTrue(afterCount == Math.min(end - mColorCursor, count), "afterCount");
             mPendingEdits.addDeletion(afterStart, afterCount);
         }
     }
 
     private void registerInsertion(int start, int count) {
-        Verify.isTrue(start >= 0);
-        Verify.isTrue(count > 0);
+        requireRange(start >= 0, "start");
+        requireRange(count > 0, "count");
 
         if (start <= mColorCursor) {
             // Synchronize the color cursor with the updated text.
