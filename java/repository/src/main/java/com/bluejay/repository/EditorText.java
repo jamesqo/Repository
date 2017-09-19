@@ -85,6 +85,7 @@ public class EditorText extends SpannableStringBuilder {
 
         // Color the text before the start of the edit.
         int beforeCount = edit.start() - mColorCursor;
+        // addColoring() expects the count to be greater than 0.
         if (beforeCount > 0) {
             addColoring(color, beforeCount);
             count -= beforeCount;
