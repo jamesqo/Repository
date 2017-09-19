@@ -64,9 +64,6 @@
     <Compile Include="Threading\IYielder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AboutResources.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Repository.Common\Repository.Common.csproj">
       <Project>{50fb1cda-38b0-4e70-a175-7d733e2b5c9f}</Project>
       <Name>Repository.Common</Name>
