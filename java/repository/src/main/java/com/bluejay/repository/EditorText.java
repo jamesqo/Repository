@@ -10,6 +10,8 @@ import static com.bluejay.repository.Validation.*;
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
 public class EditorText extends SpannableStringBuilder {
+    private static final int DORMANT_COLOR_CURSOR = -1;
+
     private final EditQueue mPendingEdits;
 
     private int mColorCursor;
@@ -18,9 +20,16 @@ public class EditorText extends SpannableStringBuilder {
         super(rawText);
 
         mPendingEdits = new EditQueue();
+        resetColorCursor();
     }
 
     public void addColorings(ColoringList colorings) {
+        requireNonNull(colorings, "colorings");
+
+        if (isColorCursorDormant()) {
+            mColorCursor = 0;
+        }
+
         for (int i = 0; i < colorings.count(); i++) {
             @ColorInt int color = colorings.getColor(i);
             int count = colorings.getCount(i);
@@ -30,22 +39,25 @@ public class EditorText extends SpannableStringBuilder {
 
     @Override
     public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
-        if (start != end) {
-            registerDeletion(start, end - start);
-        }
+        if (!isColorCursorDormant()) {
+            if (start != end) {
+                registerDeletion(start, end - start);
+            }
 
-        if (tbstart != tbend) {
-            registerInsertion(start, tbend - tbstart);
+            if (tbstart != tbend) {
+                registerInsertion(start, tbend - tbstart);
+            }
         }
 
         return super.replace(start, end, tb, tbstart, tbend);
     }
 
     public void resetColorCursor() {
-        mColorCursor = 0;
+        mColorCursor = DORMANT_COLOR_CURSOR;
     }
 
     private void addColoring(@ColorInt int color, int count) {
+        requireTrue(!isColorCursorDormant(), "this");
         requireRange(mColorCursor >= 0, "mColorCursor");
         requireRange(count > 0 && count <= length() - mColorCursor, "count");
 
@@ -80,6 +92,7 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void addColoringAndHandleEdit(@ColorInt int color, int count) {
+        requireTrue(!isColorCursorDormant(), "this");
         requireRange(count > 0, "count");
 
         Edit edit = mPendingEdits.element();
@@ -120,7 +133,13 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void advanceColorCursor(int count) {
+        requireTrue(!isColorCursorDormant(), "this");
+
         mColorCursor += count;
+    }
+
+    private boolean isColorCursorDormant() {
+        return mColorCursor == DORMANT_COLOR_CURSOR;
     }
 
     private void makeGap(int start, int end, ForegroundColorSpan[] overlaps) {
@@ -142,6 +161,7 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void registerDeletion(int start, int count) {
+        requireTrue(!isColorCursorDormant(), "this");
         requireRange(start >= 0, "start");
         requireRange(count > 0, "count");
 
@@ -165,6 +185,7 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void registerInsertion(int start, int count) {
+        requireTrue(!isColorCursorDormant(), "this");
         requireRange(start >= 0, "start");
         requireRange(count > 0, "count");
 
