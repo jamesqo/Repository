@@ -10,6 +10,16 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.JavaInterop
             return new TestCursor(text, index);
         }
 
+        public static TestCursor GetEndCursor(this EditorText text, string subtext)
+        {
+            Verify.NotNullOrEmpty(text, nameof(text));
+            Verify.NotNullOrEmpty(subtext, nameof(subtext));
+
+            int index = text.ToString().IndexOf(subtext);
+            Verify.ValidState(index != -1, $"{nameof(subtext)} is not a substring of {nameof(text)}!");
+            return text.GetCursor(index + subtext.Length);
+        }
+
         public static TestCursor GetStartCursor(this EditorText text) => text.GetCursor(0);
 
         public static TestCursor GetStartCursor(this EditorText text, string subtext)

@@ -18,6 +18,18 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.JavaInterop
             _index = index;
         }
 
+        public TestCursor DeleteLeft(string text)
+        {
+            Verify.NotNullOrEmpty(text, nameof(text));
+
+            var (start, end) = (_index - text.Length, _index);
+            Verify.Argument(text == _text.SubSequence(start, end), nameof(text));
+
+            _text.Delete(start, end);
+            _index -= text.Length;
+            return this;
+        }
+
         public TestCursor DeleteRight(string text)
         {
             Verify.NotNullOrEmpty(text, nameof(text));
@@ -35,6 +47,14 @@ namespace Repository.Editor.Android.UnitTests.TestInternal.JavaInterop
 
             _text.Insert(_index, text);
             _index += text.Length;
+            return this;
+        }
+
+        public TestCursor InsertRight(string text)
+        {
+            Verify.NotNullOrEmpty(text, nameof(text));
+
+            _text.Insert(_index, text);
             return this;
         }
 
