@@ -13,6 +13,9 @@ public class HighlightRequester implements TextWatcher {
     private int mPendingRequests;
 
     public HighlightRequester(Runnable onInitialRequest, int maxEditsBeforeRequest) {
+        requireNonNull(onInitialRequest, "onInitialRequest");
+        requireRange(maxEditsBeforeRequest > 0, "maxEditsBeforeRequest");
+
         mOnInitialRequest = onInitialRequest;
         mMaxEditsBeforeRequest = maxEditsBeforeRequest;
         // We always want to highlight once just after the file loads, even though no edits have been made yet.

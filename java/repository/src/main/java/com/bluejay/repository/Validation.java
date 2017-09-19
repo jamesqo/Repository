@@ -4,6 +4,14 @@ class Validation {
     private Validation() {
     }
 
+    public static <T> void requireNonEmpty(T[] argument, String argumentName) {
+        requireNonNull(argument, argumentName);
+
+        if (argument.length == 0) {
+            throw new IllegalArgumentException(String.format("%s was empty", argumentName));
+        }
+    }
+
     public static void requireNonNull(Object argument, String argumentName) {
         if (argument == null) {
             throw new IllegalArgumentException(String.format("%s was null", argumentName));

@@ -143,6 +143,10 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void makeGap(int start, int end, ForegroundColorSpan[] overlaps) {
+        requireRange(start >= 0 && start < length(), "start");
+        requireRange(end > start && end <= length(), "end");
+        requireNonEmpty(overlaps, "overlaps");
+
         ForegroundColorSpan first = overlaps[0];
         int firstStart = getSpanStart(first);
 
@@ -200,6 +204,8 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     private void removeSpans(Object[] spans) {
+        requireNonEmpty(spans, "spans");
+
         for (Object span : spans) {
             removeSpan(span);
         }
