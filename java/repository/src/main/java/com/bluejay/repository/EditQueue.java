@@ -160,17 +160,13 @@ public class EditQueue {
         }
     }
 
-    private boolean contains(Edit edit) {
-        return mList.contains(edit);
-    }
-
     private Edit get(int index) {
         return mList.get(index);
     }
 
     private int getInsertIndex(Edit edit) {
         requireNonNull(edit, "edit");
-        requireTrue(!contains(edit), "edit");
+        requireTrue(!referenceContains(edit), "edit");
 
         // mList should be sorted by each edit's start index.
         for (int i = 0; i < size(); i++) {
@@ -186,6 +182,19 @@ public class EditQueue {
 
         // All edits had a start equal to or less than the new one. Insert the new one at the end of the list.
         return size();
+    }
+
+    private boolean referenceContains(Edit edit) {
+        requireNonNull(edit, "edit");
+
+        for (int i = 0; i < size(); i++) {
+            Edit e = get(i);
+            if (e == edit) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private Edit remove(int index) {
