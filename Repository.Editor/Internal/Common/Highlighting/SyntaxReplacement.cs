@@ -9,7 +9,7 @@ namespace Repository.Editor.Internal.Common.Highlighting
     [DebuggerDisplay(DebuggerStrings.DisplayFormat)]
     internal struct SyntaxReplacement
     {
-        public static SyntaxReplacement None => default(SyntaxReplacement);
+        public static SyntaxReplacement None => default;
 
         private SyntaxReplacement(NodePath path, SyntaxKind kind)
         {

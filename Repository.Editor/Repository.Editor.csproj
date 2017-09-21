@@ -29,4 +29,13 @@
     <ProjectReference Include="..\Repository.Common\Repository.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Internal\Common\Highlighting\AntlrVisitorCore.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Internal\Java\Highlighting\JavaSyntaxProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
