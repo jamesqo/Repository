@@ -9,7 +9,7 @@ using static Repository.Editor.Internal.Java.Highlighting.JavaParser;
 
 namespace Repository.Editor.Internal.Java.Highlighting
 {
-    internal partial class JavaHighlighter : IHighlighter
+    internal class JavaHighlighter : IHighlighter
     {
         private class Visitor : JavaBaseVisitor<Task>
         {
@@ -90,6 +90,9 @@ namespace Repository.Editor.Internal.Java.Highlighting
             public override Task VisitAnnotationTypeDeclaration([NotNull] AnnotationTypeDeclarationContext context)
                 => _core.VisitChildren(context, AnnotationTypeDeclarationReplacement);
 
+            public override Task VisitChildren(IRuleNode node)
+                => _core.VisitChildren(node);
+
             public override Task VisitClassDeclaration([NotNull] ClassDeclarationContext context)
                 => _core.VisitChildren(context, ClassDeclarationReplacement);
 
@@ -146,9 +149,6 @@ namespace Repository.Editor.Internal.Java.Highlighting
 
             public override Task VisitWildcardTypeArgument([NotNull] WildcardTypeArgumentContext context)
                 => _core.VisitChildren(context, WildcardTypeArgumentReplacement);
-
-            public override Task VisitChildren(IRuleNode node)
-                => _core.VisitChildren(node);
         }
 
         public Task Highlight(string text, ITextColorer colorer, CancellationToken cancellationToken)
