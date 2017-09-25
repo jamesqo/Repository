@@ -7,6 +7,7 @@ using Android.OS;
 using Android.Text;
 using Android.Widget;
 using Repository.Common.Validation;
+using Repository.Editor;
 using Repository.Editor.Android;
 using Repository.Editor.Android.Highlighting;
 using Repository.Editor.Highlighting;
@@ -75,14 +76,13 @@ namespace Repository
         }
 
         /// <summary>
-        /// Gets the best syntax highlighter given a file's path and contents.
+        /// Gets the best syntax highlighter for a code document, given its path and content.
         /// </summary>
-        private static IHighlighter GetHighlighter(string filePath, string content)
+        private static IHighlighter GetHighlighter(string path, string content)
         {
-            var fileExtension = Path.GetExtension(filePath).TrimStart('.');
-            return Highlighter.FromFileExtension(fileExtension)
-                ?? Highlighter.FromFirstLine(content.FirstLine())
-                ?? Highlighter.Plaintext;
+            var documentInfo = new DocumentInfo(path: path, content: content);
+            var language = LanguageGuesser.GuessFromDocument(documentInfo);
+            return Highlighter.FromLanguage(language);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Repository
         {
             var content = ReadEditorContent();
             _colorer = new TextColorer(content, theme.Colors);
-            _highlighter = GetHighlighter(filePath: _path, content: content);
+            _highlighter = GetHighlighter(path: _path, content: content);
 
             _requester = new HighlightRequester(
                 onInitialRequest: OnHighlightRequested,

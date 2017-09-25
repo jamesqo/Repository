@@ -132,7 +132,6 @@
     <Compile Include="Internal\Editor\EditorContent.cs" />
     <Compile Include="Internal\Editor\TypefaceProvider.cs" />
     <Compile Include="Internal\GitHub.cs" />
-    <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
     <Compile Include="Internal\Threading\TaskExtensions.cs" />
     <Compile Include="Internal\Threading\ThreadingUtilities.cs" />

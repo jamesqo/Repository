@@ -2,7 +2,7 @@
 {
     public enum SyntaxKind
     {
-        Begin = 0,
+        Begin,
         None = Begin,
 
         Annotation,

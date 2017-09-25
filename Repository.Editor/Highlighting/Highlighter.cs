@@ -1,4 +1,5 @@
-﻿using Repository.Common.Validation;
+﻿using System;
+using Repository.Common.Validation;
 using Repository.Editor.Internal.CSharp.Highlighting;
 using Repository.Editor.Internal.Java.Highlighting;
 using Repository.Editor.Internal.Plaintext.Highlighting;
@@ -13,28 +14,21 @@ namespace Repository.Editor.Highlighting
 
         public static IHighlighter Plaintext { get; } = new PlaintextHighlighter();
 
-        public static IHighlighter FromFileExtension(string fileExtension)
+        public static IHighlighter FromLanguage(Language language)
         {
-            Verify.NotNullOrEmpty(fileExtension, nameof(fileExtension));
+            Verify.Argument(language.IsValid(), nameof(language));
 
-            switch (fileExtension)
+            switch (language)
             {
-                case "cs":
+                case Language.CSharp:
                     return CSharp;
-                case "java":
+                case Language.Java:
                     return Java;
-                case "txt":
+                case Language.Unknown:
                     return Plaintext;
+                default:
+                    throw new NotSupportedException();
             }
-
-            return null;
-        }
-
-        public static IHighlighter FromFirstLine(string firstLine)
-        {
-            Verify.NotNull(firstLine, nameof(firstLine));
-
-            return null;
         }
     }
 }
