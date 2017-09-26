@@ -2,9 +2,9 @@
 
 namespace Repository.Editor
 {
-    public static class LanguageGuesser
+    public static class LanguageDetector
     {
-        public static Language GuessFromDocument(DocumentInfo documentInfo)
+        public static Language GuessLanguage(DocumentInfo documentInfo)
         {
             Verify.NotNull(documentInfo, nameof(documentInfo));
 
