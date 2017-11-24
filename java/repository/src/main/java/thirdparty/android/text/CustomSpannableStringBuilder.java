@@ -169,7 +169,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                 if (mSpanStarts[i] > mGapStart) mSpanStarts[i] += delta;
                 if (mSpanEnds[i] > mGapStart) mSpanEnds[i] += delta;
             }
-            calcMax(treeRoot());
+            calcMax();
         }
     }
 
@@ -218,7 +218,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                 mSpanStarts[i] = start;
                 mSpanEnds[i] = end;
             }
-            calcMax(treeRoot());
+            calcMax();
         }
 
         mGapStart = where;
@@ -1510,23 +1510,33 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
     // the maximum value of mSpanEnds of that node and its descendants. Thus, traversals can
     // easily reject subtrees that contain no spans overlapping the area of interest.
 
-    // Note that mSpanMax[] also has a valid valuefor interior nodes of index >= n, but which have
+    // Note that mSpanMax[] also has a valid value for interior nodes of index >= n, but which have
     // descendants of index < n. In these cases, it simply represents the maximum span end of its
     // descendants. This is a consequence of the perfect binary tree structure.
-    private int calcMax(int i) {
+    private void calcMax() {
+        int n = mSpanCount;
+        int root = treeRoot();
         int max = 0;
-        if ((i & 1) != 0) {
-            // internal tree node
-            max = calcMax(leftChild(i));
-        }
-        if (i < mSpanCount) {
-            max = Math.max(max, mSpanEnds[i]);
-            if ((i & 1) != 0) {
-                max = Math.max(max, calcMax(rightChild(i)));
+
+        for (int height = 0; ; height++) {
+            int i = (1 << height) - 1;
+            if (i == root) {
+                break;
             }
+
+            // Iterate over all nodes with height 'height'.
+
+            int increment = 1 << (height + 1);
+            // During the first iteration, 'i < n' must be true.
+            do {
+                max = Math.max(max, mSpanEnds[i]);
+                mSpanMax[i] = max;
+                i += increment;
+            } while (i < n);
         }
-        mSpanMax[i] = max;
-        return max;
+
+        max = Math.max(max, mSpanEnds[root]);
+        mSpanMax[root] = max;
     }
 
     // restores binary interval tree invariants after any mutation of span structure
@@ -1562,7 +1572,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         }
 
         // invariant 2: max is max span end for each node and its descendants
-        calcMax(treeRoot());
+        calcMax();
 
         // invariant 3: mIndexOfSpan maps spans back to indices
         if (mIndexOfSpan == null) {
