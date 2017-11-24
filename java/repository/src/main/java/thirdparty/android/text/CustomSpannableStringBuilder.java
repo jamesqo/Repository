@@ -30,6 +30,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 
+import com.bluejay.repository.util.IntStack;
+
 import thirdparty.com.android.internal.util.CustomArrayUtils;
 import thirdparty.com.android.internal.util.CustomGrowingArrayUtils;
 
@@ -39,6 +41,7 @@ import thirdparty.libcore.util.CustomEmptyArray;
 
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
+import java.util.Stack;
 
 /**
  * This is the class for text whose content and markup can both be changed.
@@ -1496,6 +1499,11 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         return Integer.highestOneBit(mSpanCount) - 1;
     }
 
+    private int treeHeight() {
+        // log2(treeRoot() + 1)
+        return 31 - Integer.numberOfLeadingZeros(treeRoot() + 1);
+    }
+
     // (i+1) & ~i is equal to 2^(the number of trailing ones in i)
     private static int leftChild(int i) {
         return i - (((i + 1) & ~i) >> 1);
@@ -1514,29 +1522,35 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
     // descendants of index < n. In these cases, it simply represents the maximum span end of its
     // descendants. This is a consequence of the perfect binary tree structure.
     private void calcMax() {
+        IntStack stack = new IntStack(treeHeight());
+        int i = treeRoot();
         int n = mSpanCount;
-        int root = treeRoot();
         int max = 0;
 
-        for (int height = 0; ; height++) {
-            int i = (1 << height) - 1;
-            if (i == root) {
-                break;
-            }
-
-            // Iterate over all nodes with height 'height'.
-
-            int increment = 1 << (height + 1);
-            // During the first iteration, 'i < n' must be true.
-            do {
+        while (true) {
+            if ((i & 1) != 0) {
+                // Interior node
+                stack.push(i);
+                i = leftChild(i);
+            } else {
+                // Leaf node
+                if (i >= n) {
+                    break;
+                }
                 max = Math.max(max, mSpanEnds[i]);
                 mSpanMax[i] = max;
-                i += increment;
-            } while (i < n);
+                if (stack.isEmpty()) {
+                    break;
+                }
+                i = stack.pop();
+                if (i >= n) {
+                    break;
+                }
+                max = Math.max(max, mSpanEnds[i]);
+                mSpanMax[i] = max;
+                i = rightChild(i);
+            }
         }
-
-        max = Math.max(max, mSpanEnds[root]);
-        mSpanMax[root] = max;
     }
 
     // restores binary interval tree invariants after any mutation of span structure
