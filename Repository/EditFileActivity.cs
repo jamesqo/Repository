@@ -9,14 +9,11 @@ using Android.Widget;
 using Repository.Common.Validation;
 using Repository.Editor;
 using Repository.Editor.Android;
-using Repository.Editor.Android.Highlighting;
-using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Threading;
 using Repository.JavaInterop;
-using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
@@ -25,13 +22,14 @@ namespace Repository
     {
         private EditText _editor;
 
+        private string _content;
         private string _path;
 
-        private IEditorManager _manager;
+        private IEditorLifetimeManager _manager;
 
         public override async void OnBackPressed()
         {
-            await _manager.OnEditorDestroyed();
+            await _manager.TeardownEditor();
             base.OnBackPressed();
         }
 
@@ -44,9 +42,9 @@ namespace Repository
 
             void CacheParameters()
             {
-                // The content is not cached since it may be an arbitrarily large string.
-                // If we stored it in a field, we would want to clear that field ASAP anyway
-                // to allow the GC to collect the string.
+                _content = EditorContent.Current;
+                // The content can be arbitrarily large. Allow the GC to collect the string once we're done with it.
+                EditorContent.Current = null;
                 _path = Intent.Extras.GetString(Strings.Extra_EditFile_Path).NotNullOrEmpty();
             }
 
@@ -70,18 +68,17 @@ namespace Repository
             return EditorTheme.GetDefault(TypefaceProvider.GetInstance(Assets));
         }
 
-        private static string ReadEditorContent() => EditorContent.Current;
+        private Language GuessLanguage()
+        {
+            var documentInfo = new DocumentInfo(path: _path, content: _content);
+            return LanguageDetector.GuessLanguage(documentInfo);
+        }
 
         private async Task SetupEditor(EditorTheme theme)
         {
-            var content = ReadEditorContent();
-
-            var documentInfo = new DocumentInfo(path: _path, content: content);
-            var language = LanguageDetector.GuessLanguage(documentInfo);
-
-            _manager = EditorManager.FromLanguage(language);
-            _manager.SetEditor(_editor);
-            await _manager.OnEditorCreated();
+            var language = GuessLanguage();
+            var setup = EditorSetup.FromLanguage(language);
+            _teardown = await setup.Run();
         }
 
         private void SetupEditorCore(EditorTheme theme, EditorText text)

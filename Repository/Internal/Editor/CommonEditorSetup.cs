@@ -7,24 +7,20 @@ using Repository.Editor.Highlighting;
 
 namespace Repository.Internal.Editor
 {
-    internal class CommonEditorManager : EditorManager
+    internal class CommonEditorSetup : EditorSetup
     {
         private readonly IHighlighter _highlighter;
 
-        internal CommonEditorManager(Language language)
+        internal CommonEditorSetup(Language language)
         {
             Verify.Argument(language.IsValid(), nameof(language));
 
             _highlighter = Highlighter.FromLanguage(language);
         }
 
-        public override Task OnEditorCreated()
+        public override Task<IDisposable> Run(EditText editor, EditorSettings settings)
         {
-            
-        }
 
-        public override Task OnEditorDestroyed()
-        {
         }
     }
 }

@@ -129,9 +129,10 @@
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\Diagnostics\DebugAssertException.cs" />
     <Compile Include="Internal\Diagnostics\DebugListener.cs" />
-    <Compile Include="Internal\Editor\CommonEditorManager.cs" />
+    <Compile Include="Internal\Editor\CommonEditorSetup.cs" />
     <Compile Include="Internal\Editor\EditorContent.cs" />
-    <Compile Include="Internal\Editor\EditorManager.cs" />
+    <Compile Include="Internal\Editor\EditorSetup.cs" />
+    <Compile Include="Internal\Editor\EditorSettings.cs" />
     <Compile Include="Internal\Editor\TypefaceProvider.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\Strings.cs" />
