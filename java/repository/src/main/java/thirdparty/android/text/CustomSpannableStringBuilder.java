@@ -609,8 +609,16 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         for (int i = 0; i < mSpanCount; i++) {
             int spanFlags = mSpanFlags[i];
 
-            // This loop handles only modified (not added) spans.
-            if ((spanFlags & SPAN_ADDED) != 0) continue;
+            if ((spanFlags & SPAN_ADDED) != 0) {
+                mSpanFlags[i] &= ~SPAN_ADDED;
+                int spanStart = mSpanStarts[i];
+                int spanEnd = mSpanEnds[i];
+                if (spanStart > mGapStart) spanStart -= mGapLength;
+                if (spanEnd > mGapStart) spanEnd -= mGapLength;
+                sendSpanAdded(mSpans[i], spanStart, spanEnd);
+                continue;
+            }
+
             int spanStart = mSpanStarts[i];
             int spanEnd = mSpanEnds[i];
             if (spanStart > mGapStart) spanStart -= mGapLength;
@@ -659,19 +667,6 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                 sendSpanChanged(mSpans[i], previousSpanStart, previousSpanEnd, spanStart, spanEnd);
             }
             mSpanFlags[i] &= ~SPAN_START_END_MASK;
-        }
-
-        // Handle added spans
-        for (int i = 0; i < mSpanCount; i++) {
-            int spanFlags = mSpanFlags[i];
-            if ((spanFlags & SPAN_ADDED) != 0) {
-                mSpanFlags[i] &= ~SPAN_ADDED;
-                int spanStart = mSpanStarts[i];
-                int spanEnd = mSpanEnds[i];
-                if (spanStart > mGapStart) spanStart -= mGapLength;
-                if (spanEnd > mGapStart) spanEnd -= mGapLength;
-                sendSpanAdded(mSpans[i], spanStart, spanEnd);
-            }
         }
     }
 
