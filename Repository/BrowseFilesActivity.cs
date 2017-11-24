@@ -52,18 +52,18 @@ namespace Repository
             await SetupFileView();
         }
 
-        private void Adapter_ItemClick(object sender, int e)
+        private async void Adapter_ItemClick(object sender, int e)
         {
             var adapter = (Adapter)sender;
             var content = adapter.Contents[e];
 
-            async void HandleDirectoryClick()
+            async Task HandleDirectoryClick()
             {
                 var subdir = adapter.CurrentDirectory + content.Name + "/";
                 await adapter.PushDirectory(subdir);
             }
 
-            async void HandleFileClick()
+            async Task HandleFileClick()
             {
                 var filePath = adapter.CurrentDirectory + content.Name;
                 var fullContent = await adapter.GetFullContent(filePath);
@@ -74,10 +74,10 @@ namespace Repository
             switch (content.Type)
             {
                 case ContentType.Dir:
-                    HandleDirectoryClick();
+                    await HandleDirectoryClick();
                     break;
                 case ContentType.File:
-                    HandleFileClick();
+                    await HandleFileClick();
                     break;
                 default:
                     throw new NotImplementedException();

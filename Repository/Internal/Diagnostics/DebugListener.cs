@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 
 namespace Repository.Internal.Diagnostics
 {
@@ -10,6 +6,7 @@ namespace Repository.Internal.Diagnostics
     {
         public override void Fail(string message, string detailMessage)
         {
+            Debugger.Break();
             throw new DebugAssertException(message);
         }
 
