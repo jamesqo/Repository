@@ -337,6 +337,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         final int replacementLength = csEnd - csStart;
         final int nbNewChars = replacementLength - replacedLength;
 
+        /*
         boolean changed = false;
         for (int i = mSpanCount - 1; i >= 0; i--) {
             int spanStart = mSpanStarts[i];
@@ -366,7 +367,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
 
                 if (spanStart != ost || spanEnd != oen) {
                     setSpan(false, mSpans[i], spanStart, spanEnd, mSpanFlags[i],
-                            true/*enforceParagraph*/);
+                            true);
                     changed = true;
                 }
             }
@@ -381,6 +382,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         if (changed) {
             restoreInvariants();
         }
+        */
 
         moveGapTo(end);
 
