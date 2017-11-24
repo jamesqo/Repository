@@ -586,7 +586,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         sendAfterTextChanged(textWatchers);
 
         // Span watchers need to be called after text watchers, which may update the layout
-        sendToSpanWatchers(start, end, newLen - origLen);
+        // sendToSpanWatchers(start, end, newLen - origLen);
 
         return this;
     }
