@@ -4,7 +4,12 @@
     <attr
         path="/api/package[@name='com.bluejay.repository']"
         name="managedName">Repository.JavaInterop</attr>
-
+  
+    <remove-node
+        path="/api/package[@name='thirdparty.com.android.internal.util']" />
+    <remove-node
+        path="/api/package[@name='thirdparty.libcore.util']" />
+  
     <!-- Methods -->
 
     <attr
@@ -20,4 +25,21 @@
     <attr
         path="/api/package[@name='com.bluejay.repository']/class[@name='EditQueue']/method[@name='isEmpty']"
         name="visibility">internal</attr>
+
+    <attr
+        path="/api/package[@name='thirdparty.android.text']/class[@name='CustomSpannableStringBuilder']
+              /method[@name='append']"
+        name="managedReturn">Java.Lang.IAppendable</attr>
+    <attr
+        path="/api/package[@name='thirdparty.android.text']/class[@name='CustomSpannableStringBuilder']
+              /method[@name='delete']"
+        name="managedReturn">Android.Text.IEditable</attr>
+    <attr
+        path="/api/package[@name='thirdparty.android.text']/class[@name='CustomSpannableStringBuilder']
+              /method[@name='insert']"
+        name="managedReturn">Android.Text.IEditable</attr>
+    <attr
+        path="/api/package[@name='thirdparty.android.text']/class[@name='CustomSpannableStringBuilder']
+              /method[@name='replace']"
+        name="managedReturn">Android.Text.IEditable</attr>
 </metadata>
