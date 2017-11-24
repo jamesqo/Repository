@@ -16,14 +16,14 @@
 
 package android.text;
 
-import android.annotation.Nullable;
-import android.graphics.BaseCanvas;
 import android.graphics.Paint;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.ArrayUtils;
-import com.android.internal.util.GrowingArrayUtils;
+import com.android.internal.util.CustomGrowingArrayUtils;
+
+import net.jcip.annotations.GuardedBy;
 
 import libcore.util.EmptyArray;
 
@@ -34,7 +34,7 @@ import java.util.IdentityHashMap;
  * This is the class for text whose content and markup can both be changed.
  */
 public class SpannableStringBuilder implements CharSequence, GetChars, Spannable, Editable,
-        Appendable, GraphicsOperations {
+        Appendable {
     private final static String TAG = "SpannableStringBuilder";
     /**
      * Create a new SpannableStringBuilder with empty contents
@@ -60,7 +60,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
 
         if (srclen < 0) throw new StringIndexOutOfBoundsException();
 
-        mText = ArrayUtils.newUnpaddedCharArray(GrowingArrayUtils.growSize(srclen));
+        mText = ArrayUtils.newUnpaddedCharArray(CustomGrowingArrayUtils.growSize(srclen));
         mGapStart = srclen;
         mGapLength = mText.length - srclen;
 
@@ -142,7 +142,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             return;
         }
 
-        char[] newText = ArrayUtils.newUnpaddedCharArray(GrowingArrayUtils.growSize(size));
+        char[] newText = ArrayUtils.newUnpaddedCharArray(CustomGrowingArrayUtils.growSize(size));
         System.arraycopy(mText, 0, newText, 0, mGapStart);
         final int newLength = newText.length;
         final int delta = newLength - oldLength;
@@ -752,11 +752,11 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             }
         }
 
-        mSpans = GrowingArrayUtils.append(mSpans, mSpanCount, what);
-        mSpanStarts = GrowingArrayUtils.append(mSpanStarts, mSpanCount, start);
-        mSpanEnds = GrowingArrayUtils.append(mSpanEnds, mSpanCount, end);
-        mSpanFlags = GrowingArrayUtils.append(mSpanFlags, mSpanCount, flags);
-        mSpanOrder = GrowingArrayUtils.append(mSpanOrder, mSpanCount, mSpanInsertCount);
+        mSpans = CustomGrowingArrayUtils.append(mSpans, mSpanCount, what);
+        mSpanStarts = CustomGrowingArrayUtils.append(mSpanStarts, mSpanCount, start);
+        mSpanEnds = CustomGrowingArrayUtils.append(mSpanEnds, mSpanCount, end);
+        mSpanFlags = CustomGrowingArrayUtils.append(mSpanFlags, mSpanCount, flags);
+        mSpanOrder = CustomGrowingArrayUtils.append(mSpanOrder, mSpanCount, mSpanInsertCount);
         invalidateIndex(mSpanCount);
         mSpanCount++;
         mSpanInsertCount++;
@@ -1039,7 +1039,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
      */
     private static int[] checkSortBuffer(int[] buffer, int size) {
         if (buffer == null || size > buffer.length) {
-            return ArrayUtils.newUnpaddedIntArray(GrowingArrayUtils.growSize(size));
+            return ArrayUtils.newUnpaddedIntArray(CustomGrowingArrayUtils.growSize(size));
         }
         return buffer;
     }
@@ -1396,178 +1396,6 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
         System.out.print("\n");
     }
     */
-
-    /**
-     * Don't call this yourself -- exists for Canvas to use internally.
-     * {@hide}
-     */
-    @Override
-    public void drawText(BaseCanvas c, int start, int end, float x, float y, Paint p) {
-        checkRange("drawText", start, end);
-
-        if (end <= mGapStart) {
-            c.drawText(mText, start, end - start, x, y, p);
-        } else if (start >= mGapStart) {
-            c.drawText(mText, start + mGapLength, end - start, x, y, p);
-        } else {
-            char[] buf = TextUtils.obtain(end - start);
-
-            getChars(start, end, buf, 0);
-            c.drawText(buf, 0, end - start, x, y, p);
-            TextUtils.recycle(buf);
-        }
-    }
-
-
-    /**
-     * Don't call this yourself -- exists for Canvas to use internally.
-     * {@hide}
-     */
-    @Override
-    public void drawTextRun(BaseCanvas c, int start, int end, int contextStart, int contextEnd,
-                            float x, float y, boolean isRtl, Paint p) {
-        checkRange("drawTextRun", start, end);
-
-        int contextLen = contextEnd - contextStart;
-        int len = end - start;
-        if (contextEnd <= mGapStart) {
-            c.drawTextRun(mText, start, len, contextStart, contextLen, x, y, isRtl, p);
-        } else if (contextStart >= mGapStart) {
-            c.drawTextRun(mText, start + mGapLength, len, contextStart + mGapLength,
-                    contextLen, x, y, isRtl, p);
-        } else {
-            char[] buf = TextUtils.obtain(contextLen);
-            getChars(contextStart, contextEnd, buf, 0);
-            c.drawTextRun(buf, start - contextStart, len, 0, contextLen, x, y, isRtl, p);
-            TextUtils.recycle(buf);
-        }
-    }
-
-    /**
-     * Don't call this yourself -- exists for Paint to use internally.
-     * {@hide}
-     */
-    public float measureText(int start, int end, Paint p) {
-        checkRange("measureText", start, end);
-
-        float ret;
-
-        if (end <= mGapStart) {
-            ret = p.measureText(mText, start, end - start);
-        } else if (start >= mGapStart) {
-            ret = p.measureText(mText, start + mGapLength, end - start);
-        } else {
-            char[] buf = TextUtils.obtain(end - start);
-
-            getChars(start, end, buf, 0);
-            ret = p.measureText(buf, 0, end - start);
-            TextUtils.recycle(buf);
-        }
-
-        return ret;
-    }
-
-    /**
-     * Don't call this yourself -- exists for Paint to use internally.
-     * {@hide}
-     */
-    public int getTextWidths(int start, int end, float[] widths, Paint p) {
-        checkRange("getTextWidths", start, end);
-
-        int ret;
-
-        if (end <= mGapStart) {
-            ret = p.getTextWidths(mText, start, end - start, widths);
-        } else if (start >= mGapStart) {
-            ret = p.getTextWidths(mText, start + mGapLength, end - start, widths);
-        } else {
-            char[] buf = TextUtils.obtain(end - start);
-
-            getChars(start, end, buf, 0);
-            ret = p.getTextWidths(buf, 0, end - start, widths);
-            TextUtils.recycle(buf);
-        }
-
-        return ret;
-    }
-
-    /**
-     * Don't call this yourself -- exists for Paint to use internally.
-     * {@hide}
-     */
-    public float getTextRunAdvances(int start, int end, int contextStart, int contextEnd, boolean isRtl,
-                                    float[] advances, int advancesPos, Paint p) {
-
-        float ret;
-
-        int contextLen = contextEnd - contextStart;
-        int len = end - start;
-
-        if (end <= mGapStart) {
-            ret = p.getTextRunAdvances(mText, start, len, contextStart, contextLen,
-                    isRtl, advances, advancesPos);
-        } else if (start >= mGapStart) {
-            ret = p.getTextRunAdvances(mText, start + mGapLength, len,
-                    contextStart + mGapLength, contextLen, isRtl, advances, advancesPos);
-        } else {
-            char[] buf = TextUtils.obtain(contextLen);
-            getChars(contextStart, contextEnd, buf, 0);
-            ret = p.getTextRunAdvances(buf, start - contextStart, len,
-                    0, contextLen, isRtl, advances, advancesPos);
-            TextUtils.recycle(buf);
-        }
-
-        return ret;
-    }
-
-    /**
-     * Returns the next cursor position in the run.  This avoids placing the cursor between
-     * surrogates, between characters that form conjuncts, between base characters and combining
-     * marks, or within a reordering cluster.
-     *
-     * <p>The context is the shaping context for cursor movement, generally the bounds of the metric
-     * span enclosing the cursor in the direction of movement.
-     * <code>contextStart</code>, <code>contextEnd</code> and <code>offset</code> are relative to
-     * the start of the string.</p>
-     *
-     * <p>If cursorOpt is CURSOR_AT and the offset is not a valid cursor position,
-     * this returns -1.  Otherwise this will never return a value before contextStart or after
-     * contextEnd.</p>
-     *
-     * @param contextStart the start index of the context
-     * @param contextEnd the (non-inclusive) end index of the context
-     * @param dir either DIRECTION_RTL or DIRECTION_LTR
-     * @param offset the cursor position to move from
-     * @param cursorOpt how to move the cursor, one of CURSOR_AFTER,
-     * CURSOR_AT_OR_AFTER, CURSOR_BEFORE,
-     * CURSOR_AT_OR_BEFORE, or CURSOR_AT
-     * @param p the Paint object that is requesting this information
-     * @return the offset of the next position, or -1
-     * @deprecated This is an internal method, refrain from using it in your code
-     */
-    @Deprecated
-    public int getTextRunCursor(int contextStart, int contextEnd, int dir, int offset,
-                                int cursorOpt, Paint p) {
-
-        int ret;
-
-        int contextLen = contextEnd - contextStart;
-        if (contextEnd <= mGapStart) {
-            ret = p.getTextRunCursor(mText, contextStart, contextLen,
-                    dir, offset, cursorOpt);
-        } else if (contextStart >= mGapStart) {
-            ret = p.getTextRunCursor(mText, contextStart + mGapLength, contextLen,
-                    dir, offset + mGapLength, cursorOpt) - mGapLength;
-        } else {
-            char[] buf = TextUtils.obtain(contextLen);
-            getChars(contextStart, contextEnd, buf, 0);
-            ret = p.getTextRunCursor(buf, 0, contextLen,
-                    dir, offset - contextStart, cursorOpt) + contextStart;
-            TextUtils.recycle(buf);
-        }
-
-        return ret;
-    }
 
     // Documentation from interface
     public void setFilters(InputFilter[] filters) {
