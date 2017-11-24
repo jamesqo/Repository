@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package android.text;
+package thirdparty.android.text;
 
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.GetChars;
+import android.text.InputFilter;
+import android.text.NoCopySpan;
+import android.text.Selection;
+import android.text.SpanWatcher;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 
-import com.android.internal.util.ArrayUtils;
-import com.android.internal.util.CustomGrowingArrayUtils;
+import thirdparty.com.android.internal.util.CustomArrayUtils;
+import thirdparty.com.android.internal.util.CustomGrowingArrayUtils;
 
 import net.jcip.annotations.GuardedBy;
 
-import libcore.util.EmptyArray;
+import thirdparty.libcore.util.CustomEmptyArray;
 
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
@@ -33,34 +43,34 @@ import java.util.IdentityHashMap;
 /**
  * This is the class for text whose content and markup can both be changed.
  */
-public class SpannableStringBuilder implements CharSequence, GetChars, Spannable, Editable,
+public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spannable, Editable,
         Appendable {
-    private final static String TAG = "SpannableStringBuilder";
+    private final static String TAG = "CustomSpannableStringBuilder";
     /**
-     * Create a new SpannableStringBuilder with empty contents
+     * Create a new CustomSpannableStringBuilder with empty contents
      */
-    public SpannableStringBuilder() {
+    public CustomSpannableStringBuilder() {
         this("");
     }
 
     /**
-     * Create a new SpannableStringBuilder containing a copy of the
+     * Create a new CustomSpannableStringBuilder containing a copy of the
      * specified text, including its spans if any.
      */
-    public SpannableStringBuilder(CharSequence text) {
+    public CustomSpannableStringBuilder(CharSequence text) {
         this(text, 0, text.length());
     }
 
     /**
-     * Create a new SpannableStringBuilder containing a copy of the
+     * Create a new CustomSpannableStringBuilder containing a copy of the
      * specified slice of the specified text, including its spans if any.
      */
-    public SpannableStringBuilder(CharSequence text, int start, int end) {
+    public CustomSpannableStringBuilder(CharSequence text, int start, int end) {
         int srclen = end - start;
 
         if (srclen < 0) throw new StringIndexOutOfBoundsException();
 
-        mText = ArrayUtils.newUnpaddedCharArray(CustomGrowingArrayUtils.growSize(srclen));
+        mText = CustomArrayUtils.newUnpaddedCharArray(CustomGrowingArrayUtils.growSize(srclen));
         mGapStart = srclen;
         mGapLength = mText.length - srclen;
 
@@ -68,12 +78,12 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
 
         mSpanCount = 0;
         mSpanInsertCount = 0;
-        mSpans = EmptyArray.OBJECT;
-        mSpanStarts = EmptyArray.INT;
-        mSpanEnds = EmptyArray.INT;
-        mSpanFlags = EmptyArray.INT;
-        mSpanMax = EmptyArray.INT;
-        mSpanOrder = EmptyArray.INT;
+        mSpans = CustomEmptyArray.OBJECT;
+        mSpanStarts = CustomEmptyArray.INT;
+        mSpanEnds = CustomEmptyArray.INT;
+        mSpanFlags = CustomEmptyArray.INT;
+        mSpanMax = CustomEmptyArray.INT;
+        mSpanOrder = CustomEmptyArray.INT;
 
         if (text instanceof Spanned) {
             Spanned sp = (Spanned) text;
@@ -104,11 +114,11 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
         }
     }
 
-    public static SpannableStringBuilder valueOf(CharSequence source) {
-        if (source instanceof SpannableStringBuilder) {
-            return (SpannableStringBuilder) source;
+    public static CustomSpannableStringBuilder valueOf(CharSequence source) {
+        if (source instanceof CustomSpannableStringBuilder) {
+            return (CustomSpannableStringBuilder) source;
         } else {
-            return new SpannableStringBuilder(source);
+            return new CustomSpannableStringBuilder(source);
         }
     }
 
@@ -142,7 +152,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             return;
         }
 
-        char[] newText = ArrayUtils.newUnpaddedCharArray(CustomGrowingArrayUtils.growSize(size));
+        char[] newText = CustomArrayUtils.newUnpaddedCharArray(CustomGrowingArrayUtils.growSize(size));
         System.arraycopy(mText, 0, newText, 0, mGapStart);
         final int newLength = newText.length;
         final int delta = newLength - oldLength;
@@ -215,18 +225,18 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
     }
 
     // Documentation from interface
-    public SpannableStringBuilder insert(int where, CharSequence tb, int start, int end) {
+    public CustomSpannableStringBuilder insert(int where, CharSequence tb, int start, int end) {
         return replace(where, where, tb, start, end);
     }
 
     // Documentation from interface
-    public SpannableStringBuilder insert(int where, CharSequence tb) {
+    public CustomSpannableStringBuilder insert(int where, CharSequence tb) {
         return replace(where, where, tb, 0, tb.length());
     }
 
     // Documentation from interface
-    public SpannableStringBuilder delete(int start, int end) {
-        SpannableStringBuilder ret = replace(start, end, "", 0, 0);
+    public CustomSpannableStringBuilder delete(int start, int end) {
+        CustomSpannableStringBuilder ret = replace(start, end, "", 0, 0);
 
         if (mGapLength > 2 * length())
             resizeFor(length());
@@ -264,7 +274,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
     }
 
     // Documentation from interface
-    public SpannableStringBuilder append(CharSequence text) {
+    public CustomSpannableStringBuilder append(CharSequence text) {
         int length = length();
         return replace(length, length, text, 0, text.length());
     }
@@ -275,9 +285,9 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
      * @param text the character sequence to append.
      * @param what the object to be spanned over the appended text.
      * @param flags see {@link Spanned}.
-     * @return this {@code SpannableStringBuilder}.
+     * @return this {@code CustomSpannableStringBuilder}.
      */
-    public SpannableStringBuilder append(CharSequence text, Object what, int flags) {
+    public CustomSpannableStringBuilder append(CharSequence text, Object what, int flags) {
         int start = length();
         append(text);
         setSpan(what, start, length(), flags);
@@ -285,13 +295,13 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
     }
 
     // Documentation from interface
-    public SpannableStringBuilder append(CharSequence text, int start, int end) {
+    public CustomSpannableStringBuilder append(CharSequence text, int start, int end) {
         int length = length();
         return replace(length, length, text, start, end);
     }
 
     // Documentation from interface
-    public SpannableStringBuilder append(char text) {
+    public CustomSpannableStringBuilder append(char text) {
         return append(String.valueOf(text));
     }
 
@@ -500,12 +510,12 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
     }
 
     // Documentation from interface
-    public SpannableStringBuilder replace(int start, int end, CharSequence tb) {
+    public CustomSpannableStringBuilder replace(int start, int end, CharSequence tb) {
         return replace(start, end, tb, 0, tb.length());
     }
 
     // Documentation from interface
-    public SpannableStringBuilder replace(final int start, final int end,
+    public CustomSpannableStringBuilder replace(final int start, final int end,
                                           CharSequence tb, int tbstart, int tbend) {
         checkRange("replace", start, end);
 
@@ -852,17 +862,17 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
      */
     public <T> T[] getSpans(int queryStart, int queryEnd, @Nullable Class<T> kind,
                             boolean sortByInsertionOrder) {
-        if (kind == null) return (T[]) ArrayUtils.emptyArray(Object.class);
-        if (mSpanCount == 0) return ArrayUtils.emptyArray(kind);
+        if (kind == null) return (T[]) CustomArrayUtils.emptyArray(Object.class);
+        if (mSpanCount == 0) return CustomArrayUtils.emptyArray(kind);
         int count = countSpans(queryStart, queryEnd, kind, treeRoot());
         if (count == 0) {
-            return ArrayUtils.emptyArray(kind);
+            return CustomArrayUtils.emptyArray(kind);
         }
 
         // Safe conversion, but requires a suppressWarning
         T[] ret = (T[]) Array.newInstance(kind, count);
-        final int[] prioSortBuffer = sortByInsertionOrder ? obtain(count) : EmptyArray.INT;
-        final int[] orderSortBuffer = sortByInsertionOrder ? obtain(count) : EmptyArray.INT;
+        final int[] prioSortBuffer = sortByInsertionOrder ? obtain(count) : CustomEmptyArray.INT;
+        final int[] orderSortBuffer = sortByInsertionOrder ? obtain(count) : CustomEmptyArray.INT;
         getSpansRec(queryStart, queryEnd, kind, treeRoot(), ret, prioSortBuffer,
                 orderSortBuffer, 0, sortByInsertionOrder);
         if (sortByInsertionOrder) {
@@ -1039,7 +1049,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
      */
     private static int[] checkSortBuffer(int[] buffer, int size) {
         if (buffer == null || size > buffer.length) {
-            return ArrayUtils.newUnpaddedIntArray(CustomGrowingArrayUtils.growSize(size));
+            return CustomArrayUtils.newUnpaddedIntArray(CustomGrowingArrayUtils.growSize(size));
         }
         return buffer;
     }
@@ -1180,7 +1190,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
      * range of this buffer, including the overlapping spans.
      */
     public CharSequence subSequence(int start, int end) {
-        return new SpannableStringBuilder(this, start, end);
+        return new CustomSpannableStringBuilder(this, start, end);
     }
 
     /**

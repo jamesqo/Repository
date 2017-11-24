@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package libcore.util;
-public final class EmptyArray {
-    private EmptyArray() {}
+package thirdparty.libcore.util;
+public final class CustomEmptyArray {
+    private CustomEmptyArray() {}
     public static final boolean[] BOOLEAN = new boolean[0];
     public static final byte[] BYTE = new byte[0];
     public static final char[] CHAR = new char[0];

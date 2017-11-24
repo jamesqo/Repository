@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util;
+package thirdparty.com.android.internal.util;
 
 /**
  * A helper class that aims to provide comparable growth performance to ArrayList, but on primitive
@@ -42,7 +42,7 @@ public final class CustomGrowingArrayUtils {
 
         if (currentSize + 1 > array.length) {
             @SuppressWarnings("unchecked")
-            T[] newArray = ArrayUtils.newUnpaddedArray(
+            T[] newArray = CustomArrayUtils.newUnpaddedArray(
                     (Class<T>) array.getClass().getComponentType(), growSize(currentSize));
             System.arraycopy(array, 0, newArray, 0, currentSize);
             array = newArray;
@@ -58,7 +58,7 @@ public final class CustomGrowingArrayUtils {
         assert currentSize <= array.length;
 
         if (currentSize + 1 > array.length) {
-            int[] newArray = ArrayUtils.newUnpaddedIntArray(growSize(currentSize));
+            int[] newArray = CustomArrayUtils.newUnpaddedIntArray(growSize(currentSize));
             System.arraycopy(array, 0, newArray, 0, currentSize);
             array = newArray;
         }

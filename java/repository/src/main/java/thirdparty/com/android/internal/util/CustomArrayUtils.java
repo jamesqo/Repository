@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.android.internal.util;
+package thirdparty.com.android.internal.util;
 
 import android.support.annotation.NonNull;
 import android.util.ArraySet;
 
 import org.jetbrains.annotations.Nullable;
 
-import libcore.util.EmptyArray;
+import thirdparty.libcore.util.CustomEmptyArray;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -32,14 +32,14 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * ArrayUtils contains some methods that you can call to find out
+ * CustomArrayUtils contains some methods that you can call to find out
  * the most efficient increments by which to grow arrays.
  */
-public class ArrayUtils {
+public class CustomArrayUtils {
     private static final int CACHE_SIZE = 73;
     private static Object[] sCache = new Object[CACHE_SIZE];
 
-    private ArrayUtils() { /* cannot be instantiated */ }
+    private CustomArrayUtils() { /* cannot be instantiated */ }
 
     public static char[] newUnpaddedCharArray(int minLen) {
         return new char[minLen];
@@ -47,6 +47,11 @@ public class ArrayUtils {
 
     public static int[] newUnpaddedIntArray(int minLen) {
         return new int[minLen];
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] newUnpaddedArray(Class<T> clazz, int minLen) {
+        return (T[]) Array.newInstance(clazz, minLen);
     }
 
     /**
@@ -84,7 +89,7 @@ public class ArrayUtils {
     @SuppressWarnings("unchecked")
     public static <T> T[] emptyArray(Class<T> kind) {
         if (kind == Object.class) {
-            return (T[]) EmptyArray.OBJECT;
+            return (T[]) CustomEmptyArray.OBJECT;
         }
 
         int bucket = (kind.hashCode() & 0x7FFFFFFF) % CACHE_SIZE;
@@ -559,6 +564,6 @@ public class ArrayUtils {
     }
 
     public static String[] defeatNullable(@Nullable String[] val) {
-        return (val != null) ? val : EmptyArray.STRING;
+        return (val != null) ? val : CustomEmptyArray.STRING;
     }
 }
