@@ -102,7 +102,7 @@ namespace Repository
             var intent = new Intent(this, typeof(EditFileActivity));
             // The file content can be arbitrarily large, which makes it no good for Intent.PutExtra
             // and SharedPreferences. Just store it in a static field.
-            EditorContent.Current = content;
+            EditFileActivity.OriginalContent = content;
             intent.PutExtra(Strings.Extra_EditFile_Path, path);
             StartActivity(intent);
         }

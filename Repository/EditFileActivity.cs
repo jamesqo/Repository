@@ -15,6 +15,7 @@ using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Threading;
 using Repository.JavaInterop;
+using _Highlighter = Repository.Editor.Highlighting.Highlighter;
 using Path = System.IO.Path;
 
 namespace Repository
@@ -22,20 +23,33 @@ namespace Repository
     [Activity]
     public partial class EditFileActivity : Activity
     {
+        // These properties are static instead of instance since they have must be preserved
+        // when the activity is recreated, e.g. when the user changes the screen orientation.
+        // However, they can't easily be serialized to a Bundle, so I just put them in static
+        // fields.
+        // (Although OriginalContent is a string, it can be arbitrarily long so it's not safe
+        // to serialize it.)
+        public static string OriginalContent { get; set; }
+        private static TextColorer Colorer { get; set; }
+        private static IHighlighter Highlighter { get; set; }
+        private static CancellationTokenSource HighlightCanceller { get; set; }
+        private static HighlightRequester HighlightRequester { get; set; }
+
         private EditText _editor;
 
-        private string _originalContent;
         private string _path;
-
-        private TextColorer _colorer;
-        private IHighlighter _highlighter;
-        private CancellationTokenSource _highlightCts;
-        private HighlightRequester _requester;
 
         public override void OnBackPressed()
         {
             // We don't need to continue highlighting this file's text if we're currently doing so.
-            _highlightCts?.Cancel();
+            HighlightCanceller?.Cancel();
+
+            OriginalContent = null;
+            Colorer = null;
+            Highlighter = null;
+            HighlightCanceller = null;
+            HighlightRequester = null;
+
             base.OnBackPressed();
         }
 
@@ -48,7 +62,6 @@ namespace Repository
 
             void CacheParameters()
             {
-                _originalContent = EditorContent.Current;
                 _path = Intent.Extras.GetString(Strings.Extra_EditFile_Path).NotNullOrEmpty();
             }
 
@@ -62,7 +75,7 @@ namespace Repository
 
             try
             {
-                await SetupEditor();
+                await SetupEditor(savedInstanceState);
             }
             catch (TaskCanceledException)
             {
@@ -82,9 +95,9 @@ namespace Repository
         private static IHighlighter GetHighlighter(string filePath, string content)
         {
             var fileExtension = Path.GetExtension(filePath).TrimStart('.');
-            return Highlighter.FromFileExtension(fileExtension)
-                ?? Highlighter.FromFirstLine(content.FirstLine())
-                ?? Highlighter.Plaintext;
+            return _Highlighter.FromFileExtension(fileExtension)
+                ?? _Highlighter.FromFirstLine(content.FirstLine())
+                ?? _Highlighter.Plaintext;
         }
 
         /// <summary>
@@ -98,18 +111,18 @@ namespace Repository
             // because we let other work, such as input/rendering code, run more often.
             const int FlushFrequency = 32;
 
-            Verify.ValidState(_requester.IsHighlightRequested, "A highlight should have been requested.");
+            Verify.ValidState(HighlightRequester.IsHighlightRequested, "A highlight should have been requested.");
 
-            _highlightCts = _highlightCts ?? new CancellationTokenSource();
-            content = content ?? _colorer.Text.ToString();
+            HighlightCanceller = HighlightCanceller ?? new CancellationTokenSource();
+            content = content ?? Colorer.Text.ToString();
 
-            using (_colorer.Setup(FlushFrequency))
+            using (Colorer.Setup(FlushFrequency))
             {
-                await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
+                await Highlighter.Highlight(content, Colorer, HighlightCanceller.Token);
             }
 
-            _requester.OnHighlightFinished();
-            if (!_requester.IsHighlightRequested)
+            HighlightRequester.OnHighlightFinished();
+            if (!HighlightRequester.IsHighlightRequested)
             {
                 return;
             }
@@ -125,19 +138,29 @@ namespace Repository
             ThreadingUtilities.PostToUIThread(async () => await HighlightContent());
         }
 
-        private async Task SetupEditor()
+        private async Task SetupEditor(Bundle bundle)
         {
             var theme = GetEditorTheme();
-            _colorer = new TextColorer(_originalContent, theme.Colors);
-            _highlighter = GetHighlighter(filePath: _path, content: _originalContent);
+            if (bundle == null)
+            {
+                // This is a fresh activity instance.
+                Colorer = new TextColorer(OriginalContent, theme.Colors);
+                Highlighter = GetHighlighter(filePath: _path, content: OriginalContent);
 
-            _requester = new HighlightRequester(
-                onInitialRequest: OnHighlightRequested,
-                maxEditsBeforeRequest: 10);
-            _colorer.Text.SetSpan(_requester);
+                HighlightRequester = new HighlightRequester(
+                    onInitialRequest: OnHighlightRequested,
+                    maxEditsBeforeRequest: 10);
+                Colorer.Text.SetSpan(HighlightRequester);
 
-            SetupEditorCore(theme, _colorer.Text);
-            await HighlightContent(_originalContent);
+                SetupEditorCore(theme, Colorer.Text);
+                await HighlightContent(OriginalContent);
+            }
+            else
+            {
+                // This instance is being recreated from a previous instance of this activity.
+                // Just use the state from that instance.
+                SetupEditorCore(theme, Colorer.Text);
+            }
         }
 
         private void SetupEditorCore(EditorTheme theme, EditorText text)
