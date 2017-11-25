@@ -864,7 +864,7 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                             boolean sortByInsertionOrder) {
         if (kind == null) return (T[]) CustomArrayUtils.emptyArray(Object.class);
         if (mSpanCount == 0) return CustomArrayUtils.emptyArray(kind);
-        int count = countSpans(queryStart, queryEnd, kind, treeRoot());
+        int count = countSpans(queryStart, queryEnd, kind);
         if (count == 0) {
             return CustomArrayUtils.emptyArray(kind);
         }
@@ -883,40 +883,58 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
         return ret;
     }
 
-    private int countSpans(int queryStart, int queryEnd, Class kind, int i) {
+    private int countSpans(int queryStart, int queryEnd, Class kind) {
+        IntStack stack = new IntStack(treeHeight());
+        int i = treeRoot();
+        int n = mSpanCount;
         int count = 0;
-        if ((i & 1) != 0) {
-            // internal tree node
-            int left = leftChild(i);
-            int spanMax = mSpanMax[left];
-            if (spanMax > mGapStart) {
-                spanMax -= mGapLength;
+
+        while (true) {
+            if (i != -1 && (i & 1) != 0) {
+                // Interior node
+                stack.push(i);
+
+                int left = leftChild(i);
+                int spanMax = mSpanMax[left];
+                if (spanMax > mGapStart) {
+                    spanMax -= mGapLength;
+                }
+                i = spanMax >= queryStart ? left : -1;
             }
-            if (spanMax >= queryStart) {
-                count = countSpans(queryStart, queryEnd, kind, left);
+            else {
+                // Leaf node, or skipping left child of interior node (indicated by -1)
+                if (i >= n) {
+                    break;
+                }
+                if (i != -1) {
+                    int spanStart = mSpanStarts[i];
+                    if (spanStart > mGapStart) {
+                        spanStart -= mGapLength;
+                    }
+                    if (spanStart <= queryEnd) {
+                        int spanEnd = mSpanEnds[i];
+                        if (spanEnd > mGapStart) {
+                            spanEnd -= mGapLength;
+                        }
+                        if (spanEnd >= queryStart &&
+                                (spanStart == spanEnd || queryStart == queryEnd ||
+                                        (spanStart != queryEnd && spanEnd != queryStart)) &&
+                                (Object.class == kind || kind.isInstance(mSpans[i]))) {
+                            count++;
+                        }
+                    }
+                }
+                if (stack.isEmpty()) {
+                    break;
+                }
+                i = stack.pop();
+                if (i >= n) {
+                    break;
+                }
+                i = rightChild(i);
             }
         }
-        if (i < mSpanCount) {
-            int spanStart = mSpanStarts[i];
-            if (spanStart > mGapStart) {
-                spanStart -= mGapLength;
-            }
-            if (spanStart <= queryEnd) {
-                int spanEnd = mSpanEnds[i];
-                if (spanEnd > mGapStart) {
-                    spanEnd -= mGapLength;
-                }
-                if (spanEnd >= queryStart &&
-                        (spanStart == spanEnd || queryStart == queryEnd ||
-                                (spanStart != queryEnd && spanEnd != queryStart)) &&
-                        (Object.class == kind || kind.isInstance(mSpans[i]))) {
-                    count++;
-                }
-                if ((i & 1) != 0) {
-                    count += countSpans(queryStart, queryEnd, kind, rightChild(i));
-                }
-            }
-        }
+
         return count;
     }
 
