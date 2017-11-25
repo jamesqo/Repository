@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Android.OS;
 
 namespace Repository.Editor.Android.Internal.Threading
