@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Repository.Editor.Android.Threading
+namespace Repository.Common.Android.Threading
 {
     public interface IYielder
     {

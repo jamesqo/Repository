@@ -6,6 +6,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Text;
 using Android.Widget;
+using Repository.Common.Android.Threading;
 using Repository.Common.Validation;
 using Repository.Editor.Android;
 using Repository.Editor.Android.Highlighting;
@@ -21,9 +22,10 @@ namespace Repository
     [Activity]
     public partial class EditFileActivity : Activity
     {
+        public static string OriginalContent { get; set; }
+
         private EditText _editor;
 
-        private string _originalContent;
         private string _path;
 
         private TextColorer _colorer;
@@ -35,6 +37,7 @@ namespace Repository
         {
             // We don't need to continue highlighting this file's text if we're currently doing so.
             _highlightCts?.Cancel();
+            OriginalContent = null;
             base.OnBackPressed();
         }
 
@@ -131,8 +134,8 @@ namespace Repository
             if (bundle == null)
             {
                 // This is a fresh activity instance.
-                _colorer = new TextColorer(_originalContent, theme.Colors);
-                _highlighter = GetHighlighter(filePath: _path, content: _originalContent);
+                _colorer = new TextColorer(OriginalContent, theme.Colors);
+                _highlighter = GetHighlighter(filePath: _path, content: OriginalContent);
 
                 _requester = new HighlightRequester(
                     onInitialRequest: OnHighlightRequested,
@@ -140,7 +143,7 @@ namespace Repository
                 _colorer.Text.SetSpan(_requester);
 
                 SetupEditorCore(theme, _colorer.Text);
-                await HighlightContent(_originalContent);
+                await HighlightContent(OriginalContent);
             }
             else
             {
@@ -150,7 +153,7 @@ namespace Repository
                 // recreating the activity will cause the queued continuations that highlight the
                 // source code to be lost. (The colorer implicitly queues these continuations when
                 // it awaits Task.Yield().) We have to re-post those callbacks here.
-                ThreadingUtilities.Post(DefaultYielder.MostRecentCallback);
+                ThreadingUtilities.Post(DefaultYielder.MostRecentContinuation);
             }
         }
 

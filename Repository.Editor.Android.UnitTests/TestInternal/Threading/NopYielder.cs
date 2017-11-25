@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Repository.Editor.Android.Threading;
+using Repository.Common.Android.Threading;
 
 namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
 {

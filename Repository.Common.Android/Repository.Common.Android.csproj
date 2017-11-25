@@ -5,18 +5,17 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FBACC4C2-B89F-4C98-9B7A-71EB7A15E840}</ProjectGuid>
+    <ProjectGuid>{B4F01D53-F214-487A-8549-072505D1177D}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Repository.Editor.Android</RootNamespace>
-    <AssemblyName>Repository.Editor.Android</AssemblyName>
+    <RootNamespace>Repository.Common.Android</RootNamespace>
+    <AssemblyName>Repository.Common.Android</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,41 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EditorTheme.cs" />
-    <Compile Include="Internal\Disposable.cs" />
-    <Compile Include="Internal\Editor\Highlighting\Coloring.cs" />
-    <Compile Include="Highlighting\ColorTheme.cs" />
-    <Compile Include="Highlighting\IColorTheme.cs" />
-    <Compile Include="Internal\Editor\Highlighting\MonokaiColorTheme.cs" />
-    <Compile Include="Internal\IO\NativeBuffer.cs" />
-    <Compile Include="Internal\IO\NativeBuffer.DebuggerProxy.cs" />
-    <Compile Include="Internal\JavaInterop\Jni.cs" />
-    <Compile Include="Internal\JavaInterop\NativeByteBuffer.cs" />
-    <Compile Include="ITypefaceProvider.cs" />
-    <Compile Include="NoCopyEditableFactory.cs" />
-    <Compile Include="Highlighting\TextColorer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Threading\DefaultYielder.cs" />
+    <Compile Include="Threading\IYielder.cs" />
+    <Compile Include="Threading\ThreadingUtilities.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Repository.Common.Android\Repository.Common.Android.csproj">
-      <Project>{b4f01d53-f214-487a-8549-072505d1177d}</Project>
-      <Name>Repository.Common.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repository.Common\Repository.Common.csproj">
-      <Project>{50fb1cda-38b0-4e70-a175-7d733e2b5c9f}</Project>
-      <Name>Repository.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repository.Editor\Repository.Editor.csproj">
-      <Project>{4490be7b-c620-40b1-8c62-5396eecc6f3e}</Project>
-      <Name>Repository.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repository.JavaInterop\Repository.JavaInterop.csproj">
-      <Project>{d84b83dc-37b4-443a-bb4b-4a9acc01d4ab}</Project>
-      <Name>Repository.JavaInterop</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Repository.Common.Android.Threading;
 using Repository.Common.Validation;
-using Repository.Editor.Android.Threading;
 
 namespace Repository.Editor.Android.UnitTests.TestInternal.Threading
 {

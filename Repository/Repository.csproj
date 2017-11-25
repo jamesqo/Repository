@@ -184,6 +184,10 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Repository.Common.Android\Repository.Common.Android.csproj">
+      <Project>{b4f01d53-f214-487a-8549-072505d1177d}</Project>
+      <Name>Repository.Common.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Repository.Common\Repository.Common.csproj">
       <Project>{50fb1cda-38b0-4e70-a175-7d733e2b5c9f}</Project>
       <Name>Repository.Common</Name>

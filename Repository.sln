@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{F8475452-CA0A-4CC5-9F2E-1EA3A72CDD57}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Editor.Android.UnitTests", "Repository.Editor.Android.UnitTests\Repository.Editor.Android.UnitTests.csproj", "{80BF51F9-73E9-4F16-B051-A4C4DFC0D588}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.JavaInterop.UnitTests", "Repository.JavaInterop.UnitTests\Repository.JavaInterop.UnitTests.csproj", "{1655B6B2-54EF-4C8B-A9E8-81BC5C43BC28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Common.Android", "Repository.Common.Android\Repository.Common.Android.csproj", "{B4F01D53-F214-487A-8549-072505D1177D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{1655B6B2-54EF-4C8B-A9E8-81BC5C43BC28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1655B6B2-54EF-4C8B-A9E8-81BC5C43BC28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1655B6B2-54EF-4C8B-A9E8-81BC5C43BC28}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B4F01D53-F214-487A-8549-072505D1177D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4F01D53-F214-487A-8549-072505D1177D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4F01D53-F214-487A-8549-072505D1177D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4F01D53-F214-487A-8549-072505D1177D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

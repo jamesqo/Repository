@@ -1,10 +1,12 @@
 ﻿using System;
 using Android.OS;
 
-namespace Repository.Editor.Android.Internal.Threading
+namespace Repository.Common.Android.Threading
 {
-    internal static class ThreadingUtilities
+    public static class ThreadingUtilities
     {
+        public static bool IsRunningOnUIThread => Looper.MainLooper == Looper.MyLooper();
+
         /// <summary>
         /// Posts an action to the current thread.
         /// </summary>

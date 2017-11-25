@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Repository.Editor.Android.Threading;
 
-namespace Repository.Editor.Android.Internal.Threading
+namespace Repository.Common.Android.Threading
 {
-    internal sealed class DefaultYielder : IYielder
+    public sealed class DefaultYielder : IYielder
     {
         private struct YieldAwaitable : INotifyCompletion
         {

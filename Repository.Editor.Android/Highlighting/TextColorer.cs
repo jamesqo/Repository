@@ -2,12 +2,11 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Repository.Common.Android.Threading;
 using Repository.Common.Validation;
 using Repository.Editor.Android.Internal;
 using Repository.Editor.Android.Internal.Editor.Highlighting;
 using Repository.Editor.Android.Internal.JavaInterop;
-using Repository.Editor.Android.Internal.Threading;
-using Repository.Editor.Android.Threading;
 using Repository.Editor.Highlighting;
 using Repository.JavaInterop;
 
