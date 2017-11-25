@@ -125,7 +125,7 @@ namespace Repository
             ThreadingUtilities.PostToUIThread(async () => await HighlightContent());
         }
 
-        private Task SetupEditor()
+        private async Task SetupEditor()
         {
             var theme = GetEditorTheme();
             _colorer = new TextColorer(_originalContent, theme.Colors);
@@ -137,7 +137,7 @@ namespace Repository
             _colorer.Text.SetSpan(_requester);
 
             SetupEditorCore(theme, _colorer.Text);
-            return HighlightContent(_originalContent);
+            await HighlightContent(_originalContent);
         }
 
         private void SetupEditorCore(EditorTheme theme, EditorText text)

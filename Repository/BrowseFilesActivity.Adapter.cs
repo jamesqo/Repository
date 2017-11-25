@@ -77,18 +77,18 @@ namespace Repository
                 return fullContents.Single();
             }
 
-            internal Task PopDirectory()
+            internal async Task PopDirectory()
             {
                 Verify.ValidState(!IsAtRoot);
 
                 _directoryStack.Pop();
-                return UpdateContents();
+                await UpdateContents();
             }
 
-            internal Task PushDirectory(string directory)
+            internal async Task PushDirectory(string directory)
             {
                 _directoryStack.Push(directory);
-                return UpdateContents();
+                await UpdateContents();
             }
 
             private void OnClick(int position) => ItemClick?.Invoke(this, position);
