@@ -1,15 +1,16 @@
 package com.bluejay.repository;
 
 import android.support.annotation.ColorInt;
-import android.text.SpannableStringBuilder;
 import android.text.style.*;
+
+import thirdparty.android.text.CustomSpannableStringBuilder;
 
 import static com.bluejay.repository.Validation.*;
 
 // It would be preferable to implement Editable and wrap a SpannableStringBuilder,
 // instead of extending it directly. However, that causes the EditText to act glitchy.
 // See https://stackoverflow.com/q/45125759/4077294 for more info.
-public class EditorText extends SpannableStringBuilder {
+public class EditorText extends CustomSpannableStringBuilder {
     private static final int DORMANT_COLOR_CURSOR = -1;
 
     private final EditQueue mPendingEdits;
@@ -38,7 +39,7 @@ public class EditorText extends SpannableStringBuilder {
     }
 
     @Override
-    public SpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
+    public CustomSpannableStringBuilder replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
         if (!isColorCursorDormant()) {
             if (start != end) {
                 registerDeletion(start, end - start);
