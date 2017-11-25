@@ -134,7 +134,6 @@
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
     <Compile Include="Internal\Strings.cs" />
-    <Compile Include="Internal\Threading\TaskExtensions.cs" />
     <Compile Include="Internal\Threading\ThreadingUtilities.cs" />
     <Compile Include="Internal\UrlUtilities.cs" />
     <Compile Include="MainActivity.cs" />

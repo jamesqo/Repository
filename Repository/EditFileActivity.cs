@@ -15,7 +15,6 @@ using Repository.Internal.Android;
 using Repository.Internal.Editor;
 using Repository.Internal.Threading;
 using Repository.JavaInterop;
-using Debug = System.Diagnostics.Debug;
 using Path = System.IO.Path;
 
 namespace Repository
@@ -62,9 +61,13 @@ namespace Repository
             CacheViews();
             CacheParameters();
 
-            var theme = GetEditorTheme();
-            if (await SetupEditor(theme).BecomesCanceled())
+            try
             {
+                await SetupEditor();
+            }
+            catch (TaskCanceledException)
+            {
+                // If highlighting is canceled because the user clicks the back button, just bail.
                 return;
             }
         }
@@ -88,43 +91,18 @@ namespace Repository
         /// <summary>
         /// Highlights the content of the editor.
         /// </summary>
-        private Task HighlightContent()
-        {
-            string newContent = _colorer.Text.ToString();
-            return HighlightContent(newContent);
-        }
-
-        /// <summary>
-        /// Highlights the content of the editor.
-        /// </summary>
         /// <param name="content">The textual content of the editor.</param>
-        private async Task HighlightContent(string content)
-        {
-            Verify.ValidState(_requester.IsHighlightRequested, "A highlight should have been requested.");
-
-            await HighlightContentCore(content);
-
-            _requester.OnHighlightFinished();
-            if (!_requester.IsHighlightRequested)
-            {
-                return;
-            }
-
-            await HighlightContent();
-        }
-
-        /// <summary>
-        /// Highlights the content of the editor.
-        /// </summary>
-        /// <param name="content">The textual content of the editor.</param>
-        private async Task HighlightContentCore(string content)
+        private async Task HighlightContent(string content = null)
         {
             // This controls how often we flush work done by the colorer and yield
             // to pending work on the UI thread. A lower value means increased responsiveness
             // because we let other work, such as input/rendering code, run more often.
             const int FlushFrequency = 32;
 
+            Verify.ValidState(_requester.IsHighlightRequested, "A highlight should have been requested.");
+
             _highlightCts = _highlightCts ?? new CancellationTokenSource();
+            content = content ?? _colorer.Text.ToString();
 
             using (_colorer.Setup(FlushFrequency))
             {
@@ -135,6 +113,14 @@ namespace Repository
                 // undesirable for large files.
                 await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
             }
+
+            _requester.OnHighlightFinished();
+            if (!_requester.IsHighlightRequested)
+            {
+                return;
+            }
+
+            await HighlightContent();
         }
 
         /// <summary>
@@ -150,8 +136,9 @@ namespace Repository
             return EditorContent.Current;
         }
 
-        private Task SetupEditor(EditorTheme theme)
+        private Task SetupEditor()
         {
+            var theme = GetEditorTheme();
             var content = ReadEditorContent();
             _colorer = new TextColorer(content, theme.Colors);
             _highlighter = GetHighlighter(filePath: _path, content: content);
