@@ -13,9 +13,7 @@ using Repository.Editor.Highlighting;
 using Repository.Internal;
 using Repository.Internal.Android;
 using Repository.Internal.Editor;
-using Repository.Internal.Threading;
 using Repository.JavaInterop;
-using _Highlighter = Repository.Editor.Highlighting.Highlighter;
 using Path = System.IO.Path;
 
 namespace Repository
@@ -23,33 +21,20 @@ namespace Repository
     [Activity]
     public partial class EditFileActivity : Activity
     {
-        // These properties are static instead of instance since they have must be preserved
-        // when the activity is recreated, e.g. when the user changes the screen orientation.
-        // However, they can't easily be serialized to a Bundle, so I just put them in static
-        // fields.
-        // (Although OriginalContent is a string, it can be arbitrarily long so it's not safe
-        // to serialize it.)
-        public static string OriginalContent { get; set; }
-        private static TextColorer Colorer { get; set; }
-        private static IHighlighter Highlighter { get; set; }
-        private static CancellationTokenSource HighlightCanceller { get; set; }
-        private static HighlightRequester HighlightRequester { get; set; }
-
         private EditText _editor;
 
+        private string _originalContent;
         private string _path;
+
+        private TextColorer _colorer;
+        private IHighlighter _highlighter;
+        private CancellationTokenSource _highlightCts;
+        private HighlightRequester _requester;
 
         public override void OnBackPressed()
         {
             // We don't need to continue highlighting this file's text if we're currently doing so.
-            HighlightCanceller?.Cancel();
-
-            OriginalContent = null;
-            Colorer = null;
-            Highlighter = null;
-            HighlightCanceller = null;
-            HighlightRequester = null;
-
+            _highlightCts?.Cancel();
             base.OnBackPressed();
         }
 
@@ -95,9 +80,9 @@ namespace Repository
         private static IHighlighter GetHighlighter(string filePath, string content)
         {
             var fileExtension = Path.GetExtension(filePath).TrimStart('.');
-            return _Highlighter.FromFileExtension(fileExtension)
-                ?? _Highlighter.FromFirstLine(content.FirstLine())
-                ?? _Highlighter.Plaintext;
+            return Highlighter.FromFileExtension(fileExtension)
+                ?? Highlighter.FromFirstLine(content.FirstLine())
+                ?? Highlighter.Plaintext;
         }
 
         /// <summary>
@@ -111,18 +96,18 @@ namespace Repository
             // because we let other work, such as input/rendering code, run more often.
             const int FlushFrequency = 32;
 
-            Verify.ValidState(HighlightRequester.IsHighlightRequested, "A highlight should have been requested.");
+            Verify.ValidState(_requester.IsHighlightRequested, "A highlight should have been requested.");
 
-            HighlightCanceller = HighlightCanceller ?? new CancellationTokenSource();
-            content = content ?? Colorer.Text.ToString();
+            _highlightCts = _highlightCts ?? new CancellationTokenSource();
+            content = content ?? _colorer.Text.ToString();
 
-            using (Colorer.Setup(FlushFrequency))
+            using (_colorer.Setup(FlushFrequency))
             {
-                await Highlighter.Highlight(content, Colorer, HighlightCanceller.Token);
+                await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
             }
 
-            HighlightRequester.OnHighlightFinished();
-            if (!HighlightRequester.IsHighlightRequested)
+            _requester.OnHighlightFinished();
+            if (!_requester.IsHighlightRequested)
             {
                 return;
             }
@@ -135,7 +120,9 @@ namespace Repository
         /// </summary>
         private void OnHighlightRequested()
         {
-            ThreadingUtilities.PostToUIThread(async () => await HighlightContent());
+            Verify.ValidState(ThreadingUtilities.IsRunningOnUIThread, "We should be running on the UI thread!");
+
+            ThreadingUtilities.Post(async () => await HighlightContent());
         }
 
         private async Task SetupEditor(Bundle bundle)
@@ -144,22 +131,26 @@ namespace Repository
             if (bundle == null)
             {
                 // This is a fresh activity instance.
-                Colorer = new TextColorer(OriginalContent, theme.Colors);
-                Highlighter = GetHighlighter(filePath: _path, content: OriginalContent);
+                _colorer = new TextColorer(_originalContent, theme.Colors);
+                _highlighter = GetHighlighter(filePath: _path, content: _originalContent);
 
-                HighlightRequester = new HighlightRequester(
+                _requester = new HighlightRequester(
                     onInitialRequest: OnHighlightRequested,
                     maxEditsBeforeRequest: 10);
-                Colorer.Text.SetSpan(HighlightRequester);
+                _colorer.Text.SetSpan(_requester);
 
-                SetupEditorCore(theme, Colorer.Text);
-                await HighlightContent(OriginalContent);
+                SetupEditorCore(theme, _colorer.Text);
+                await HighlightContent(_originalContent);
             }
             else
             {
                 // This instance is being recreated from a previous instance of this activity.
-                // Just use the state from that instance.
-                SetupEditorCore(theme, Colorer.Text);
+                // All state from that instance has been transferred, except for one thing...
+                // If we are in the middle of highlighting when the user rotates the device,
+                // recreating the activity will cause the queued continuations that highlight the
+                // source code to be lost. (The colorer implicitly queues these continuations when
+                // it awaits Task.Yield().) We have to re-post those callbacks here.
+                ThreadingUtilities.Post(DefaultYielder.MostRecentCallback);
             }
         }
 
