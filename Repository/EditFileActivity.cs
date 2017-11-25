@@ -147,12 +147,7 @@ namespace Repository
 
         private static string ReadEditorContent()
         {
-            var content = EditorContent.Current;
-            Debug.Assert(content != null); // We only read the content once.
-            // No reason to keep the content alive after we're done using it.
-            // The string can be arbitrarily large, so let the GC collect it ASAP.
-            EditorContent.Current = null;
-            return content;
+            return EditorContent.Current;
         }
 
         private Task SetupEditor(EditorTheme theme)
