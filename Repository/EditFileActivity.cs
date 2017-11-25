@@ -24,6 +24,7 @@ namespace Repository
     {
         private EditText _editor;
 
+        private string _originalContent;
         private string _path;
 
         private TextColorer _colorer;
@@ -47,9 +48,7 @@ namespace Repository
 
             void CacheParameters()
             {
-                // The content is not cached since it may be an arbitrarily large string.
-                // If we stored it in a field, we would want to clear that field ASAP anyway
-                // to allow the GC to collect the string.
+                _originalContent = EditorContent.Current;
                 _path = Intent.Extras.GetString(Strings.Extra_EditFile_Path).NotNullOrEmpty();
             }
 
@@ -106,11 +105,6 @@ namespace Repository
 
             using (_colorer.Setup(FlushFrequency))
             {
-                // Do not reference `content` past this line.
-                // Doing so will cause it to be stored in a field in the async state
-                // machine for this method. Storing a reference to it will prevent the GC
-                // from collecting the string while the highlighter is running, which is
-                // undesirable for large files.
                 await _highlighter.Highlight(content, _colorer, _highlightCts.Token);
             }
 
@@ -131,17 +125,11 @@ namespace Repository
             ThreadingUtilities.PostToUIThread(async () => await HighlightContent());
         }
 
-        private static string ReadEditorContent()
-        {
-            return EditorContent.Current;
-        }
-
         private Task SetupEditor()
         {
             var theme = GetEditorTheme();
-            var content = ReadEditorContent();
-            _colorer = new TextColorer(content, theme.Colors);
-            _highlighter = GetHighlighter(filePath: _path, content: content);
+            _colorer = new TextColorer(_originalContent, theme.Colors);
+            _highlighter = GetHighlighter(filePath: _path, content: _originalContent);
 
             _requester = new HighlightRequester(
                 onInitialRequest: OnHighlightRequested,
@@ -149,7 +137,7 @@ namespace Repository
             _colorer.Text.SetSpan(_requester);
 
             SetupEditorCore(theme, _colorer.Text);
-            return HighlightContent(content);
+            return HighlightContent(_originalContent);
         }
 
         private void SetupEditorCore(EditorTheme theme, EditorText text)
