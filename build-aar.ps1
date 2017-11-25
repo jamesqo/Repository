@@ -14,6 +14,7 @@ if (! $?)
 
 New-Item -Force -ItemType Directory -Path $aarDestination | Out-Null
 cp $aarSource $aarDestination -Force
-echo "Successfully copied $aarName to $aarDestination."
+$time = Get-Date -Format "hh:mm:ss tt"
+echo "Successfully copied $aarName to $aarDestination at $time."
 
 popd
