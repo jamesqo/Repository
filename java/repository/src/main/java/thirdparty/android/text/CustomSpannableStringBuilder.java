@@ -931,6 +931,24 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                 if (i >= n) {
                     break;
                 }
+                {
+                    int spanStart = mSpanStarts[i];
+                    if (spanStart > mGapStart) {
+                        spanStart -= mGapLength;
+                    }
+                    if (spanStart <= queryEnd) {
+                        int spanEnd = mSpanEnds[i];
+                        if (spanEnd > mGapStart) {
+                            spanEnd -= mGapLength;
+                        }
+                        if (spanEnd >= queryStart &&
+                                (spanStart == spanEnd || queryStart == queryEnd ||
+                                        (spanStart != queryEnd && spanEnd != queryStart)) &&
+                                (Object.class == kind || kind.isInstance(mSpans[i]))) {
+                            count++;
+                        }
+                    }
+                }
                 i = rightChild(i);
             }
         }
