@@ -147,13 +147,19 @@ namespace Repository
             }
             else
             {
+                return;
+
                 // This instance is being recreated from a previous instance of this activity.
                 // All state from that instance has been transferred, except for one thing...
                 // If we are in the middle of highlighting when the user rotates the device,
                 // recreating the activity will cause the queued continuations that highlight the
                 // source code to be lost. (The colorer implicitly queues these continuations when
                 // it awaits Task.Yield().) We have to re-post those callbacks here.
-                ThreadingUtilities.Post(DefaultYielder.MostRecentContinuation);
+                var continuation = DefaultYielder.MostRecentContinuation;
+                if (continuation != null)
+                {
+                    ThreadingUtilities.Post(continuation);
+                }
             }
         }
 

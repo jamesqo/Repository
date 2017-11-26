@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -18,8 +19,19 @@ namespace Repository.Common.Android.Threading
 
             public void OnCompleted(Action continuation)
             {
+                continuation = WrapForDebugger(continuation);
                 MostRecentContinuation = continuation;
                 ThreadingUtilities.Post(continuation);
+            }
+
+            private static Action WrapForDebugger(Action continuation)
+            {
+                return () =>
+                {
+                    Debug.WriteLine($"Running continuation #{RuntimeHelpers.GetHashCode(continuation)}");
+                    Debugger.Break();
+                    continuation();
+                };
             }
         }
 
