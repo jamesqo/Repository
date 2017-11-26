@@ -9,7 +9,7 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
-    [Activity(MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(MainLauncher = true, Icon = "@drawable/icon", Name = "com.bluejay.repository.MainActivity")]
     public class MainActivity : Activity
     {
         private Button _startButton;

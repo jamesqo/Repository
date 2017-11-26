@@ -11,7 +11,7 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity]
+    [Activity(Name = "com.bluejay.repository.ChooseProviderActivity")]
     public class ChooseProviderActivity : Activity
     {
         private Button _githubButton;

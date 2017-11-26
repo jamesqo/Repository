@@ -19,7 +19,7 @@ using Path = System.IO.Path;
 
 namespace Repository
 {
-    [Activity]
+    [Activity(Name = "com.bluejay.repository.EditFileActivity")]
     public partial class EditFileActivity : Activity
     {
         public static string OriginalContent { get; set; }

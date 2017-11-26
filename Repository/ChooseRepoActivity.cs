@@ -7,7 +7,7 @@ using Repository.Internal;
 
 namespace Repository
 {
-    [Activity]
+    [Activity(Name = "com.bluejay.repository.ChooseRepoActivity")]
     public partial class ChooseRepoActivity : Activity
     {
         private RecyclerView _repoView;
