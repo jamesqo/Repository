@@ -22,9 +22,10 @@ namespace Repository
     [Activity]
     public partial class EditFileActivity : Activity
     {
+        public static string OriginalContent { get; set; }
+
         private EditText _editor;
 
-        private string _originalContent;
         private string _path;
 
         private TextColorer _colorer;
@@ -36,6 +37,7 @@ namespace Repository
         {
             // We don't need to continue highlighting this file's text if we're currently doing so.
             _highlightCts?.Cancel();
+            OriginalContent = null;
             base.OnBackPressed();
         }
 
@@ -48,7 +50,6 @@ namespace Repository
 
             void CacheParameters()
             {
-                _originalContent = EditorContent.Current;
                 _path = Intent.Extras.GetString(Strings.Extra_EditFile_Path).NotNullOrEmpty();
             }
 
@@ -128,8 +129,8 @@ namespace Repository
         private async Task SetupEditor()
         {
             var theme = GetEditorTheme();
-            _colorer = new TextColorer(_originalContent, theme.Colors);
-            _highlighter = GetHighlighter(filePath: _path, content: _originalContent);
+            _colorer = new TextColorer(OriginalContent, theme.Colors);
+            _highlighter = GetHighlighter(filePath: _path, content: OriginalContent);
 
             _requester = new HighlightRequester(
                 onInitialRequest: OnHighlightRequested,
@@ -137,7 +138,7 @@ namespace Repository
             _colorer.Text.SetSpan(_requester);
 
             SetupEditorCore(theme, _colorer.Text);
-            await HighlightContent(_originalContent);
+            await HighlightContent(OriginalContent);
         }
 
         private void SetupEditorCore(EditorTheme theme, EditorText text)

@@ -129,7 +129,6 @@
     <Compile Include="Internal\Creds.cs" />
     <Compile Include="Internal\Diagnostics\DebugAssertException.cs" />
     <Compile Include="Internal\Diagnostics\DebugListener.cs" />
-    <Compile Include="Internal\Editor\EditorContent.cs" />
     <Compile Include="Internal\Editor\TypefaceProvider.cs" />
     <Compile Include="Internal\GitHub.cs" />
     <Compile Include="Internal\StringExtensions.cs" />
