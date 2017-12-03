@@ -11,7 +11,7 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity(Name = "com.bluejay.repository.SignInActivity")]
+    [Activity(Name = Strings.Name_SignIn)]
     public partial class SignInActivity : Activity
     {
         private WebView _webView;

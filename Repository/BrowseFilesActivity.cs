@@ -10,7 +10,7 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity(Label = "File View", Name = "com.bluejay.repository.BrowseFilesActivity")]
+    [Activity(Label = "File View", Name = Strings.Name_BrowseFiles)]
     public partial class BrowseFilesActivity : Activity
     {
         private RecyclerView _fileView;

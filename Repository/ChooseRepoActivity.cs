@@ -7,7 +7,7 @@ using Repository.Internal;
 
 namespace Repository
 {
-    [Activity(Name = "com.bluejay.repository.ChooseRepoActivity")]
+    [Activity(Label = "@string/Label_ChooseRepo", Name = Strings.Name_ChooseRepo)]
     public partial class ChooseRepoActivity : Activity
     {
         private RecyclerView _repoView;
@@ -21,7 +21,6 @@ namespace Repository
 
             base.OnCreate(savedInstanceState);
 
-            Title = Resources.GetString(Resource.String.Label_ChooseRepo);
             SetContentView(Resource.Layout.ChooseRepo);
             CacheViews();
 

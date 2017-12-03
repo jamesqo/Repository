@@ -4,12 +4,13 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Widget;
+using Repository.Internal;
 using Repository.Internal.Diagnostics;
 using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
-    [Activity(MainLauncher = true, Icon = "@drawable/icon", Name = "com.bluejay.repository.MainActivity")]
+    [Activity(Icon = "@drawable/icon", Label = "@string/app_name", MainLauncher = true, Name = Strings.Name_Main)]
     public class MainActivity : Activity
     {
         private Button _startButton;
@@ -25,7 +26,6 @@ namespace Repository
 
             base.OnCreate(bundle);
 
-            Title = Resources.GetString(Resource.String.app_name);
             SetContentView(Resource.Layout.Main);
             CacheViews();
 

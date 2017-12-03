@@ -11,7 +11,7 @@ using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity(Name = "com.bluejay.repository.ChooseProviderActivity")]
+    [Activity(Label = "@string/Label_ChooseProvider", Name = Strings.Name_ChooseProvider)]
     public class ChooseProviderActivity : Activity
     {
         private Button _githubButton;
@@ -25,7 +25,6 @@ namespace Repository
 
             base.OnCreate(savedInstanceState);
 
-            Title = Resources.GetString(Resource.String.Label_ChooseProvider);
             SetContentView(Resource.Layout.ChooseProvider);
             CacheViews();
 
