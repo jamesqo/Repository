@@ -20,7 +20,7 @@ using Path = System.IO.Path;
 
 namespace Repository
 {
-    [Activity]
+    [Activity(Name = Strings.Name_EditFile)]
     public partial class EditFileActivity : Activity
     {
         // This property is static because serializing file contents via Intent.PutExtra can be

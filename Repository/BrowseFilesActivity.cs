@@ -6,12 +6,11 @@ using Android.OS;
 using Android.Support.V7.Widget;
 using Octokit;
 using Repository.Internal;
-using Repository.Internal.Editor;
 using Activity = Android.App.Activity;
 
 namespace Repository
 {
-    [Activity(Label = "File View")]
+    [Activity(Label = "File View", Name = Strings.Name_BrowseFiles)]
     public partial class BrowseFilesActivity : Activity
     {
         private RecyclerView _fileView;

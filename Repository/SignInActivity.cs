@@ -8,11 +8,10 @@ using Repository.Common.Validation;
 using Repository.Internal;
 using Repository.Internal.Android;
 using Activity = Android.App.Activity;
-using Debug = System.Diagnostics.Debug;
 
 namespace Repository
 {
-    [Activity]
+    [Activity(Name = Strings.Name_SignIn)]
     public partial class SignInActivity : Activity
     {
         private WebView _webView;
