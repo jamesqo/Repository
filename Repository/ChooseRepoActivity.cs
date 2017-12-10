@@ -20,8 +20,8 @@ namespace Repository
             }
 
             base.OnCreate(savedInstanceState);
-
             SetContentView(Resource.Layout.ChooseRepo);
+
             CacheViews();
 
             await SetupRepoView();

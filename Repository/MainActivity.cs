@@ -25,8 +25,8 @@ namespace Repository
             }
 
             base.OnCreate(bundle);
-
             SetContentView(Resource.Layout.Main);
+
             CacheViews();
 
             _startButton.Click += StartButton_Click;

@@ -33,14 +33,6 @@ namespace Repository
         private CancellationTokenSource _highlightCts;
         private HighlightRequester _requester;
 
-        public override void OnBackPressed()
-        {
-            // We don't need to continue highlighting this file's text if we're currently doing so.
-            _highlightCts?.Cancel();
-            OriginalContent = null;
-            base.OnBackPressed();
-        }
-
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             void CacheViews()
@@ -54,10 +46,10 @@ namespace Repository
             }
 
             base.OnCreate(savedInstanceState);
-
             this.HideActionBar();
-
+            this.LockScreenOrientation();
             SetContentView(Resource.Layout.EditFile);
+
             CacheViews();
             CacheParameters();
 
@@ -70,6 +62,15 @@ namespace Repository
                 // If highlighting is canceled because the user clicks the back button, just bail.
                 return;
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            // We don't need to continue highlighting this file's text if we're currently doing so.
+            _highlightCts?.Cancel();
+            // Allow the GC to collect the string containing the file contents; it can be arbitrarily large.
+            OriginalContent = null;
+            base.OnDestroy();
         }
 
         private EditorTheme GetEditorTheme()
