@@ -1500,8 +1500,9 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
     }
 
     private int treeHeight() {
-        // log2(treeRoot() + 1)
-        return 31 - Integer.numberOfLeadingZeros(treeRoot() + 1);
+        // Returns the inclusive tree height (including root/leaf nodes).
+        // log2(treeRoot() + 1) + 1
+        return 32 - Integer.numberOfLeadingZeros(treeRoot() + 1);
     }
 
     // (i+1) & ~i is equal to 2^(the number of trailing ones in i)
@@ -1522,34 +1523,43 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
     // descendants of index < n. In these cases, it simply represents the maximum span end of its
     // descendants. This is a consequence of the perfect binary tree structure.
     private void calcMax() {
+        // Implements iterative postorder tree traversal.
+        // See https://stackoverflow.com/a/4045752/4077294 for explanation of algorithm.
         IntStack stack = new IntStack(treeHeight());
-        int i = treeRoot();
+        stack.push(treeRoot());
         int n = mSpanCount;
+        int previous = -1;
         int max = 0;
 
-        while (true) {
-            if ((i & 1) != 0) {
-                // Interior node
-                stack.push(i);
-                i = leftChild(i);
+        while (!stack.isEmpty()) {
+            int i = stack.peek();
+
+            if (previous == -1 || i == leftChild(previous) || i == rightChild(previous)) {
+                // We descended the tree. Descend further into our left child.
+                if ((i & 1) != 0) {
+                    // Interior tree node
+                    stack.push(leftChild(i));
+                } else {
+                    // Leaf tree node (visit it and pop)
+                    if (i < n) {
+                        max = Math.max(max, mSpanEnds[i]);
+                        mSpanMax[i] = max;
+                    }
+                    stack.pop();
+                }
+            } else if (previous == leftChild(i)) {
+                // We ascended the tree from the left. Descend into the right.
+                stack.push(rightChild(i));
             } else {
-                // Leaf node
-                if (i >= n) {
-                    break;
+                // We ascended the tree from the right. Visit the node and pop.
+                if (i < n) {
+                    max = Math.max(max, mSpanEnds[i]);
+                    mSpanMax[i] = max;
                 }
-                max = Math.max(max, mSpanEnds[i]);
-                mSpanMax[i] = max;
-                if (stack.isEmpty()) {
-                    break;
-                }
-                i = stack.pop();
-                if (i >= n) {
-                    break;
-                }
-                max = Math.max(max, mSpanEnds[i]);
-                mSpanMax[i] = max;
-                i = rightChild(i);
+                stack.pop();
             }
+
+            previous = i;
         }
     }
 
