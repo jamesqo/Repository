@@ -1,6 +1,6 @@
 package com.bluejay.repository.util;
 
-public class IntStack {
+public final class IntStack {
     private final int[] mArray;
     private int mSize;
 
@@ -10,6 +10,10 @@ public class IntStack {
 
     public boolean isEmpty() {
         return mSize == 0;
+    }
+
+    public int peek() {
+        return mArray[mSize - 1];
     }
 
     public int pop() {
