@@ -1543,8 +1543,8 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                     // Leaf tree node (visit it and pop)
                     if (i < n) {
                         max = Math.max(max, mSpanEnds[i]);
-                        mSpanMax[i] = max;
                     }
+                    mSpanMax[i] = max;
                     stack.pop();
                 }
             } else if (previous == leftChild(i)) {
@@ -1554,8 +1554,8 @@ public class CustomSpannableStringBuilder implements CharSequence, GetChars, Spa
                 // We ascended the tree from the right. Visit the node and pop.
                 if (i < n) {
                     max = Math.max(max, mSpanEnds[i]);
-                    mSpanMax[i] = max;
                 }
+                mSpanMax[i] = max;
                 stack.pop();
             }
 
