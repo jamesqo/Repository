@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec powershell ./build-aar.ps1 "$@"

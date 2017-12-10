@@ -109,7 +109,7 @@ public class EditorText extends CustomSpannableStringBuilder {
         if (edit.isInsertion()) {
             // We haven't parsed the inserted text so we can't assume anything about how it should be colored.
             // Skip it and leave it white.
-            mColorCursor += edit.count();
+            advanceColorCursor(edit.count());
         } else {
             // The edit's a deletion.
             // Throw away the part of the coloring that is inside the deleted region.
@@ -196,7 +196,7 @@ public class EditorText extends CustomSpannableStringBuilder {
 
         if (start <= mColorCursor) {
             // Synchronize the color cursor with the updated text.
-            mColorCursor += count;
+            advanceColorCursor(count);
             return;
         }
 
