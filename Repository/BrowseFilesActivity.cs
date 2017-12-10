@@ -43,8 +43,8 @@ namespace Repository
             }
 
             base.OnCreate(savedInstanceState);
-
             SetContentView(Resource.Layout.BrowseFiles);
+
             CacheViews();
             CacheParameters();
 

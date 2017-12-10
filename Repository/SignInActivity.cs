@@ -39,8 +39,8 @@ namespace Repository
             base.OnCreate(savedInstanceState);
 
             this.HideActionBar();
-
             SetContentView(Resource.Layout.SignIn);
+
             CacheViews();
             CacheParameters();
 
